@@ -37,11 +37,8 @@ use Illuminate\Support\Facades\Route;
 
 //Registration
 Route::post('verify-email', [RegisterationController::class, 'email_verification']);
-Route::post('resend-phone-otp', [RegisterationController::class, 'resend_phone_otp']);
 Route::post('resend-email-otp', [RegisterationController::class, 'resend_email_otp']);
-Route::post('verify-phone-otp', [RegisterationController::class, 'verify_phone_otp']);
 Route::post('verify-email-otp', [RegisterationController::class, 'verify_email_otp']);
-
 Route::post('register', [RegisterationController::class, 'register']);
 
 

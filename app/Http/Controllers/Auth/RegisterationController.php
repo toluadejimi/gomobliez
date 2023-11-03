@@ -286,13 +286,31 @@ class RegisterationController extends Controller
             $email = $request->email;
             $code = $request->code;
 
-            $get_auth_code = User::where('id', $user_id)->first()->sms_code ?? null;
 
-            $get_code = User::where('email', $email)->first()->sms_code ?? null;
+            $get_code = User::where('email', $email)->first()->code ?? null;
 
-            if ($code == $get_code && $user_id == null) {
 
-                $update = User::where('email', $email)
+            if($email == null || $code == null){
+                return response()->json([
+                    'status' => $this->failed,
+                    'message' => 'Email or code can not be null',
+                ], 500);
+            }
+
+
+            if ($get_code  != $code) {
+
+                return response()->json([
+                    'status' => $this->failed,
+                    'message' => 'Invalid code, try again',
+                ], 500);
+
+
+            }
+
+            if($get_code  == $code){
+
+                User::where('email', $email)
                     ->update([
 
                         'is_email_verified' => 1,
@@ -307,32 +325,7 @@ class RegisterationController extends Controller
 
             }
 
-            return response()->json([
-                'status' => $this->failed,
-                'message' => 'Invalid code, try again',
-            ], 500);
-
-            if ($code == $get_auth_code && $user_id == Auth::id()) {
-
-                $update = User::where('id', $user_id)
-                    ->update([
-
-                        'is_email_verified' => 1,
-                        'status' => 1,
-
-                    ]);
-
-                return response()->json([
-                    'status' => $this->success,
-                    'message' => 'OTP Code verified successfully',
-                ], 200);
-
-            }
-
-            return response()->json([
-                'status' => $this->failed,
-                'message' => 'Invalid code, try again',
-            ], 500);
+        
 
         } catch (\Exception$th) {
             return $th->getMessage();
