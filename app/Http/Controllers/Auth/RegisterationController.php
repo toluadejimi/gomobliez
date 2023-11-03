@@ -74,7 +74,7 @@ class RegisterationController extends Controller
                     ]);
 
                 $data = array(
-                    'fromsender' => 'noreply@enkpay.com', 'Gomobilez',
+                    'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
                     'subject' => "One Time Password",
                     'toreceiver' => $email,
                     'sms_code' => $sms_code,
@@ -100,7 +100,7 @@ class RegisterationController extends Controller
             ]);
 
             $data = array(
-                'fromsender' => 'noreply@enkpay.com', 'Gomobilez',
+                'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
                 'subject' => "One Time Password",
                 'toreceiver' => $email,
                 'sms_code' => $sms_code,
