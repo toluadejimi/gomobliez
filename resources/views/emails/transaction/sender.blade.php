@@ -102,7 +102,7 @@
                                                     <tr>
                                                         <td style="width: 75px;"><img
                                                                 style="border: 0px; display: block; outline: none; text-decoration: none; height: 49px; width: 245px; font-size: 13px;"
-                                                                src="https://enkwave.com/wp-content/uploads/2023/03/logo.png"
+                                                                src="{{url('')}}/public/assets/img/logolg.png"
                                                                 width="90" height="auto" /></td>
                                                     </tr>
                                                 </tbody>

@@ -41,7 +41,7 @@
 
 
     <div class="header">
-        <img class="my-3" src="https://enkwave.com/wp-content/uploads/2023/03/logo.png" width="190" height="auto" />
+        <img class="my-3" src="{{url('')}}/public/assets/img/logolg.png" width="190" height="auto" />
         <h5 class="text-muted">Monthly Transaction Report</h5>
     </div>
 

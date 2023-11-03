@@ -115,7 +115,7 @@
                     <table>
                         <tr>
                             <td class="title">
-                                <img src="https://enkwave.com/wp-content/uploads/2023/03/logo.png"
+                                <img src="{{url('')}}/public/assets/img/logolg.png"
                                     style="width: 100%; max-width: 200px" />
                             </td>
 
