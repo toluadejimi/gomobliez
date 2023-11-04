@@ -37,9 +37,16 @@ use Illuminate\Support\Facades\Route;
 
 //Registration
 Route::post('verify-email', [RegisterationController::class, 'email_verification']);
-Route::post('resend-email-otp', [RegisterationController::class, 'resend_email_otp']);
+Route::post('resend-otp-code', [RegisterationController::class, 'resend_email_otp']);
 Route::post('verify-email-otp', [RegisterationController::class, 'verify_email_otp']);
 Route::post('register', [RegisterationController::class, 'register']);
+Route::post('forgot-password', [RegisterationController::class, 'forgot_password']);
+Route::post('reset-password', [RegisterationController::class, 'reset_password']);
+
+
+
+
+
 
 
 
@@ -254,7 +261,7 @@ Route::post('auth-verify-email', [RegisterationController::class, 'auth_email_ve
 
 
 
-    
+
 
     //Education
     Route::get('get-waec', [EducationController::class, 'get_waec']);

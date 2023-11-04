@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use AfricasTalking\SDK\AfricasTalking;
 use App\Http\Controllers\Controller;
-use App\Models\State;
-use App\Models\StateLga;
+use App\Models\MyPlan;
+use App\Models\MyPlans;
 use App\Models\User;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Mail;
 
 class RegisterationController extends Controller
 {
@@ -43,7 +41,6 @@ class RegisterationController extends Controller
                     'status' => $this->failed,
                     'message' => 'Account has been Restricted on Gomobliez',
                 ], 500);
-
             }
 
             if ($check_email == $email && $check_status == 1) {
@@ -52,7 +49,6 @@ class RegisterationController extends Controller
                     'status' => $this->failed,
                     'message' => 'Email Already Exist, Login your account to continue',
                 ], 500);
-
             }
 
             if ($check_email == null) {
@@ -63,7 +59,6 @@ class RegisterationController extends Controller
                 $user->save();
 
                 $token = $user->createToken('API Token')->accessToken;
-
             }
 
             if ($check_email == $email && $check_email_verification == 0) {
@@ -88,16 +83,15 @@ class RegisterationController extends Controller
 
                 return response()->json([
                     'status' => $this->success,
-                    'message' => 'OTP Code has been sent succesfully',
+                    'message' => 'OTP Code has been sent successfully',
                 ], 200);
-
             }
 
 
             $update_code = User::where('email', $email)
-            ->update([
-                'code' => $sms_code,
-            ]);
+                ->update([
+                    'code' => $sms_code,
+                ]);
 
             $data = array(
                 'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
@@ -114,21 +108,21 @@ class RegisterationController extends Controller
 
             return response()->json([
                 'status' => $this->success,
-                'message' => 'OTP Code has been sent succesfully',
+                'message' => 'OTP Code has been sent successfully',
             ], 200);
-
-
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
-
     }
 
 
     public function register(Request $request)
     {
 
-        // try {
+        try {
+
+
+
 
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|string|max:50',
@@ -145,41 +139,76 @@ class RegisterationController extends Controller
                 ], 500);
             }
 
-            $check_phone = User::where('phone', $request->phone_no)
-            ->first()->phone ?? null;
+            $ck = User::where('email', $request->email)->first()->is_email_verified;
+            if ($ck == 0) {
+                return response()->json([
+                    'status' => $this->failed,
+                    'message' => 'Your Email has not been verified, Kindly verify your email to register',
+                ], 500);
+            }
 
 
-            $check_email = User::where('email', $request->email)->first()->email ?? null;
 
 
+            $check_email = User::where('email', $request->email)->first()->first_name ?? null;
 
             $email = $request->email;
-            $device_id = $request->devide_id;
+            $device_id = $request->device_id;
             $first_name = $request->first_name;
             $last_name = $request->last_name;
             $gender = $request->gender;
             $password = $request->password;
-            $email = $request->email;
 
 
 
-            if($check_email == null ){
+            if ($check_email == null) {
 
-                $create = new User();
-                $create->first_name = $first_name;
-                $create->last_name = $last_name;
-                $create->gender = $gender;
-                $create->email = $email;
-                $create->device_id = $device_id;
-                $create->is_phone_verified = 1;
-                $create->password = bcrypt($password);
-                $create->save();
+
+                User::where('email', $request->email)->update([
+
+                    'first_name' => $first_name,
+                    'last_name' => $last_name,
+                    'gender' => $gender,
+                    'password' => bcrypt($password),
+                    'device_id' => $device_id
+
+                ]);
+
+
+            $user_id = User::where('email', $request->email)->first()->id;
+
+
+            $chl_plan = MyPlan::where('user_id', $user_id)->first()->user_id ?? null;
+
+            if($chl_plan == null){
+
+                $plan = new MyPlan();
+                $plan->user_id = $user_id;
+                $plan->plan_id = 0;
+                $plan->amount = 0;
+                $plan->save();
+            }
+
+
+            $data = array(
+                'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
+                'subject' => "Account Creation",
+                'toreceiver' => $email,
+                'name' => $first_name,
+            );
+
+            Mail::send('emails.registration.account-creation', ["data1" => $data], function ($message) use ($data) {
+                $message->from($data['fromsender']);
+                $message->to($data['toreceiver']);
+                $message->subject($data['subject']);
+            });
+
+
 
                 return response()->json([
                     'status' => $this->success,
                     'message' => 'Your account has been successfully created',
                 ], 200);
-
             }
 
 
@@ -188,7 +217,9 @@ class RegisterationController extends Controller
                 'status' => $this->failed,
                 'message' => 'Email Already Exist',
             ], 200);
-
+        } catch (\Exception $th) {
+            return $th->getMessage();
+        }
     }
 
 
@@ -197,82 +228,50 @@ class RegisterationController extends Controller
     {
 
 
-
-
         try {
 
-            $api_key = env('EMAILKEY');
+            $check_email = User::where('email', $request->email)->first()->email ?? null;
 
-            $from = env('FROM_API');
+            if ($check_email == null) {
 
-            $email = $request->email;
+                return response()->json([
+                    'status' => $this->failed,
+                    'message' => 'Email could not be found on Gomobilez',
+                ], 500);
+            }
 
-            $sms_code = random_int(1000, 9999);
-
-            $check_email = User::where('email', $email)->first()->email ?? null;
-
-            if ($check_email == $email) {
-
-                $update_code = User::where('email', $email)
-                    ->update([
-                        'sms_code' => $sms_code,
-                    ]);
-
-                // $data = array(
-                //     'fromsender' => 'noreply@enkpayapp.enkwave.com', 'EnkPay',
-                //     'subject' => "One Time Password",
-                //     'toreceiver' => $email,
-                //     'sms_code' => $sms_code,
-                // );
-
-                // Mail::send('emails.registration.otpcode', ["data1" => $data], function ($message) use ($data) {
-                //     $message->from($data['fromsender']);
-                //     $message->to($data['toreceiver']);
-                //     $message->subject($data['subject']);
-                // });
+            if ($check_email == $request->email) {
 
 
-                $client = new Client([
-                    'base_uri' => 'https://api.elasticemail.com',
-                ]);
+                $code = User::where('email', $request->email)->first()->code ?? null;
 
-                // The response to get
-                $res = $client->request('GET', '/v2/email/send', [
-                    'query' => [
+                $data = array(
+                    'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
+                    'subject' => "One Time Password",
+                    'toreceiver' => $request->email,
+                    'sms_code' => $code,
+                );
 
-                        'apikey' => "$api_key",
-                        'from' => "$from",
-                        'fromName' => 'ENKPAY',
-                        'sender' => "$email",
-                        'senderName' => 'ENKPAY',
-                        'subject' => 'Verification Code',
-                        'to' => "$email",
-                        'bodyHtml' => view('emails.registration.otpcode', compact('sms_code'))->render(),
-                        'encodingType' => 0,
-
-                    ],
-                ]);
-
-                $body = $res->getBody();
-                $array_body = json_decode($body);
+                Mail::send('emails.registration.otpcode', ["data1" => $data], function ($message) use ($data) {
+                    $message->from($data['fromsender']);
+                    $message->to($data['toreceiver']);
+                    $message->subject($data['subject']);
+                });
 
                 return response()->json([
                     'status' => $this->success,
-                    'message' => 'OTP Code has been sent succesfully',
+                    'message' => 'OTP Code has been resent successfully',
                 ], 200);
-
             } else {
 
                 return response()->json([
                     'status' => $this->failed,
-                    'message' => 'Email could not be found on Enkpay',
+                    'message' => 'Something Went wrong',
                 ], 500);
             }
-
-        } catch (\Exception$th) {
+        } catch (\Exception $th) {
             return $th->getMessage();
         }
-
     }
 
 
@@ -290,7 +289,7 @@ class RegisterationController extends Controller
             $get_code = User::where('email', $email)->first()->code ?? null;
 
 
-            if($email == null || $code == null){
+            if ($email == null || $code == null) {
                 return response()->json([
                     'status' => $this->failed,
                     'message' => 'Email or code can not be null',
@@ -304,11 +303,9 @@ class RegisterationController extends Controller
                     'status' => $this->failed,
                     'message' => 'Invalid code, try again',
                 ], 500);
-
-
             }
 
-            if($get_code  == $code){
+            if ($get_code  == $code) {
 
                 User::where('email', $email)
                     ->update([
@@ -322,97 +319,29 @@ class RegisterationController extends Controller
                     'status' => $this->success,
                     'message' => 'OTP Code verified successfully',
                 ], 200);
-
             }
-
-        
-
-        } catch (\Exception$th) {
+        } catch (\Exception $th) {
             return $th->getMessage();
         }
     }
 
 
-    // public function register(Request $request)
-    // {
 
-    //     // try {
-
-    //         $validator = Validator::make($request->all(), [
-    //             'first_name' => 'required|string|max:50',
-    //             'last_name' => 'required|string|max:50',
-    //             'gender' => 'required|string|max:50',
-    //             'email' => 'required|string|max:50',
-    //             'password' => 'required',
-    //         ]);
-
-    //         if ($validator->fails()) {
-    //             return response()->json([
-    //                 'status' => $this->failed,
-    //                 'message' => $validator->messages()->first(),
-    //             ], 500);
-    //         }
-
-    //         $check_phone = User::where('phone', $request->phone_no)
-    //         ->first()->phone ?? null;
-
-
-    //         $check_email = User::where('email', $request->email)->first()->email ?? null;
-
-
-
-    //         $email = $request->email;
-    //         $device_id = $request->devide_id;
-    //         $first_name = $request->first_name;
-    //         $last_name = $request->last_name;
-    //         $gender = $request->gender;
-    //         $password = $request->password;
-    //         $email = $request->email;
-
-
-
-    //         if($check_email == null ){
-
-    //             $create = new User();
-    //             $create->first_name = $first_name;
-    //             $create->last_name = $last_name;
-    //             $create->gender = $gender;
-    //             $create->email = $email;
-    //             $create->device_id = $device_id;
-    //             $create->is_phone_verified = 1;
-    //             $create->password = bcrypt($password);
-    //             $create->save();
-
-    //             return response()->json([
-    //                 'status' => $this->success,
-    //                 'message' => 'Your account has been successfully created',
-    //             ], 200);
-
-    //         }
-
-
-
-    //         return response()->json([
-    //             'status' => $this->failed,
-    //             'message' => 'Email Already Exist',
-    //         ], 200);
-
-    // }
-
-
-
-    public function forgot_password(request $request){
+    public function forgot_password(request $request)
+    {
 
 
         try {
 
             $email = $request->email;
+            $code = random_int(1000, 9999);
+
 
             $check = User::where('email', $email)
-            ->first()->email ?? null;
+                ->first()->email ?? null;
 
 
-            if($email == null){
+            if ($email == null) {
 
                 return response()->json([
 
@@ -420,26 +349,22 @@ class RegisterationController extends Controller
                     'message' => 'Account not found, please sign up',
 
                 ], 500);
-
-
             }
 
 
-            $first_name = User::where('email', $email)
-                ->first()->first_name ?? null;
+            User::where('email', $email)
+                ->update(['code' => $code]);
 
             if ($check == $email) {
 
-                //send email
                 $data = array(
-                    'fromsender' => 'noreply@enkpayapp.enkwave.com', 'EnkPay',
-                    'subject' => "Reset Password",
+                    'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
+                    'subject' => "One Time Password",
                     'toreceiver' => $email,
-                    'first_name' => $first_name,
-                    'link' => url('') . "/reset-password/?email=$email",
+                    'sms_code' => $code,
                 );
 
-                Mail::send('emails.notify.passwordlink', ["data1" => $data], function ($message) use ($data) {
+                Mail::send('emails.registration.otpcode', ["data1" => $data], function ($message) use ($data) {
                     $message->from($data['fromsender']);
                     $message->to($data['toreceiver']);
                     $message->subject($data['subject']);
@@ -447,9 +372,8 @@ class RegisterationController extends Controller
 
                 return response()->json([
                     'status' => $this->success,
-                    'message' => 'Check your inbox or spam for futher instructions',
+                    'message' => 'Check your inbox or spam for OTP Code',
                 ], 200);
-
             } else {
 
                 return response()->json([
@@ -458,18 +382,55 @@ class RegisterationController extends Controller
                     'message' => 'User not found on our system',
 
                 ], 500);
-
             }
-
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => $this->failed,
                 'message' => $e->getMessage(),
             ], 500);
         }
-
-
-
     }
 
+
+    public function reset_password(request $request)
+    {
+
+
+        try {
+
+
+            if ($request->password != $request->confirm_password) {
+
+                return response()->json([
+                    'status' => $this->failed,
+                    'message' => 'Password does not match',
+                ], 500);
+            }
+
+
+            $chk_user = User::where('email', $request->email)->first()->email ?? null;
+            if ($chk_user == null) {
+
+                return response()->json([
+                    'status' => $this->failed,
+                    'message' => 'Account not found',
+                ], 500);
+            }
+
+
+            User::where('email', $request->email)->update([
+                'password' => bcrypt($request->password)
+            ]);
+
+            return response()->json([
+                'status' => $this->success,
+                'message' => 'Your password has been successfully updated',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => $this->failed,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }
