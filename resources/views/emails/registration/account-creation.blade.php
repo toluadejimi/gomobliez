@@ -56,7 +56,7 @@
                                                                                                     class="m_-5773299331375091765max-width CToWUd"
                                                                                                     style="display: block; color: #000000; text-decoration: none; font-family: Helvetica,arial,sans-serif; font-size: 16px;"
                                                                                                     src="{{url('')}}/public/assets/img/logoo.png"
-                                                                                                    width="259"
+                                                                                                    width="300"
                                                                                                     height="51"
                                                                                                     border="0"
                                                                                                     data-bit="iit" />
