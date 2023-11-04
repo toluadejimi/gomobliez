@@ -46,39 +46,8 @@ Route::post('reset-password', [RegisterationController::class, 'reset_password']
 
 
 
-
-
-
-
-//properties
-Route::get('pos-properties', [DeviceOrderController::class, 'pos_properties']);
-
-
-
-//Device Order
-Route::post('order-device', [DeviceOrderController::class, 'order_device']);
-Route::get('bank-details', [DeviceOrderController::class, 'bank_details']);
-Route::get('all-pickup-location', [DeviceOrderController::class, 'all_pick_up_location']);
-Route::post('state-pickup', [DeviceOrderController::class, 'state_pick_up_location']);
-Route::post('lga-pickup', [DeviceOrderController::class, 'lga_pick_up_location']);
-
-Route::post('order-device-complete', [DeviceOrderController::class, 'order_complete']);
-
-
-
-//webhooks
-Route::post('v1/cash-out-webhook', [TransactionController::class, 'cash_out_webhook']);
-Route::post('v1/cash-in', [VirtualaccountController::class, 'cash_in_webhook']);
-Route::post('v1/pwebhook', [VirtualaccountController::class, 'providusCashIn']);
-Route::post('v1/pwebhook.com', [VirtualaccountController::class, 'providusCashIn']);
-Route::post('v1/p-cash-in', [VirtualaccountController::class, 'providusCashIn']);
-
-Route::post('v1/wallet-check', [TransactionController::class, 'balance_webhook']);
-Route::post('v1/transfer-request', [TransactionController::class, 'transfer_request']);
-
-Route::post('v1/merchant-details', [ProfileController::class, 'view_agent_account']);
-
-
+//login
+Route::post('login', [LoginController::class, 'login']);
 
 
 
