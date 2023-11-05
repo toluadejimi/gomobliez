@@ -40,7 +40,7 @@ Route::group(['prefix' => 'payment-mobile'], function () {
 Route::get('return', [PaymentController::class, 'return']);
 Route::get('cancel', [PaymentController::class, 'payment_decline']);
 
-Route::get('verify-payment', [PaymentController::class, 'verify-payment']);
+Route::get('verify-payment', [PaymentController::class, 'verify_payment']);
 
 
 
