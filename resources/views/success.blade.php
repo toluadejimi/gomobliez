@@ -98,7 +98,7 @@
             font-size: 18px; /* add this line */
               }             </style>
 
-              <form action="https://gomobilez.bplux.store/verify-payment?order_token={{ $order_token }}&status=$status">
+              <form action="https://gomobilez.bplux.store/verify-payment?order_token={{ $order_token }}&status=$status" method="GET">
                 <button type="submit" value=" " /> Go back Home</button>
             </form>
             
