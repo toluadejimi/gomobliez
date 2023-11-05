@@ -253,7 +253,7 @@ class PaymentController extends Controller
 
         $data = "Payment processing...";
         $url = url('')."/verify-payment"."?token=$request->token&status=$request->status";
-        return view('success', compact('data', 'url'))
+        return view('success', compact('data', 'url'));
 
 
 
