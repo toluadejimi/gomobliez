@@ -188,11 +188,10 @@ class PaymentController extends Controller
                 ]);
 
 
+                $data = "Your account has been funded with $".$order_amount;
+                return view ('success', compact('data'));
 
-                return response()->json([
-                    'status' => true,
-                    'message' => "Your account has been funded with $".$order_amount,
-                ], 200);
+
 
             }else{
 
