@@ -154,7 +154,7 @@ class PaymentController extends Controller
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api-m.sandbox.paypal.com/v2/checkout/orders/$request->token/capture",
+                CURLOPT_URL => "https://api-m.sandbox.paypal.com/v2/checkout/orders/$request->order_token/capture",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -262,10 +262,7 @@ class PaymentController extends Controller
     {
 
         $data = "Payment processing...";
-        $url = url('')."/verify-payment"."?token=$request->token&status=$request->status";
-
-
-
+        $url = url('')."/verify-payment"."?order_token=$request->token&status=$request->status";
 
 
         return view('success', compact('data', 'url'));
