@@ -145,7 +145,6 @@ class PaymentController extends Controller
     {
 
 
-        dd($request->all());
 
 
         if ($request->status == 'true') {
@@ -182,6 +181,7 @@ class PaymentController extends Controller
             $order_amount = (int)$amount;
 
 
+            dd($var, $request->all());
 
 
             if($ss == "COMPLETED"){
@@ -192,7 +192,7 @@ class PaymentController extends Controller
                 ]);
 
 
-                return "Payment_successful";
+                echo "Payment_successful";
 
 
                 // return response()->json([
@@ -204,7 +204,7 @@ class PaymentController extends Controller
             }else{
 
 
-                return  $status ?? "Somthingwent wrong";
+                echo  $status ?? "Somthingwent wrong";
 
                 // return response()->json([
                 //     'status' => false,
@@ -265,7 +265,6 @@ class PaymentController extends Controller
         $url = url('')."/verify-payment"."?token=$request->token&status=$request->status";
 
 
-        dd($url);
 
 
 
