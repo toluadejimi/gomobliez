@@ -57,6 +57,7 @@ class PaymentController extends Controller
         }
 
 
+        $url = url('');
 
         $curl = curl_init();
         $data = [
@@ -69,8 +70,8 @@ class PaymentController extends Controller
                 ]
             ]],
             "application_context" => [
-                "cancel_url" => "http://127.0.0.1:8000/cancel?status=false",
-                "return_url" => "http://127.0.0.1:8000/return?status=true"
+                "cancel_url" => "$url/cancel?status=false",
+                "return_url" => "$url/return?status=true"
             ]
         ];
 
