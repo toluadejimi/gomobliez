@@ -180,27 +180,33 @@ class PaymentController extends Controller
 
 
 
-            if($ss == "COMPLETED"){
 
-                User::where('id', Auth::id())->increment('wallet', $order_amount);
+            if($ss == "COMPLETED"){
+                $user_id =  Transaction::where('token', $request->token)->first()->user_id ?? null;
+                User::where('id', $user_id)->increment('wallet', $order_amount);
                 Transaction::where('token', $request->token)->update([
                     'status' => 2
                 ]);
 
 
-                return response()->json([
-                    'status' => true,
-                    'message' => "Payment successful",
-                ], 200);
+                return "Payment_successful";
+
+
+                // return response()->json([
+                //     'status' => true,
+                //     'message' => "Payment successful",
+                // ], 200);
 
 
             }else{
 
 
-                return response()->json([
-                    'status' => false,
-                    'message' => "$status",
-                ], 500);
+                return  $status ?? "Somthingwent wrong";
+
+                // return response()->json([
+                //     'status' => false,
+                //     'message' => "$status",
+                // ], 500);
 
 
 
