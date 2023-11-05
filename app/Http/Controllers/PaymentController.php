@@ -239,8 +239,12 @@ class PaymentController extends Controller
             ]);
 
             $data = "Your payment was not processed, try again";
+            $order_token = $request->token;
+            $status = $request->status;
 
-            return view ('decline', compact('data'));
+
+
+            return view ('decline', compact('data', 'order_token', 'status'));
 
         }else{
 
