@@ -188,7 +188,7 @@ class PaymentController extends Controller
                 ]);
 
 
-                $data = "Your account has been funded with $".$order_amount;
+                $data = 
                 return view ('success', compact('data'));
 
 
@@ -250,9 +250,21 @@ class PaymentController extends Controller
     public function return(request $request)
     {
 
+        $data = "Payment processing...";
+        $url = url('')."/verify-payment"."?token=$request->token&status=$request->status";
+        return view('success', compact('data', 'url'))
 
 
-        dd($request->all());
+
+
+
+
+
+
+
+
+
+
     }
     // public function save_customer_id(Request $request)
     // {
