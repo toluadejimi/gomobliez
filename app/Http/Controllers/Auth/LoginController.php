@@ -100,11 +100,17 @@ class LoginController extends Controller
 
             $myplan = MyPlan::select('id','user_id', 'plan_id', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
             $plans = Plan::select('id','title','amount', 'period')->get();
+            $billing = User::select('first_name', 'last_name','city', 'street', 'zipcode', 'country', 'state', 'phone')->where('id', Auth::id())->get();
+
+
+
 
 
             $user = Auth()->user();
             $user['token'] = $token;
             $user['my_plan'] = $myplan;
+            $user['billing_information'] = $billing;
+
             $user['plans'] = $plans;
 
 

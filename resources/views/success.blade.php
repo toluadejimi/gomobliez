@@ -1,266 +1,287 @@
-{{-- <html>
-  <head>
-    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap" rel="stylesheet">
-  </head>
-    <style>
-      body {
-        text-align: center;
-        padding: 40px 0;
-        background: #EBF0F5;
-      }
-        h1 {
-          color: #88B04B;
-          font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
-          font-weight: 900;
-          font-size: 40px;
-          margin-bottom: 10px;
-        }
-        p {
-          color: #404F5E;
-          font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
-          font-size:20px;
-          margin: 0;
-        }
-      i {
-        color: #6a66bc;
-        font-size: 100px;
-        line-height: 200px;
-        margin-left:-15px;
-      }
-      .card {
-        background: white;
-        padding: 60px;
-        border-radius: 4px;
-        box-shadow: 0 2px 3px #C8D0D8;
-        display: inline-block;
-        margin: 0 auto;
-      }
-    </style>
-    <body>
-      <div class="card">
-      <div style="border-radius:200px; height:200px; width:200px; background: #F8FAF5; margin:0 auto;">
-        <i class="checkmark">✓</i>
-      </div>
-        <h1>Success</h1>
-        <p>Password Changed Successfully;<br/> Procceed to login on your mobile app</p>
-      </div>
-    </body>
-</html> --}}
-<html>
+preview.gif
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Khand:wght@500&display=swap');
-*{
-  margin:0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body  {
-  height: 100vh;
-  display: flex;
-  font-size: 14px;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Khand', sans-serif;
-}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html
+    style="-moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased; background-color: #464646; margin: 0; padding: 0;">
 
-.wrapperAlert {
-  width: 500px;
-  height: 400px;
-  overflow: hidden;
-  border-radius: 12px;
-  border: thin solid #ddd;
-}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <title>Gomobilez</title>
 
-.topHalf {
-  width: 100%;
-  color: white;
-  overflow: hidden;
-  min-height: 250px;
-  position: relative;
-  padding: 40px 0;
-  background: rgb(0,0,0);
-  background: -webkit-linear-gradient(45deg, #019871, #a0ebcf);
-}
+</head>
 
-.topHalf p {
-  margin-bottom: 30px;
-}
-svg {
-  fill: white;
-}
-.topHalf h1 {
-  font-size: 2.25rem;
-  display: block;
-  font-weight: 500;
-  letter-spacing: 0.15rem;
-  text-shadow: 0 2px rgba(128, 128, 128, 0.6);
-}
-
-/* Original Author of Bubbles Animation -- https://codepen.io/Lewitje/pen/BNNJjo */
-.bg-bubbles{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-li{
-  position: absolute;
-  list-style: none;
-  display: block;
-  width: 40px;
-  height: 40px;
-  background-color: rgba(255, 255, 255, 0.15);/* fade(green, 75%);*/
-  bottom: -160px;
-
-  -webkit-animation: square 20s infinite;
-  animation:         square 20s infinite;
-
-  -webkit-transition-timing-function: linear;
-  transition-timing-function: linear;
-}
-li:nth-child(1){
-  left: 10%;
-}
-li:nth-child(2){
-  left: 20%;
-
-  width: 80px;
-  height: 80px;
-
-  animation-delay: 2s;
-  animation-duration: 17s;
-}
-li:nth-child(3){
-  left: 25%;
-  animation-delay: 4s;
-}
-li:nth-child(4){
-  left: 40%;
-  width: 60px;
-  height: 60px;
-
-  animation-duration: 22s;
-
-  background-color: rgba(white, 0.3); /* fade(white, 25%); */
-}
-li:nth-child(5){
-  left: 70%;
-}
-li:nth-child(6){
-  left: 80%;
-  width: 120px;
-  height: 120px;
-
-  animation-delay: 3s;
-  background-color: rgba(white, 0.2); /* fade(white, 20%); */
-}
-li:nth-child(7){
-  left: 32%;
-  width: 160px;
-  height: 160px;
-
-  animation-delay: 7s;
-}
-li:nth-child(8){
-  left: 55%;
-  width: 20px;
-  height: 20px;
-
-  animation-delay: 15s;
-  animation-duration: 40s;
-}
-li:nth-child(9){
-  left: 25%;
-  width: 10px;
-  height: 10px;
-
-  animation-delay: 2s;
-  animation-duration: 40s;
-  background-color: rgba(white, 0.3); /*fade(white, 30%);*/
-}
-li:nth-child(10){
-  left: 90%;
-  width: 160px;
-  height: 160px;
-
-  animation-delay: 11s;
-}
-
-@-webkit-keyframes square {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(-500px) rotate(600deg); }
-}
-@keyframes square {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(-500px) rotate(600deg); }
-}
-
-.bottomHalf {
-  align-items: center;
-  padding: 35px;
-}
-.bottomHalf p {
-  font-weight: 500;
-  font-size: 1.05rem;
-  margin-bottom: 20px;
-}
-
-button {
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 12px;
-  padding: 10px 18px;
-  background-color: #019871;
-  text-shadow: 0 1px rgba(128, 128, 128, 0.75);
-}
-button:hover {
-  background-color: #85ddbf;
-}
-</style>
-
-<div class="wrapperAlert ">
-
-    <div class="contentAlert">
-
-      <div class="topHalf">
-
-        <p><svg viewBox="0 0 512 512" width="100" title="check-circle">
-          <path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z" />
-          </svg></p>
-        <h1>Congratulations</h1>
-
-       <ul class="bg-bubbles">
-         <li></li>
-         <li></li>
-         <li></li>
-         <li></li>
-         <li></li>
-         <li></li>
-         <li></li>
-         <li></li>
-         <li></li>
-         <li></li>
-       </ul>
-      </div>
-
-      <div class="bottomHalf">
-
-        <h3>Credientials Reset Successfully</h3><br>
-        <p>Return to the Enkpay app to contine your transactions</p>
-
-
-        {{-- <button id="alertMO">Back to Trash Bash</button> --}}
-
-      </div>
-
+<body bgcolor="#d7d7d7" class="generic-template"
+    style="-moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased; background-color: #d7d7d7; margin: 0; padding: 0;">
+    <!-- Header Start -->
+    <div class="bg-white header" bgcolor="#ffffff" style="background-color: white; width: 100%;">
+        <table align="center" bgcolor="#ffffff"
+            style="border-left: 10px solid white; border-right: 10px solid white; max-width: 600px; width: 100%;">
+            <tr height="80">
+                <td align="left" class="vertical-align-middle"
+                    style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: middle;">
+                    <a href="https://www.go.com.mt/" target="_blank"
+                        style="-webkit-text-decoration-color: #F16522; color: #F16522; text-decoration: none; text-decoration-color: #F16522;">
+                        <img src="http://dgtlmrktng.s3.amazonaws.com/go/emails/generic-email-template/logo.png" alt="GO"
+                            width="70" style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;">
+                    </a>
+                </td>
+            </tr>
+        </table>
     </div>
+    <!-- Header End -->
 
-  </div>
+    <!-- Content Start -->
+    <table cellpadding="0" cellspacing="0" cols="1" bgcolor="#d7d7d7" align="center" style="max-width: 600px;">
+        <tr bgcolor="#d7d7d7">
+            <td height="50"
+                style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+            </td>
+        </tr>
+
+        <tr bgcolor="#d7d7d7">
+            <td
+                style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                <!-- Seperator Start -->
+                <table cellpadding="0" cellspacing="0" cols="1" bgcolor="#d7d7d7" align="center"
+                    style="max-width: 600px; width: 100%;">
+                    <tr bgcolor="#d7d7d7">
+                        <td height="30"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                </table>
+                <!-- Seperator End -->
+
+                <!-- Generic Pod Left Aligned with Price breakdown Start -->
+                <table align="center" cellpadding="0" cellspacing="0" cols="3" bgcolor="white"
+                    class="bordered-left-right"
+                    style="border-left: 10px solid #d7d7d7; border-right: 10px solid #d7d7d7; max-width: 600px; width: 100%;">
+                    <tr height="50">
+                        <td colspan="3"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td width="36"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                        <td class="text-primary"
+                            style="color: #AAFF00; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                            <img src="{{url('')}}/public/assets/img/logoo.png""
+                                alt="GO" width="50"
+                                style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;">
+                        </td>
+                        <td width="36"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                    <tr height="17">
+                        <td colspan="3"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td width="36"
+                            style="color: #AAFF00; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                        <td class="text-primary"
+                            style="color: #AAFF00; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                            <h1
+                                style="color: #AAFF00; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 30px; font-weight: 700; line-height: 34px; margin-bottom: 0; margin-top: 0;">
+                                Payment Successful</h1>
+                        </td>
+                        <td width="36"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                    <tr height="30">
+                        <td colspan="3"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                    <tr align="left">
+                        <td width="36"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                        <td
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                            <p
+                                style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">
+                                Hi [name],
+                            </p>
+                        </td>
+                        <td width="36"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                    <tr height="10">
+                        <td colspan="3"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                    <tr align="left">
+                        <td width="36"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                        <td
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                            <p
+                                style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">
+                                Your transaction was successful!</p>
+                            <br>
+                            <p
+                                style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0; ">
+                                <strong>Payment Details:</strong><br />
+
+                                Amount: €$moneyFormatter.format(${amount}) <br />
+                                Account: ${accountNumber}.<br /></p>
+                            <br>
+                            <p
+                                style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">
+                                We advise to keep this email for future reference.&nbsp;&nbsp;&nbsp;&nbsp;<br /></p>
+                        </td>
+                        <td width="36"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                    <tr height="30">
+                        <td
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                        <td
+                            style="border-bottom: 1px solid #D3D1D1; color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                        <td
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                    <tr height="30">
+                        <td colspan="3"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td width="36"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                        <td
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                            <p
+                                style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">
+                                <strong>Transaction reference: ${authorizationCode}</strong></p>
+                            <p
+                                style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">
+                                Order date: [time] [date]</p>
+                            <p
+                                style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">
+                            </p>
+                        </td>
+                        <td width="36"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+
+                    <tr height="50">
+                        <td colspan="3"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+
+                </table>
+                <!-- Generic Pod Left Aligned with Price breakdown End -->
+
+                <!-- Seperator Start -->
+                <table cellpadding="0" cellspacing="0" cols="1" bgcolor="#d7d7d7" align="center"
+                    style="max-width: 600px; width: 100%;">
+                    <tr bgcolor="#d7d7d7">
+                        <td height="50"
+                            style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                        </td>
+                    </tr>
+                </table>
+                <!-- Seperator End -->
+
+            </td>
+        </tr>
+    </table>
+    <!-- Content End -->
+
+    <!-- Footer Start -->
+    <div class="bg-gray-dark footer" bgcolor="#464646" height="165" style="background-color: #464646; width: 100%;">
+        <table align="center" bgcolor="#464646" style="max-width: 600px; width: 100%;">
+
+            <tr height="15">
+                <td
+                    style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                </td>
+            </tr>
+
+            <tr>
+                <td align="center"
+                    style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                    <img src="{{url('')}}/public/assets/img/preview.gif" alt="GO"
+                        width="250" style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;">
+                </td>
+            </tr>
+
+            <tr height="2">
+                <td
+                    style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                </td>
+            </tr>
+
+            <tr>
+                <td align="center"
+                    style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                    <p class="text-white"
+                        style="color: white; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">
+                        Copyright © Gomobilez 2023. All rights reserved.</p>
+                    <p class="text-primary"
+                        style="color: #F16522; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">
+                    </p>
+                </td>
+            </tr>
+
+            <tr height="15">
+                <td
+                    style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                </td>
+            </tr>
+
+            <tr>
+                <td align="center"
+                    style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                    <a href="https://www.facebook.com/go.com.mt"
+                        style="-webkit-text-decoration-color: #464646; color: #F16522; text-decoration: none; text-decoration-color: #464646;"><img
+                            width="25" htight="25"
+                            src="http://dgtlmrktng.s3.amazonaws.com/go/emails/generic-email-template/fb.png"
+                            target="_blank" alt="Facebook"
+                            style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;"></a>&nbsp;
+                    <a href="https://www.youtube.com/user/gomaltachannel"
+                        style="-webkit-text-decoration-color: #464646; color: #F16522; text-decoration: none; text-decoration-color: #464646;"><img
+                            width="25" htight="25"
+                            src="http://dgtlmrktng.s3.amazonaws.com/go/emails/generic-email-template/youtube.png"
+                            target="_blank" alt="Youtube"
+                            style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;"></a>&nbsp;
+                    <a href="https://www.linkedin.com/company/mobis/?trk=prof-following-company-logo"
+                        style="-webkit-text-decoration-color: #464646; color: #F16522; text-decoration: none; text-decoration-color: #464646;"><img
+                            width="25" htight="25"
+                            src="http://dgtlmrktng.s3.amazonaws.com/go/emails/generic-email-template/linkedin.png"
+                            target="_blank" alt="LinkedIn"
+                            style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;"></a>&nbsp;
+                </td>
+            </tr>
+            <tr height="10">
+                <td
+                    style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <!-- Footer End -->
+</body>
 
 </html>

@@ -15,6 +15,8 @@ use App\Http\Controllers\VAS\InsuranceController;
 use App\Http\Controllers\Virtual\VirtualaccountController;
 use App\Http\Controllers\Virtualcard\VirtualCardController;
 use App\Http\Controllers\WebpaymentController;
+use App\Http\Controllers\PaymentController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,6 +57,12 @@ Route::post('login', [LoginController::class, 'login']);
 //Transactions
 Route::post('transaction-status', [TransactionController::class, 'transactiion_status']);
 Route::post('test-transaction', [TransactionController::class, 'test_transaction']);
+
+
+
+
+
+
 
 
 
@@ -110,8 +118,6 @@ Route::post('email-login', [LoginController::class, 'email_login']);
 Route::post('update-device', [LoginController::class, 'update_device_identifier']);
 
 
-
-
 //Contact
 Route::get('contact', [ProfileController::class, 'contact']);
 
@@ -119,156 +125,10 @@ Route::get('contact', [ProfileController::class, 'contact']);
 Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
 
-
-
-
-    //Fogot Pin
-    Route::post('forgot-pin', [ProfileController::class, 'forgot_pin']);
-
-    //Profile
-    Route::get('user-info', [ProfileController::class, 'user_info']);
-    Route::post('delete-user', [ProfileController::class, 'delete_user']);
-
-    Route::post('update-kyc', [ProfileController::class, 'update_user']);
-    Route::post('verify-info', [ProfileController::class, 'verify_info']);
-    Route::post('update-business', [ProfileController::class, 'update_business']);
-    Route::post('update-account-info', [ProfileController::class, 'update_account_info']);
-    Route::post('update-bank-info', [ProfileController::class, 'update_bank_info']);
-    Route::post('verify-identity', [ProfileController::class, 'verify_identity']);
-    Route::post('upload-identity', [ProfileController::class, 'upload_identity']);
-
-
-//Virtual Card
-Route::post('verify-card-identity', [VirtualCardController::class, 'verify_card_identity']);
-Route::post('fund-card', [VirtualCardController::class, 'fund_card']);
-Route::post('create-card', [VirtualCardController::class, 'create_card']);
-Route::post('block-card', [VirtualCardController::class, 'block_card']);
-Route::post('unblock-card', [VirtualCardController::class, 'unblock_card']);
-Route::post('liquidate-card', [VirtualCardController::class, 'liquidate_card']);
-Route::get('card-details', [VirtualCardController::class, 'card_details']);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   //Get Eletric Compnay
-Route::get('electric-company', [PowerController::class, 'get_eletric_company']);
-
-
-
-//Auth Verification
-Route::post('auth-verify-phone', [RegisterationController::class, 'auth_phone_verification']);
-Route::post('auth-verify-email', [RegisterationController::class, 'auth_email_verification']);
-
-
-
-
-
-
-    Route::get('get-data-plan', [DataController::class, 'get_data']);
-
-    //Trasnaction
-    Route::post('cash-out', [TransactionController::class, 'cash_out']);
-    Route::post('resolve-bank', [TransactionController::class, 'resolve_bank']);
-    Route::post('resolve-enkpay-account', [TransactionController::class, 'resolve_enkpay_account']);
-    Route::post('enkpay-transfer', [TransactionController::class, 'enkpay_transfer']);
-    Route::get('get-wallet', [TransactionController::class, 'get_wallet']);
-    Route::post('self-cash-out', [TransactionController::class, 'self_cash_out']);
-
-    Route::get('get-terminals', [TransactionController::class, 'get_terminals']);
-
-
-
-
-
-
-
-    //Pin Verify
-    Route::post('verify-pin', [TransactionController::class, 'verify_pin']);
-
-
-
-// Transfer Properties
-    Route::get('transfer-properties', [TransactionController::class, 'transfer_properties']);
-    Route::get('selfcashout-properties', [TransactionController::class, 'selfcashout_properties']);
-
-
-
-    //Airtime
-    Route::post('buy-airtime', [AirtimeController::class, 'buy_airtime']);
-
-    //Buy Data Bundle
-    Route::post('buy-data', [DataController::class, 'buy_data']);
-
-    //Power
-    Route::post('verify-account', [PowerController::class, 'verify_account']);
-    Route::post('buy-power', [PowerController::class, 'buy_power']);
-
-    //Get  Transactions
-    Route::get('all-transaction', [TransactionController::class, 'get_all_transactions']);
-    Route::get('get-pos', [TransactionController::class, 'pos']);
-    Route::get('get-transfers', [TransactionController::class, 'transfer']);
-    Route::get('get-vas', [TransactionController::class, 'vas']);
-
-    //Bank Transfer
-    Route::post('bank-transfer', [TransactionController::class, 'bank_transfer']);
-
-    //Virtual Acccount
-    Route::post('create-account', [VirtualaccountController::class, 'create_account']);
-    Route::get('get-virtual-account', [VirtualaccountController::class, 'get_virtual_account']);
-
-
-
-
-
-    //Education
-    Route::get('get-waec', [EducationController::class, 'get_waec']);
-    Route::post('buy-waec', [EducationController::class, 'buy_waec']);
-
-    //Cable
-    Route::get('get-cable-plan', [CableController::class, 'get_cable_plan']);
-    Route::post('buy-cable', [CableController::class, 'buy_cable']);
-
-
-    //
-    Route::post('logout', [LoginController::class, 'logout']);
-
-
-
-    //
-
-
-
-
-
-    //insurance
-    Route::get('get-motor-insurance', [InsuranceController::class, 'third_party_motor']);
-    Route::get('get-health-insurance', [InsuranceController::class, 'health_insurance']);
-    Route::get('personal-accident-insurance', [InsuranceController::class, 'personal_accident_insurance']);
-    Route::get('home-cover-insurance', [InsuranceController::class, 'home_cover_insurance']);
-    Route::get('extra-home-cover-insurance', [InsuranceController::class, 'extra_home_cover_insurance']);
-
-
-
-
-
-
-    Route::post('confirm-pay', [WebpaymentController::class, 'confirm_pay']);
-
-
-
-
+    //Payment
+    Route::post('pay-now', [PaymentController::class, 'create_order']);
+    Route::post('verify-payment', [PaymentController::class, 'verify_payment']);
+    
 
 
 

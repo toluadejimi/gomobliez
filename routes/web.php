@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\RealTimeMessage;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Events\NewMessage;
@@ -31,25 +32,18 @@ Route::get('/t', function () {
 
 
 
+Route::group(['prefix' => 'payment-mobile'], function () {
+    Route::get('/', 'PaymentController@payment')->name('payment-mobile');
+    Route::get('set-payment-method/{name}', 'PaymentController@set_payment_method')->name('set-payment-method');
+});
 
-//Route::get('/', [TestController::class, 'testevent']);
-//
-
-
-
-Route::get('reset-pin', [ProfileController::class, 'reset_pin']);
-Route::get('reset-password', [ProfileController::class, 'reset_password']);
-
-
-Route::post('reset-pin-now', [ProfileController::class, 'reset_pin_now']);
-Route::post('reset-password-now', [ProfileController::class, 'reset_password_now']);
-
-
-Route::get('success', [ProfileController::class, 'success']);
+Route::get('return', [PaymentController::class, 'return']);
+Route::get('cancel', [PaymentController::class, 'payment_decline']);
 
 
 
 
 
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('pay-paypal', 'PaypalPaymentController@payWithpaypal')->name('pay-paypal');
+Route::get('payment-success', 'PaymentController@success')->name('payment-success');
+Route::get('payment-fail', 'PaymentController@fail')->name('payment-fail');
