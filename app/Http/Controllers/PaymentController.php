@@ -238,7 +238,7 @@ class PaymentController extends Controller
                 'status' => 4
             ]);
 
-            $data = "Payment Declined";
+            $data = "Your payment was not proccessed, try again;
 
             return view ('decline', compact('data'));
 
@@ -271,5 +271,5 @@ class PaymentController extends Controller
 
 
 
- 
+
 }
