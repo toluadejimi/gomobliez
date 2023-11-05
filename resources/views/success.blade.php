@@ -72,27 +72,29 @@
 
             <td width="36" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
           </tr>
-          
-          
-          
+
+
+
             <td style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
             <td style="border-bottom: 1px solid #D3D1D1; color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
 
-         
+
           </tr>
           <tr height="17">
           </tr>
           <tr align="center">
             <td width="36" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
             <td style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
-              
+
             <style>button {
             display: inline-block;
-            background-color: #0aa133;
+            background-color: #f1d32a;
             padding: 10px;
             width: 150px;
-            color: #84c727;
+            color: #fffff;
             text-align: center;
+            text-size: 10px;
+
             border: 2px double #cccccc; /* add this line */
             border-radius: 10px; /* add this line */
             font-size: 18px; /* add this line */
@@ -103,17 +105,17 @@
                 <input type="text" hidden value="{{$status}}" name="status" />
                 <button type="submit" /> Go back Home</button>
             </form>
-            
-            
+
+
                 </tr>
           <tr height="50">
           </tr>
 
             <td width="36" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
           </tr>
-          
-          
-   
+
+
+
 
         </table>
         <!-- Generic Pod Left Aligned with Price breakdown End -->
