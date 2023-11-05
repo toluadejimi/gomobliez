@@ -99,7 +99,6 @@
               }             </style>
 
               <form action="{{ $url }}">
-                @csrf
                 <button type="submit" value=" " /> Go back Home</button>
             </form>
             
