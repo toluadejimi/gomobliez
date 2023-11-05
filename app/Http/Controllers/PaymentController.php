@@ -262,23 +262,16 @@ class PaymentController extends Controller
     {
 
         $data = "Payment processing...";
-        $url = url('')."/verify-payment"."?order_token=$request->token&status=$request->status";
+        $order_token = $request->token;
+        $status = $request->status;
 
-
-        return view('success', compact('data', 'url'));
-
-
-
-
-
-
-
-
-
-
-
+        
+        return view('success', compact('data','order_token','status'));
 
     }
+
+
+
     // public function save_customer_id(Request $request)
     // {
 
