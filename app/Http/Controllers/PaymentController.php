@@ -145,6 +145,9 @@ class PaymentController extends Controller
     {
 
 
+        dd($request->all());
+
+
         if ($request->status == 'true') {
 
             $token = pay_pal_token();
@@ -260,6 +263,12 @@ class PaymentController extends Controller
 
         $data = "Payment processing...";
         $url = url('')."/verify-payment"."?token=$request->token&status=$request->status";
+
+
+        dd($url);
+
+
+
         return view('success', compact('data', 'url'));
 
 
