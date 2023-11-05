@@ -145,6 +145,15 @@ class PaymentController extends Controller
     {
 
 
+        if ($request->status == 'false') {
+
+
+            echo "Payment_declined";
+
+
+
+        }
+
 
 
         if ($request->status == 'true') {
