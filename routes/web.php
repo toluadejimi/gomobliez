@@ -37,8 +37,9 @@ Route::group(['prefix' => 'payment-mobile'], function () {
     Route::get('set-payment-method/{name}', 'PaymentController@set_payment_method')->name('set-payment-method');
 });
 
-Route::get('return', [PaymentController::class, 'return']);
+Route::get('success', [PaymentController::class, 'return']);
 Route::get('cancel', [PaymentController::class, 'payment_decline']);
+
 
 
 

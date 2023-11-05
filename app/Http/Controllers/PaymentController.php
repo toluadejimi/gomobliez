@@ -16,7 +16,7 @@ class PaymentController extends Controller
 
     public function create_order(request $request)
     {
-       
+
         $token = pay_pal_token();
         $trxID = "GFUND-".date('ymd-his');
 
@@ -137,7 +137,7 @@ class PaymentController extends Controller
 
 
 
-      
+
     }
 
 
@@ -188,9 +188,10 @@ class PaymentController extends Controller
                 ]);
 
 
-                $data = 
-                return view ('success', compact('data'));
-
+                return response()->json([
+                    'status' => true,
+                    'message' => "Payment successful",
+                ], 200);
 
 
             }else{
@@ -200,13 +201,13 @@ class PaymentController extends Controller
                     'status' => false,
                     'message' => "$status",
                 ], 500);
-    
+
 
 
             }
 
 
-            
+
 
 
 
