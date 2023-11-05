@@ -59,7 +59,7 @@
           <tr align="center">
             <td width="36" style="color: #AAFF00; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
             <td class="text-primary" style="color: #F16522; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
-              <h1 style="color: #50C878; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 30px; font-weight: 700; line-height: 34px; margin-bottom: 0; margin-top: 0;">Payment Successful</h1>
+              <h1 style="color: #50C878; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 25px; font-weight: 700; line-height: 34px; margin-bottom: 0; margin-top: 0;">Payment Successful</h1>
 
           </tr>
           <tr height="17">
@@ -91,7 +91,7 @@
             background-color: #f1d32a;
             padding: 10px;
             width: 150px;
-            color: #fffff;
+            color: #D3D1D1;
             text-align: center;
             text-size: 10px;
 
