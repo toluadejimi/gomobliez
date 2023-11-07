@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "africastalking/africastalking",
-            "version": "v3.0.0",
-            "version_normalized": "3.0.0.0",
+            "version": "v3.0.1",
+            "version_normalized": "3.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AfricasTalkingLtd/africastalking-php.git",
-                "reference": "94e17a13eaaf782cf7697bfc7da020398a2b6f13"
+                "reference": "eaa02a84d5743692bd212d1cc9874c0906d9ec3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AfricasTalkingLtd/africastalking-php/zipball/94e17a13eaaf782cf7697bfc7da020398a2b6f13",
-                "reference": "94e17a13eaaf782cf7697bfc7da020398a2b6f13",
+                "url": "https://api.github.com/repos/AfricasTalkingLtd/africastalking-php/zipball/eaa02a84d5743692bd212d1cc9874c0906d9ec3c",
+                "reference": "eaa02a84d5743692bd212d1cc9874c0906d9ec3c",
                 "shasum": ""
             },
             "require": {
@@ -22,7 +22,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^9.3"
             },
-            "time": "2020-10-11T00:52:15+00:00",
+            "time": "2023-11-07T11:35:25+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -55,7 +55,7 @@
             ],
             "support": {
                 "issues": "https://github.com/AfricasTalkingLtd/africastalking-php/issues",
-                "source": "https://github.com/AfricasTalkingLtd/africastalking-php/tree/v3.0.0"
+                "source": "https://github.com/AfricasTalkingLtd/africastalking-php/tree/v3.0.1"
             },
             "install-path": "../africastalking/africastalking"
         },
@@ -333,6 +333,66 @@
                 }
             ],
             "install-path": "../brick/math"
+        },
+        {
+            "name": "cartalyst/stripe",
+            "version": "v2.4.6",
+            "version_normalized": "2.4.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cartalyst/stripe.git",
+                "reference": "e75b4d714fec5f034d533e55f5365f0229b5686d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cartalyst/stripe/zipball/e75b4d714fec5f034d533e55f5365f0229b5686d",
+                "reference": "e75b4d714fec5f034d533e55f5365f0229b5686d",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~6.0|~7.0",
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "time": "2021-10-09T10:40:49+00:00",
+            "type": "library",
+            "extra": {
+                "component": "package",
+                "branch-alias": {
+                    "dev-master": "2.4.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Cartalyst\\Stripe\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Cartalyst LLC",
+                    "email": "help@cartalyst.com",
+                    "homepage": "https://cartalyst.com"
+                }
+            ],
+            "description": "A comprehensive Stripe API package.",
+            "keywords": [
+                "cartalyst",
+                "php",
+                "stripe"
+            ],
+            "support": {
+                "issues": "https://github.com/cartalyst/stripe/issues",
+                "source": "https://github.com/cartalyst/stripe/tree/v2.4.6"
+            },
+            "install-path": "../cartalyst/stripe"
         },
         {
             "name": "cboden/ratchet",
@@ -3207,17 +3267,17 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.18.0",
-            "version_normalized": "3.18.0.0",
+            "version": "3.19.0",
+            "version_normalized": "3.19.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "015633a05aee22490495159237a5944091d8281e"
+                "reference": "1b2aa10f2326e0351399b8ce68e287d8e9209a83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/015633a05aee22490495159237a5944091d8281e",
-                "reference": "015633a05aee22490495159237a5944091d8281e",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/1b2aa10f2326e0351399b8ce68e287d8e9209a83",
+                "reference": "1b2aa10f2326e0351399b8ce68e287d8e9209a83",
                 "shasum": ""
             },
             "require": {
@@ -3250,7 +3310,7 @@
                 "phpunit/phpunit": "^9.5.11|^10.0",
                 "sabre/dav": "^4.3.1"
             },
-            "time": "2023-10-20T17:59:40+00:00",
+            "time": "2023-11-07T09:04:28+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3284,7 +3344,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.18.0"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.19.0"
             },
             "funding": [
                 {
@@ -3300,17 +3360,17 @@
         },
         {
             "name": "league/flysystem-local",
-            "version": "3.18.0",
-            "version_normalized": "3.18.0.0",
+            "version": "3.19.0",
+            "version_normalized": "3.19.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-local.git",
-                "reference": "e7381ef7643f658b87efb7dbe98fe538fb1bbf32"
+                "reference": "8d868217f9eeb4e9a7320db5ccad825e9a7a4076"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-local/zipball/e7381ef7643f658b87efb7dbe98fe538fb1bbf32",
-                "reference": "e7381ef7643f658b87efb7dbe98fe538fb1bbf32",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-local/zipball/8d868217f9eeb4e9a7320db5ccad825e9a7a4076",
+                "reference": "8d868217f9eeb4e9a7320db5ccad825e9a7a4076",
                 "shasum": ""
             },
             "require": {
@@ -3319,7 +3379,7 @@
                 "league/mime-type-detection": "^1.0.0",
                 "php": "^8.0.2"
             },
-            "time": "2023-10-19T20:07:13+00:00",
+            "time": "2023-11-06T20:35:28+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3347,7 +3407,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem-local/issues",
-                "source": "https://github.com/thephpleague/flysystem-local/tree/3.18.0"
+                "source": "https://github.com/thephpleague/flysystem-local/tree/3.19.0"
             },
             "funding": [
                 {
@@ -8792,17 +8852,17 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v13.2.0",
-            "version_normalized": "13.2.0.0",
+            "version": "v13.2.1",
+            "version_normalized": "13.2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "e0a960c8655b21b21c3ba2e5927f432eeda9105f"
+                "reference": "3f39dcd583b5e9ff2b65281034d38c79358a8095"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/e0a960c8655b21b21c3ba2e5927f432eeda9105f",
-                "reference": "e0a960c8655b21b21c3ba2e5927f432eeda9105f",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/3f39dcd583b5e9ff2b65281034d38c79358a8095",
+                "reference": "3f39dcd583b5e9ff2b65281034d38c79358a8095",
                 "shasum": ""
             },
             "require": {
@@ -8816,7 +8876,7 @@
                 "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^5.7 || ^9.0"
             },
-            "time": "2023-11-02T22:32:22+00:00",
+            "time": "2023-11-06T23:24:49+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -8848,7 +8908,7 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v13.2.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v13.2.1"
             },
             "install-path": "../stripe/stripe-php"
         },

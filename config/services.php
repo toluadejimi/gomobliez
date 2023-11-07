@@ -33,6 +33,8 @@ return [
 
     'stripe' => [
         'secret' => env('STRIPE_SECRET'),
+        'publish' => env('STRIPE_PUBLISH'),
+
    ],
 
 ];

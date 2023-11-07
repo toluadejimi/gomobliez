@@ -42,6 +42,12 @@ Route::get('cancel', [PaymentController::class, 'payment_decline']);
 
 Route::get('verify-payment', [PaymentController::class, 'verify_payment']);
 
+Route::get('stripe', [PaymentController::class, 'stripe']);
+
+Route::post('charge', [PaymentController::class, 'charge']);
+
+
+
 
 
 

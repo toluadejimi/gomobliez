@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Plan;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Session;
+use Stripe;
+
 
 
 
@@ -17,120 +21,136 @@ class PaymentController extends Controller
     public function create_order(request $request)
     {
 
-        $token = pay_pal_token();
-        $trxID = "GFUND-".date('ymd-his');
 
 
-        if($request->amount == null){
 
 
-            return response()->json([
-                'status' => false,
-                'message' => "Amount can not be empty",
-            ], 500);
+
+        if ($request->vendor == 'pay_pal')
+        {
+            $token = pay_pal_token();
+            $trxID = "GFUND-" . date('ymd-his');
 
 
-        }
+            if ($request->amount == null) {
 
 
-        if($request->amount > 1000){
+                return response()->json([
+                    'status' => false,
+                    'message' => "Amount can not be empty",
+                ], 500);
+            }
 
 
-            return response()->json([
-                'status' => false,
-                'message' => "Amount can not be be more than $1000",
-            ], 500);
+            if ($request->amount > 1000) {
 
 
-        }
+                return response()->json([
+                    'status' => false,
+                    'message' => "Amount can not be be more than $1000",
+                ], 500);
+            }
 
 
-        if($request->amount < 10){
+            if ($request->amount < 10) {
 
 
-            return response()->json([
-                'status' => false,
-                'message' => "Amount can not be be less than $10",
-            ], 500);
+                return response()->json([
+                    'status' => false,
+                    'message' => "Amount can not be be less than $10",
+                ], 500);
+            }
 
 
-        }
+            $url = url('');
 
-
-        $url = url('');
-
-        $curl = curl_init();
-        $data = [
-            "intent" => "CAPTURE",
-            "purchase_units" => [[
-                "reference_id" => "$trxID",
-                "amount" => [
-                    "value" => "$request->amount",
-                    "currency_code" => "USD"
+            $curl = curl_init();
+            $data = [
+                "intent" => "CAPTURE",
+                "purchase_units" => [[
+                    "reference_id" => "$trxID",
+                    "amount" => [
+                        "value" => "$request->amount",
+                        "currency_code" => "USD"
+                    ]
+                ]],
+                "application_context" => [
+                    "cancel_url" => "$url/cancel?status=false",
+                    "return_url" => "$url/return?status=true"
                 ]
-            ]],
-            "application_context" => [
-                "cancel_url" => "$url/cancel?status=false",
-                "return_url" => "$url/return?status=true"
-            ]
-        ];
+            ];
 
-        $post_data = json_encode($data);
+            $post_data = json_encode($data);
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api-m.sandbox.paypal.com/v2/checkout/orders',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $post_data,
-            CURLOPT_HTTPHEADER => array(
-                "Authorization:Bearer" . " " . $token,
-                'Content-Type: application/json',
-            ),
-        ));
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api-m.sandbox.paypal.com/v2/checkout/orders',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $post_data,
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization:Bearer" . " " . $token,
+                    'Content-Type: application/json',
+                ),
+            ));
 
 
-        $var = curl_exec($curl);
+            $var = curl_exec($curl);
 
-        curl_close($curl);
+            curl_close($curl);
 
-        $var = json_decode($var);
-        $link = $var->links[1]->href ?? null;
-        $query = parse_url($link, PHP_URL_QUERY);
-        parse_str($query, $query_params);
-        $token = $query_params['token'];
+            $var = json_decode($var);
+            $link = $var->links[1]->href ?? null;
+            $query = parse_url($link, PHP_URL_QUERY);
+            parse_str($query, $query_params);
+            $token = $query_params['token'];
 
-        $trx = new Transaction();
-        $trx->trx_id = $trxID;
-        $trx->user_id = Auth::id();
-        $trx->amount = $request->amount;
-        $trx->status = 3; //initiated;
-        $trx->type = 2;//credit
-        $trx->token = $token;
-        $trx->save();
+            $trx = new Transaction();
+            $trx->trx_id = $trxID;
+            $trx->user_id = Auth::id();
+            $trx->amount = $request->amount;
+            $trx->status = 3; //initiated;
+            $trx->type = 2; //credit
+            $trx->token = $token;
+            $trx->save();
 
 
 
 
-        if($link != null){
+            if ($link != null) {
+
+                return response()->json([
+                    'status' => true,
+                    'href' => "$link",
+                ], 200);
+            } else {
+
+
+                return response()->json([
+                    'status' => false,
+                    'message' => "Something Went Wrong",
+                ], 500);
+            }
+        }
+
+        if ($request->vendor == "stripe") {
+
+
+            $email = Auth::user()->email;
+            $url = url('')."/stripe?amount=$request->amount&email=$email";
+
+
 
             return response()->json([
                 'status' => true,
-                'href' => "$link",
+                'url' => $url,
             ], 200);
 
 
-        }else{
-
-
-            return response()->json([
-                'status' => false,
-                'message' => "Something Went Wrong",
-            ], 500);
 
 
         }
@@ -141,6 +161,53 @@ class PaymentController extends Controller
     }
 
 
+    public function charge(request $request){
+
+
+        $tok = $request->stripeToken;
+        $final = str_replace(" ", "", $tok);
+
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+       $stripe =  Stripe\Charge::create ([
+                "amount" => $request->amount*100,
+                "currency" => "USD",
+                "source" => $final,
+                "description" => "Wallet funding on Gomobilez",
+        ]);
+
+        $status = $stripe->statu ?? null;
+
+        if($status == 'succeeded'){
+
+            User::where('email', $request->email)->increment('wallet', $request->amount);
+
+            echo "Payment_successful";
+
+        }else{
+                echo "Payment_declined";
+        }
+
+
+
+
+
+    }
+
+
+    public function stripe(request $request){
+        $amount = $request->amount;
+        $email = $request->email;
+
+        return view('stripe', compact('amount', 'email'));
+
+
+    }
+
+
+
+
+
+
     public function verify_payment(request $request)
     {
 
@@ -149,9 +216,6 @@ class PaymentController extends Controller
 
 
             echo "Payment_declined";
-
-
-
         }
 
 
@@ -192,7 +256,7 @@ class PaymentController extends Controller
 
 
 
-            if($ss == "COMPLETED"){
+            if ($ss == "COMPLETED") {
                 $user_id =  Transaction::where('token', $request->token)->first()->user_id ?? null;
                 User::where('id', $user_id)->increment('wallet', $order_amount);
                 Transaction::where('token', $request->token)->update([
@@ -209,7 +273,7 @@ class PaymentController extends Controller
                 // ], 200);
 
 
-            }else{
+            } else {
 
 
                 echo  $status ?? "Somthingwent wrong";
@@ -222,12 +286,6 @@ class PaymentController extends Controller
 
 
             }
-
-
-
-
-
-
         }
     }
 
@@ -241,7 +299,7 @@ class PaymentController extends Controller
 
         $ss = $request->status;
 
-        if($ss == "false"){
+        if ($ss == "false") {
 
             Transaction::where('token', $request->token)->update([
                 'status' => 4
@@ -253,9 +311,8 @@ class PaymentController extends Controller
 
 
 
-            return view ('decline', compact('data', 'order_token', 'status'));
-
-        }else{
+            return view('decline', compact('data', 'order_token', 'status'));
+        } else {
 
 
             return response()->json([
@@ -263,8 +320,6 @@ class PaymentController extends Controller
                 'message' => "Something Went Wrong",
             ], 500);
         }
-
-
     }
 
 
@@ -278,11 +333,6 @@ class PaymentController extends Controller
         $status = $request->status;
 
 
-        return view('success', compact('data','order_token','status'));
-
+        return view('success', compact('data', 'order_token', 'status'));
     }
-
-
-
-
 }

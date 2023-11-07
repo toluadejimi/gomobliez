@@ -36,8 +36,8 @@ class LoginController extends Controller
         $credentials = request(['email', 'password']);
 
 
-        Passport::tokensExpireIn(Carbon::now()->addMinutes(20));
-        Passport::refreshTokensExpireIn(Carbon::now()->addMinutes(20));
+        Passport::tokensExpireIn(Carbon::now()->addMinutes(50));
+        Passport::refreshTokensExpireIn(Carbon::now()->addMinutes(50));
 
         $check_status = User::where('email', $email)->first()->status ?? null;
 
@@ -46,7 +46,7 @@ class LoginController extends Controller
             return response()->json([
                 'status' => $this->failed,
                 'message' => 'Your account has restricted on Gomobliez',
-            ], 500);
+            ], 401);
         }
 
 
@@ -54,7 +54,7 @@ class LoginController extends Controller
             return response()->json([
                 'status' => $this->failed,
                 'message' => 'Phone No or Password Incorrect'
-            ], 500);
+            ], 401);
         }
 
 
@@ -93,7 +93,7 @@ class LoginController extends Controller
                 'status' => $this->failed,
                 'message' => 'You can not login at the moment, Please contact  support',
 
-            ], 500);
+            ], 401);
         }
 
             $token = auth()->user()->createToken('API Token')->accessToken;
@@ -101,11 +101,6 @@ class LoginController extends Controller
             $myplan = MyPlan::select('id','user_id', 'plan_id', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
             $plans = Plan::select('id','title','amount', 'period')->get();
             $billing = User::select('first_name', 'last_name','city', 'street', 'zipcode', 'country', 'state', 'phone')->where('id', Auth::id())->get();
-
-
-
-
-
             $user = Auth()->user();
             $user['token'] = $token;
             $user['my_plan'] = $myplan;
@@ -116,9 +111,7 @@ class LoginController extends Controller
 
             $keys = ApiKey::select('vendor', 'encrypted_public', 'encrypted_secret')->get();
             foreach ($keys as $data){
-
                 $key[] = $data;
-
             }
 
 

@@ -40,7 +40,7 @@ class RegisterationController extends Controller
                 return response()->json([
                     'status' => $this->failed,
                     'message' => 'Account has been Restricted on Gomobliez',
-                ], 500);
+                ], 401);
             }
 
             if ($check_email == $email && $check_status == 1) {
@@ -48,7 +48,7 @@ class RegisterationController extends Controller
                 return response()->json([
                     'status' => $this->failed,
                     'message' => 'Email Already Exist, Login your account to continue',
-                ], 500);
+                ], 409);
             }
 
             if ($check_email == null) {
@@ -136,7 +136,7 @@ class RegisterationController extends Controller
                 return response()->json([
                     'status' => $this->failed,
                     'message' => $validator->messages()->first(),
-                ], 500);
+                ], 400);
             }
 
             $ck = User::where('email', $request->email)->first()->is_email_verified;
@@ -144,7 +144,7 @@ class RegisterationController extends Controller
                 return response()->json([
                     'status' => $this->failed,
                     'message' => 'Your Email has not been verified, Kindly verify your email to register',
-                ], 500);
+                ], 409);
             }
 
 
@@ -208,7 +208,7 @@ class RegisterationController extends Controller
                 return response()->json([
                     'status' => $this->success,
                     'message' => 'Your account has been successfully created',
-                ], 200);
+                ], 201);
             }
 
 
@@ -216,7 +216,10 @@ class RegisterationController extends Controller
             return response()->json([
                 'status' => $this->failed,
                 'message' => 'Email Already Exist',
-            ], 200);
+            ], 409);
+
+
+
         } catch (\Exception $th) {
             return $th->getMessage();
         }
@@ -237,7 +240,7 @@ class RegisterationController extends Controller
                 return response()->json([
                     'status' => $this->failed,
                     'message' => 'Email could not be found on Gomobilez',
-                ], 500);
+                ], 401);
             }
 
             if ($check_email == $request->email) {
@@ -262,6 +265,8 @@ class RegisterationController extends Controller
                     'status' => $this->success,
                     'message' => 'OTP Code has been resent successfully',
                 ], 200);
+
+
             } else {
 
                 return response()->json([
@@ -293,7 +298,7 @@ class RegisterationController extends Controller
                 return response()->json([
                     'status' => $this->failed,
                     'message' => 'Email or code can not be null',
-                ], 500);
+                ], 400);
             }
 
 
@@ -302,7 +307,7 @@ class RegisterationController extends Controller
                 return response()->json([
                     'status' => $this->failed,
                     'message' => 'Invalid code, try again',
-                ], 500);
+                ], 400);
             }
 
             if ($get_code  == $code) {
@@ -320,6 +325,8 @@ class RegisterationController extends Controller
                     'message' => 'OTP Code verified successfully',
                 ], 200);
             }
+
+
         } catch (\Exception $th) {
             return $th->getMessage();
         }
@@ -348,7 +355,7 @@ class RegisterationController extends Controller
                     'status' => $this->failed,
                     'message' => 'Account not found, please sign up',
 
-                ], 500);
+                ], 404);
             }
 
 
@@ -374,6 +381,8 @@ class RegisterationController extends Controller
                     'status' => $this->success,
                     'message' => 'Check your inbox or spam for OTP Code',
                 ], 200);
+
+
             } else {
 
                 return response()->json([
@@ -381,8 +390,10 @@ class RegisterationController extends Controller
                     'status' => $this->failed,
                     'message' => 'User not found on our system',
 
-                ], 500);
+                ], 404);
             }
+
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => $this->failed,
@@ -404,7 +415,7 @@ class RegisterationController extends Controller
                 return response()->json([
                     'status' => $this->failed,
                     'message' => 'Password does not match',
-                ], 500);
+                ], 400);
             }
 
 
@@ -414,7 +425,7 @@ class RegisterationController extends Controller
                 return response()->json([
                     'status' => $this->failed,
                     'message' => 'Account not found',
-                ], 500);
+                ], 404);
             }
 
 
@@ -426,6 +437,8 @@ class RegisterationController extends Controller
                 'status' => $this->success,
                 'message' => 'Your password has been successfully updated',
             ], 200);
+
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => $this->failed,
