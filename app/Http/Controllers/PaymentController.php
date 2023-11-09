@@ -113,7 +113,7 @@ class PaymentController extends Controller
 
 
 
-            $body['url'] = $link;
+            $body['href'] = $link;
 
 
             $trx = new Transaction();
@@ -151,7 +151,7 @@ class PaymentController extends Controller
 
 
             $email = Auth::user()->email;
-            $body['url'] = url('')."/stripe?amount=$request->amount&email=$email";
+            $body['href'] = url('')."/stripe?amount=$request->amount&email=$email";
 
 
 
