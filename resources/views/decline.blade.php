@@ -1,182 +1,258 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html style="-moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased; background-color: #464646; margin: 0; padding: 0;">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="format-detection" content="telephone=no">
-  <title>Gomobilez</title>
 
+    <meta  charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="images/dollar.png" type="image/png" sizes="16x16">
+    <title>Payment Success</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
+<style>
+    body {
+        background: #ffea01;
+        margin: 0;
+        height: 100%;
 
-<body bgcolor="#d7d7d7" class="generic-template" style="-moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased; background-color: #d7d7d7; margin: 0; padding: 0;">
-  <!-- Header Start -->
-  <div class="bg-white header" bgcolor="#ffffff" style="background-color: white; width: 100%;">
-    <table align="center" bgcolor="#ffffff" style="border-left: 10px solid white; border-right: 10px solid white; max-width: 600px; width: 100%;">
-      <tr height="80">
-        <td align="Center" class="vertical-align-middle" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: middle;">
-          <a href="https://gomobilez.bplux.store/" target="_blank" style="-webkit-text-decoration-color: #F16522; color: #F16522; text-decoration: none; text-decoration-color: #F16522;">
-            <img src="https://gomobilez.bplux.store/public/assets/img/logoo.png" alt="GO" width="250" style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;">
-          </a>
-        </td>
-      </tr>
-    </table>
-  </div>
-  <!-- Header End -->
+    }
 
-  <!-- Content Start -->
-  <table cellpadding="0" cellspacing="0" cols="1" bgcolor="#d7d7d7" align="center" style="max-width: 600px;">
-    <tr bgcolor="#d7d7d7">
-      <td height="50" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-    </tr>
+    .button{
 
-    <!-- This encapsulation is required to ensure correct rendering on Windows 10 Mail app. -->
-    <tr bgcolor="#d7d7d7">
-      <td style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
-        <!-- Seperator Start -->
-        <table cellpadding="0" cellspacing="0" cols="1" bgcolor="#d7d7d7" align="center" style="max-width: 600px; width: 100%;">
-          <tr bgcolor="#d7d7d7">
-            <td height="30" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-          </tr>
-        </table>
-        <!-- Seperator End -->
+        background: #ffea01;
+        margin: 10px auto;
+        border: none;
+        color: white;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
 
-        <!-- Generic Pod Left Aligned with Price breakdown Start -->
-        <table align="center" cellpadding="0" cellspacing="0" cols="3" bgcolor="white" class="bordered-left-right" style="border-left: 10px solid #d7d7d7; border-right: 10px solid #d7d7d7; max-width: 600px; width: 100%;">
-          <tr height="50">
-            <td colspan="3" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-          </tr>
-          <tr align="center">
-            <td width="36" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-            <td class="text-primary" style="color: #AAFF00; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
-              <img src="https://gomobilez.bplux.store/public/assets/img/decline.gif" alt="GO" width="300" style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;">
-            </td>
-            <td width="36" style="color: #008000; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-          </tr>
-          <tr height="17">
-            <td colspan="3" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-          </tr>
-          <tr align="center">
-            <td width="36" style="color: #AAFF00; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-            <td class="text-primary" style="color: #F16522; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
-              <h1 style="color: #50C878; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 25px; font-weight: 700; line-height: 34px; margin-bottom: 0; margin-top: 0;">Payment Declined</h1>
-
-          </tr>
-          <tr height="17">
-          </tr>
-          <tr align="center">
-            <td width="36" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-            <td style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
-              <p style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">{{ $data }}</p>
-              <br>
-
-            <td width="36" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-          </tr>
-
-
-
-            <td style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-            <td style="border-bottom: 1px solid #D3D1D1; color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-
-
-          </tr>
-          <tr height="17">
-          </tr>
-          <tr align="center">
-            <td width="36" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-            <td style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
-
-            <style>button {
-            display: inline-block;
-            background-color: #f1482a;
-            padding: 10px;
-            width: 150px;
-            color: #ffffff;
-            text-align: center;
-            text-size: 10px;
-
-            border: 2px double #cccccc; /* add this line */
-            border-radius: 10px; /* add this line */
-            font-size: 18px; /* add this line */
-              }             </style>
-
-              <form action="https://gomobilez.bplux.store/verify-payment" method="GET">
-                <input type="text" hidden value="{{ $order_token }}" name="order_token" />
-                <input type="text" hidden value="{{$status}}" name="status" />
-                <button type="submit" /> Go back Home</button>
-            </form>
-
-
-                </tr>
-          <tr height="50">
-          </tr>
-
-            <td width="36" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-          </tr>
+    .button1 {
+        padding: 10px 24px;
+    }
 
 
 
 
-        </table>
-        <!-- Generic Pod Left Aligned with Price breakdown End -->
+    .container {
+        max-width: 380px;
+        margin: 100px auto;
+        overflow: hidden;
+    }
 
-        <!-- Seperator Start -->
-        <table cellpadding="0" cellspacing="0" cols="1" bgcolor="#d7d7d7" align="center" style="max-width: 600px; width: 100%;">
-          <tr bgcolor="#d7d7d7">
-            <td height="50" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-          </tr>
-        </table>
-        <!-- Seperator End -->
+    .printer-top {
+        z-index: 1;
+        border: 6px solid #666666;
+        height: 6px;
+        border-bottom: 0;
+        border-radius: 6px 6px 0 0;
+        background: #333333;
+    }
 
-      </td>
-    </tr>
-  </table>
-  <!-- Content End -->
+    .printer-bottom {
+        z-index: 0;
+        border: 6px solid #666666;
+        height: 6px;
+        border-top: 0;
+        border-radius: 0 0 6px 6px;
+        background: #333333;
+    }
 
-  <!-- Footer Start -->
-  <div class="bg-gray-dark footer" bgcolor="#464646" height="165" style="background-color: #464646; width: 100%;">
-    <table align="center" bgcolor="#464646" style="max-width: 600px; width: 100%;">
+    .paper-container {
+        position: relative;
+        overflow: hidden;
+        height: 467px;
+    }
 
-      <tr height="15">
-        <td style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-      </tr>
+    .paper {
+        background: #ffffff;
+        font-family: 'Poppins', sans-serif;
+        height: 447px;
+        position: absolute;
+        z-index: 2;
+        margin: 0 12px;
+        margin-top: -12px;
+        animation: print 2000ms cubic-bezier(0.68, -0.55, 0.265, 0.9);
+    }
 
-      <tr>
-        <td align="center" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
-          <img src="https://gomobilez.bplux.store/public/assets/img/logoo.png" alt="GO" width="150" style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;">
-        </td>
-      </tr>
+    .main-contents {
+        margin: 0 12px;
+        padding: 24px;
+    }
 
-      <tr height="2">
-        <td style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-      </tr>
+    // Paper Jagged Edge
+    .jagged-edge {
+        position: relative;
+        height: 20px;
+        width: 100%;
+        margin-top: -1px;
+    }
 
-      <tr>
-        <td align="center" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
-          <p class="text-white" style="color: white; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">Copyright © GOMOBILEZ. All rights reserved.</p>
-          <p class="text-primary" style="color: #F16522; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; margin: 0;">
-          </p>
-        </td>
-      </tr>
+    .jagged-edge:after {
+        content: "";
+        display: block;
+        position: absolute;
+        //bottom: 20px;
+        left: 0;
+        right: 0;
+        height: 20px;
+        background: linear-gradient(45deg,
+            transparent 33.333%,
+            #ffffff 33.333%,
+            #ffffff 66.667%,
+            transparent 66.667%),
+            linear-gradient(-45deg,
+            transparent 33.333%,
+            #ffffff 33.333%,
+            #ffffff 66.667%,
+            transparent 66.667%);
+        background-size: 16px 40px;
+        background-position: 0 -20px;
+    }
 
-      <tr height="15">
-        <td style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-      </tr>
+    .success-icon {
+        text-align: center;
+        font-size: 30px;
+        height: 100px;
+        background: #ffdbdb;
+        border-radius: 50%;
+        width: 20%;
+        height: 50px;
+        margin: 10px auto;
+        padding: 4px ;
+        color: #fff;
+    }
 
-      <tr>
-        <td align="center" style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;">
-          <a href="https://www.facebook.com/#" style="-webkit-text-decoration-color: #464646; color: #F16522; text-decoration: none; text-decoration-color: #464646;"><img width="25" htight="25" src="http://dgtlmrktng.s3.amazonaws.com/go/emails/generic-email-template/fb.png" target="_blank" alt="Facebook" style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;"></a>&nbsp;
-          <a href="https://www.youtube.com/user/#l" style="-webkit-text-decoration-color: #464646; color: #F16522; text-decoration: none; text-decoration-color: #464646;"><img width="25" htight="25" src="http://dgtlmrktng.s3.amazonaws.com/go/emails/generic-email-template/youtube.png" target="_blank" alt="Youtube" style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;"></a>&nbsp;
-          <a href="https://www.linkedin.com/company/#" style="-webkit-text-decoration-color: #464646; color: #F16522; text-decoration: none; text-decoration-color: #464646;"><img width="25" htight="25" src="http://dgtlmrktng.s3.amazonaws.com/go/emails/generic-email-template/linkedin.png" target="_blank" alt="LinkedIn" style="border: 0; font-size: 0; margin: 0; max-width: 100%; padding: 0;"></a>&nbsp;
-        </td>
-      </tr>
-      <tr height="10">
-        <td style="color: #464646; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 16px; vertical-align: top;"></td>
-      </tr>
+    .success-title {
+        font-size: 18px;
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        color: #666;
+        font-weight: bold;
+        margin-bottom: 16px;
+    }
 
-    </table>
-  </div>
-  <!-- Footer End -->
+    .success-description {
+        font-size: 10px;
+        font-family: 'Poppins', sans-serif;
+        line-height: 21px;
+        color: #999;
+        text-align: center;
+        margin-bottom: 24px;
+    }
+
+    .order-details {
+        text-align: center;
+        color: #333;
+        font-weight: bold;
+        font-size: 12px;
+
+
+    }
+
+    .order-number-label {
+        font-size: 10px;
+        margin-bottom: 8px;
+    }
+
+    .order-number {
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        line-height: 20px;
+        font-size: 10px;
+        padding: 8px 0;
+        margin-bottom: 24px;
+    }
+
+    .complement {
+        font-size: 10px;
+        margin-bottom: 8px;
+        color: #393939;
+    }
+
+
+
+    @keyframes print {
+        0% {
+            transform: translateY(-90%);
+        }
+
+        100% {
+            transform: translateY(0%);
+        }
+    }
+
+    @-webkit-keyframes print {
+        0% {
+            -webkit-transform: translateY(-90%);
+        }
+
+        100% {
+            -webkit-transform: translateY(0%);
+        }
+    }
+
+    @-moz-keyframes print {
+        0% {
+            -moz-transform: translateY(-90%);
+        }
+
+        100% {
+            -moz-transform: translateY(0%);
+        }
+    }
+
+    @-ms-keyframes print {
+        0% {
+            -ms-transform: translateY(-90%);
+        }
+
+        100% {
+            -ms-transform: translateY(0%);
+        }
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="printer-top"></div>
+
+        <div class="paper-container">
+            <div class="printer-bottom"></div>
+
+            <div class="paper">
+                <div class="main-contents">
+                    <div class="success-icon">❌</div>
+                    <div class="success-title">
+                        Payment Declined
+                    </div>
+                    <div class="success-description">
+                        {{ $reason ?? "Your payment was not proccessed, Use another payment method"  }}
+                    </div>
+                    <div class="order-details">
+                        <div class="order-number-label">Transaction ID</div>
+                        <div class="order-number">{{ $ref ?? "Refrence No" }}</div>
+                    </div>
+
+                    <div class="col-md-12 text-center text-white mb-5">
+                        <a href="/home" class="button button1">Home</a>
+                    </div>
+
+
+
+
+                    <div class="complement text-center my-3">Thank You for choosing Gomobilez</div>
+
+                </div>
+                <div class="jagged-edge"></div>
+            </div>
+        </div>
+    </div>
 </body>
-
 </html>

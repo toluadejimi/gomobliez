@@ -46,6 +46,15 @@ Route::get('stripe', [PaymentController::class, 'stripe']);
 
 Route::post('charge', [PaymentController::class, 'charge']);
 
+Route::get('success', [PaymentController::class, 'success']);
+
+Route::get('decline', [PaymentController::class, 'decline']);
+
+Route::get('processing', [PaymentController::class, 'processing']);
+
+
+
+
 
 
 

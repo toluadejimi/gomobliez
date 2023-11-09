@@ -75,8 +75,8 @@ class PaymentController extends Controller
                     ]
                 ]],
                 "application_context" => [
-                    "cancel_url" => "$url/cancel?status=false",
-                    "return_url" => "$url/return?status=true"
+                    "cancel_url" => "$url/cancel?status=false&ref=$trxID",
+                    "return_url" => "$url/success?status=true&ref=$trxID&amount=$request->amount"
                 ]
             ];
 
@@ -175,11 +175,20 @@ class PaymentController extends Controller
                 "description" => "Wallet funding on Gomobilez",
         ]);
 
-        $status = $stripe->statu ?? null;
+
+
+        $status = $stripe->status ?? null;
 
         if($status == 'succeeded'){
 
             User::where('email', $request->email)->increment('wallet', $request->amount);
+
+            $ref = "FUND".random_int(0000,9999).date("his");
+
+            $amount = $request->amount;
+
+            return view('success', compact('ref', 'amount'));
+
 
             echo "Payment_successful";
 
@@ -191,6 +200,46 @@ class PaymentController extends Controller
 
 
 
+
+
+
+
+    }
+
+
+
+    public function success(request $request){
+
+
+        if($request->ref == null || $request->amount == null ){
+            $ref = "FUND".random_int(0000,9999).date("his");
+        }else{
+            $ref = $request->ref;
+            $amount = $request->amount;
+
+        }
+
+
+
+
+        return view('success', compact('ref', 'amount'));
+    }
+
+
+    public function decline(){
+
+        $ref = "FUND".random_int(0000,9999).date("his");
+
+
+        return view('decline', compact('ref'));
+    }
+
+    public function processing(){
+
+        $ref = "FUND".random_int(0000,9999).date("his");
+
+
+        return view('processing', compact('ref'));
     }
 
 
