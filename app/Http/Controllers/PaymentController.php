@@ -104,10 +104,17 @@ class PaymentController extends Controller
             curl_close($curl);
 
             $var = json_decode($var);
-            $link = $var->links[1]->href ?? null;
+            $link =$var->links[1]->href ?? null;
             $query = parse_url($link, PHP_URL_QUERY);
             parse_str($query, $query_params);
             $token = $query_params['token'];
+
+            // $final = json_encode($link);
+
+
+
+            $body['url'] = $link;
+
 
             $trx = new Transaction();
             $trx->trx_id = $trxID;
@@ -125,8 +132,11 @@ class PaymentController extends Controller
 
                 return response()->json([
                     'status' => true,
-                    'href' => "$link",
+                    'body' => $body,
                 ], 200);
+
+
+
             } else {
 
 
@@ -141,13 +151,13 @@ class PaymentController extends Controller
 
 
             $email = Auth::user()->email;
-            $url = url('')."/stripe?amount=$request->amount&email=$email";
+            $body['url'] = url('')."/stripe?amount=$request->amount&email=$email";
 
 
 
             return response()->json([
                 'status' => true,
-                'url' => $url,
+                'body' => $body,
             ], 200);
 
 
