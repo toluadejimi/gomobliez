@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisterationController;
 use App\Http\Controllers\Device\DeviceOrderController;
+use App\Http\Controllers\NumberController;
 use App\Http\Controllers\Transaction\TransactionController;
 use App\Http\Controllers\Transaction\EnkpayposController;
 use App\Http\Controllers\VAS\AirtimeController;
@@ -128,6 +129,13 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     //Payment
     Route::post('pay-now', [PaymentController::class, 'create_order']);
     Route::post('verify-payment', [PaymentController::class, 'verify_payment']);
+
+    Route::get('get-countries', [NumberController::class, 'get_countries']);
+    Route::post('get-list-numbers', [NumberController::class, 'get_list_numbers']);
+
+
+    
+
     
 
 
