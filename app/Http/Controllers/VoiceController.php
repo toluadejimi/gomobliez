@@ -31,7 +31,7 @@ class VoiceController extends Controller
         $response->play('https://api.twilio.com/cowbell.mp3', ['loop' => 10]);
 
 
-        $message =json_encode($request->all());
+        $message ="Callback====>>>>".json_encode($request->all());
         send_notification($message);
 
         return $response;
@@ -44,13 +44,15 @@ class VoiceController extends Controller
     public function fallback(request $request)
     {
         
-        // $response = new VoiceResponse();
-        // $response->play('https://api.twilio.com/cowbell.mp3', ['loop' => 10]);
+     
+            $response = new VoiceResponse();
+            $response->say('An application error has occurred.Please call back later!');
 
-        $message =json_encode($request->all());
-        send_notification($message);
+            $message ="Fallback====>>>>".json_encode($request->all());
+            send_notification($message);
 
-        //return $response;
+
+            return $response;
 
     
     }
