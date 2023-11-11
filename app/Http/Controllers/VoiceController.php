@@ -44,11 +44,12 @@ class VoiceController extends Controller
     {
         
      
-      
-        $message ="Voice====>>>>".json_encode($request->all());
-        send_notification($message);
 
-        return view('fallback');
+        
+        $response = new VoiceResponse();
+        $response->say('Hello!');
+        
+        return $response;
 
     
     }
