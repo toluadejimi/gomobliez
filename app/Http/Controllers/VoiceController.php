@@ -64,7 +64,7 @@ class VoiceController extends Controller
                         break;
                 }
         
-                return response($response)->header('Content-Type', 'text/xml');
+                return response($response)//->header('Content-Type', 'text/xml');
         
 
     
@@ -79,7 +79,7 @@ class VoiceController extends Controller
 
         $response = new VoiceResponse();
         $response->say('Hello, this is your Twilio voice response. Thank you for using Twilio.');
-        return response($response)->header('Content-Type', 'text/xml');
+        return response($response)//->header('Content-Type', 'text/xml');
 
 
      
