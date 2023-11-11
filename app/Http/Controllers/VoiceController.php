@@ -9,6 +9,8 @@ use app\Services\TwiloService;
 use Twilio\Exceptions\RestException;
 use Twilio\Jwt\Grants\VoiceGrant;
 use Twilio\Jwt\AccessToken;
+use Twilio\TwiML\VoiceResponse;
+
 
 
 
@@ -24,7 +26,10 @@ class VoiceController extends Controller
 
     public function callback(request $request)
     {
-        
+
+        $response = new VoiceResponse();
+        $response->play('https://api.twilio.com/cowbell.mp3', ['loop' => 10]);
+        echo $response;
     
     }
 
