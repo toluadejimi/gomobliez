@@ -56,15 +56,11 @@ class VoiceController extends Controller
     public function voice_url(request $request)
     {
 
-        $response = new VoiceResponse();
-        $response->play('https://api.twilio.com/cowbell.mp3', ['loop' => 10]);
-
-
+    
         $message ="Voice====>>>>".json_encode($request->all());
         send_notification($message);
 
-        return $response;
-
+     
         
     
     }
