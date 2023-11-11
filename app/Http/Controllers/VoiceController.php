@@ -44,27 +44,9 @@ class VoiceController extends Controller
     {
         
      
-
+                $response = "Goodbuy";
         
-        $response = new VoiceResponse();
-                // You can handle the user's input based on the Digits parameter
-                $digits = $request->input('Digits');
-
-                switch ($digits) {
-                    case '1':
-                        $response->say('You pressed 1. Connecting you to sales.');
-                        // Add logic to connect the call to the sales department
-                        break;
-                    case '2':
-                        $response->say('You pressed 2. Connecting you to support.');
-                        // Add logic to connect the call to the support department
-                        break;
-                    default:
-                        $response->say('Invalid input. Goodbye.');
-                        break;
-                }
-        
-                return response($response);//->header('Content-Type', 'text/xml');
+                return response($response)->header('Content-Type', 'text/xml');
         
 
     
