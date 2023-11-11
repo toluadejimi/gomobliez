@@ -3,21 +3,11 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisterationController;
-use App\Http\Controllers\Device\DeviceOrderController;
 use App\Http\Controllers\NumberController;
-use App\Http\Controllers\Transaction\TransactionController;
-use App\Http\Controllers\Transaction\EnkpayposController;
-use App\Http\Controllers\VAS\AirtimeController;
-use App\Http\Controllers\VAS\DataController;
-use App\Http\Controllers\VAS\PowerController;
-use App\Http\Controllers\VAS\EducationController;
-use App\Http\Controllers\VAS\CableController;
-use App\Http\Controllers\VAS\InsuranceController;
-use App\Http\Controllers\Virtual\VirtualaccountController;
-use App\Http\Controllers\Virtualcard\VirtualCardController;
-use App\Http\Controllers\WebpaymentController;
 use App\Http\Controllers\PaymentController;
-
+use App\Http\Controllers\Transaction\EnkpayposController;
+use App\Http\Controllers\Transaction\TransactionController;
+use App\Http\Controllers\Virtual\VirtualaccountController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -135,7 +125,7 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('buy-number', [NumberController::class, 'buy_number']);
     Route::post('delete-number', [NumberController::class, 'delete_number']);
     Route::post('send-message', [NumberController::class, 'send_message']);
-    Route::get('get-user', [NumberController::class, 'get_user']);
+    Route::get('get-user', [ProfileController::class, 'get_user']);
 
 
     
