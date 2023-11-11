@@ -44,14 +44,14 @@ class VoiceController extends Controller
     {
         
      
-            $response = new VoiceResponse();
-            $response->say('An application error has occurred.Please call back later!');
-
-            $message ="Fallback====>>>>".json_encode($request->all());
-            send_notification($message);
+        $response = new VoiceResponse();
+        $response->play('https://api.twilio.com/cowbell.mp3', ['loop' => 10]);
 
 
-            return $response;
+        $message ="Voice====>>>>".json_encode($request->all());
+        send_notification($message);
+
+        return $response;
 
     
     }
