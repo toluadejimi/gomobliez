@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Twilio Voice JavaScript SDK Quickstart</title>
-    <link rel="stylesheet" href="{{url('')}}/assets/app2.css" />
+    <link rel="stylesheet" href="{{url('')}}/public/assets/app2.css" />
     <!-- Stylesheets for -->>
     <link href="https://fonts.googleapis.com/css?family=Exo" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
@@ -123,7 +123,7 @@
     </main>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script type="text/javascript" src="{{url('')}}/assets/twillo.min.js"></script>
-    <script src="{{url('')}}/assets/app.js"></script>
+    <script type="text/javascript" src="{{url('')}}/public/assets/twillo.min.js"></script>
+    <script src="{{url('')}}/public/assets/app.js"></script>
   </body>
 </html>
