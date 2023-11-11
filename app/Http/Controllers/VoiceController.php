@@ -62,9 +62,8 @@ class VoiceController extends Controller
         send_notification($message);
 
         $response = new VoiceResponse();
-        $response->say('Hello!');
-        
-        return $response;
+        $response->say('Hello, this is your Twilio voice response. Thank you for using Twilio.');
+        return response($response)->header('Content-Type', 'text/xml');
 
 
      
