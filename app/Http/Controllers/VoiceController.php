@@ -28,14 +28,13 @@ class VoiceController extends Controller
     {
 
         $response = new VoiceResponse();
-        $response->play('https://api.twilio.com/cowbell.mp3', ['loop' => 10]);
-
+        $response->say('An application error has occurred.Please call back later!');
 
         $message ="Callback====>>>>".json_encode($request->all());
         send_notification($message);
 
-        return $response;
 
+        return $response;
 
        
     
@@ -60,13 +59,14 @@ class VoiceController extends Controller
     public function voice_url(request $request)
     {
 
-       // $response = new VoiceResponse();
-        // $response->play('https://api.twilio.com/cowbell.mp3', ['loop' => 10]);
+        $response = new VoiceResponse();
+        $response->play('https://api.twilio.com/cowbell.mp3', ['loop' => 10]);
 
-        $message =json_encode($request->all());
+
+        $message ="Voice====>>>>".json_encode($request->all());
         send_notification($message);
 
-        // return $response;
+        return $response;
 
         
     
