@@ -61,6 +61,12 @@ class VoiceController extends Controller
         $message ="Voice====>>>>".json_encode($request->all());
         send_notification($message);
 
+        $response = new VoiceResponse();
+        $response->say('Hello!');
+        
+        return $response;
+
+
      
         
     
