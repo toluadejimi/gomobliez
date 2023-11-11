@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VoiceController;
 use App\Http\Controllers\Auth\RegisterationController;
 use App\Http\Controllers\NumberController;
 use App\Http\Controllers\PaymentController;
@@ -35,6 +36,13 @@ Route::post('verify-email-otp', [RegisterationController::class, 'verify_email_o
 Route::post('register', [RegisterationController::class, 'register']);
 Route::post('forgot-password', [RegisterationController::class, 'forgot_password']);
 Route::post('reset-password', [RegisterationController::class, 'reset_password']);
+
+
+Route::get('token', [VoiceController::class, 'token']);
+
+Route::post('callback', [VoiceController::class, 'callback']);
+
+
 
 
 
