@@ -34,7 +34,7 @@ class VoiceController extends Controller
     
     }
 
-    public function voice(request $request)
+    public function voice_url(request $request)
     {
         
     

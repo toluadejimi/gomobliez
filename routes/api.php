@@ -42,6 +42,9 @@ Route::get('token', [VoiceController::class, 'token']);
 
 Route::post('callback', [VoiceController::class, 'callback']);
 Route::post('fallback', [VoiceController::class, 'fallback']);
+Route::post('voice_url', [VoiceController::class, 'voice_url']);
+
+
 
 
 
