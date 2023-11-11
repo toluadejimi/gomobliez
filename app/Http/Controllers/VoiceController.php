@@ -29,7 +29,7 @@ class VoiceController extends Controller
 
         $response = new VoiceResponse();
         $response->play('https://api.twilio.com/cowbell.mp3', ['loop' => 10]);
-        echo $response;
+        return $response;
     
     }
 
