@@ -135,6 +135,10 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('buy-number', [NumberController::class, 'buy_number']);
     Route::post('delete-number', [NumberController::class, 'delete_number']);
     Route::post('send-message', [NumberController::class, 'send_message']);
+    Route::get('get-user', [NumberController::class, 'get_user']);
+
+
+    
 
 
 

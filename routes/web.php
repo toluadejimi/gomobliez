@@ -2,10 +2,12 @@
 
 use App\Events\RealTimeMessage;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\VoiceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Events\NewMessage;
 use App\Http\Controllers\TestController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +53,22 @@ Route::get('success', [PaymentController::class, 'success']);
 Route::get('decline', [PaymentController::class, 'decline']);
 
 Route::get('processing', [PaymentController::class, 'processing']);
+
+
+
+Route::get('make-call', [VoiceController::class, 'call']);
+
+Route::post('call', [VoiceController::class, 'initiateCall']);
+
+
+//Route::livewire('dialer', 'dialer');
+
+
+// After
+//Route::get('/dialer', \App\Http\Livewire\Dialer::class);  
+
+
+
 
 
 
