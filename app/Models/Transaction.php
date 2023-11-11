@@ -10,16 +10,17 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
+        'trx_id',
         'user_id',
-        'debit',
-        'serial_no'
+        'amount',
+        'status',
+        'type'
     ];
 
 
 
     protected $casts = [
-        'user_id'=> 'integer',
+        'user_id' => 'integer',
         'debit' => 'integer',
         'credit' => 'integer',
         'balance' => 'integer',
@@ -35,10 +36,8 @@ class Transaction extends Model
         'resolve' => 'integer',
 
 
-        
+
 
 
     ];
-
-
 }

@@ -132,7 +132,7 @@ class PaymentController extends Controller
 
                 return response()->json([
                     'status' => true,
-                    'body' => $body,
+                    'data' => $body,
                 ], 200);
 
 
@@ -157,7 +157,7 @@ class PaymentController extends Controller
 
             return response()->json([
                 'status' => true,
-                'body' => $body,
+                'data' => $body,
             ], 200);
 
 

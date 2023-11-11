@@ -132,6 +132,17 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
     Route::get('get-countries', [NumberController::class, 'get_countries']);
     Route::post('get-list-numbers', [NumberController::class, 'get_list_numbers']);
+    Route::post('buy-number', [NumberController::class, 'buy_number']);
+    Route::post('delete-number', [NumberController::class, 'delete_number']);
+    Route::post('send-message', [NumberController::class, 'send_message']);
+
+
+
+
+    
+
+
+    
 
 
     
