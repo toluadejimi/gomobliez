@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisterationController;
 use App\Http\Controllers\NumberController;
 use App\Http\Controllers\PaymentController;
