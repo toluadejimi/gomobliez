@@ -25,8 +25,19 @@ class VoiceController extends Controller
     public function callback(request $request)
     {
         
-        
+    
+    }
 
+    public function fallback(request $request)
+    {
+        
+    
+    }
+
+    public function voice(request $request)
+    {
+        
+    
     }
 
 
