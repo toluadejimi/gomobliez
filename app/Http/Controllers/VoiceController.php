@@ -44,10 +44,10 @@ class VoiceController extends Controller
     {
         
      
-                $response = "Goodbuy";
+        $response = new VoiceResponse();
+        $response->play('https://api.twilio.com/cowbell.mp3');
         
-                return response($response)->header('Content-Type', 'text/xml');
-        
+        return $response;
 
     
     }
