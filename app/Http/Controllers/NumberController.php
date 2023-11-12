@@ -306,9 +306,10 @@ class NumberController extends Controller
             try {
 
 
+                $user_email = Auth::user()->email;
                 $file = $request->file('file');
                 $fileName = time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('storage/content/images'), $fileName); // Save the image to the "uploads" directory in the public folder
+                $file->move(public_path("/public/assets/img/$user_email/"), $fileName); // Save the image to the "uploads" directory in the public folder
 
 
                 $auth = env('TELNYX');
@@ -330,7 +331,8 @@ class NumberController extends Controller
                     ], 422);
                 }
 
-                $media_url = url('') . "/storage/content/image/" . $fileName;
+                $user_email = Auth::user()->email;
+                $media_url = url('') . "/public/assets/img/$user_email/" . $fileName;
 
                 $profile = get_sms_profile();
                 $payload = array(
@@ -417,7 +419,7 @@ class NumberController extends Controller
                     }
                 }
 
-                
+
             } catch (Exception $e) {
 
                 return response()->json([
