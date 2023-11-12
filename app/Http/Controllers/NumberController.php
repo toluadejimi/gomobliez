@@ -332,7 +332,7 @@ class NumberController extends Controller
                 }
 
                 $user_email = Auth::user()->email;
-                $media_url = url('') . "/public/assets/img/$user_email/" . $fileName;
+                $media_url = url('') . "/public/public/assets/img/$user_email/" . $fileName;
 
                 $profile = get_sms_profile();
                 $payload = array(
