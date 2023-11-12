@@ -83,6 +83,7 @@ class VoiceController extends Controller
             $messages->from_no = $request->data['payload']['from']['phone_number'];
             $messages->to_no = $request->data['payload']['to'][0]['phone_number'];
             $messages->text = $request->data['payload']['text'];
+            $messages->media = $request->data['payload']['media'][0]['url'];
             $messages->user_id = $user_id;
             $messages->save();
 
