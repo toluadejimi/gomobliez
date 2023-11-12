@@ -76,7 +76,7 @@ class VoiceController extends Controller
         send_notification($message);
 
 
-        if($request->data->event_type == 'message.received'){
+        if($request->data[0]->event_type == 'message.received'){
 
             $user_id = MyPhoneNumber::where('phone_no',$request->data->from->phone_number)->user_id ?? null;
             $messages = new Message();
