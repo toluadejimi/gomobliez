@@ -75,7 +75,7 @@ class VoiceController extends Controller
         $message ="SMS====>>>>".json_encode($request->all());
         send_notification($message);
 
-        
+
 
         $user_id = MyPhoneNumber::where('phone_no',$request->from->phone_number)->user_id;
         $messages = new Message();
@@ -85,8 +85,6 @@ class VoiceController extends Controller
         $messages->user_id = $user_id;
         $messages->save();
     
-      
-
     
     }
 
