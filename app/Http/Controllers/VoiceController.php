@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
+use App\Models\MyPhoneNumber;
 use Exception;
 use Illuminate\Http\Request;
 use Twilio\Rest\Client;
@@ -69,9 +71,21 @@ class VoiceController extends Controller
     public function sms_webhook(request $request)
     {
 
-    
+
         $message ="SMS====>>>>".json_encode($request->all());
         send_notification($message);
+
+        
+
+        $user_id = MyPhoneNumber::where('phone_no',$request->from->phone_number)->user_id;
+        $messages = new Message();
+        $messages->from_no = $request->from->phone_number;
+        $messages->to_no = $request->to->phone_number;
+        $messages->text = $request->text;
+        $messages->user_id = $user_id;
+        $messages->save();
+    
+      
 
     
     }

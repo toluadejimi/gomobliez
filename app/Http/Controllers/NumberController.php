@@ -23,6 +23,7 @@ class NumberController extends Controller
     {
 
 
+      
 
         $countries = Country::select('code', 'name', 'flag')->orderByDesc('name')->get();
 

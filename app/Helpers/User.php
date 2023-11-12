@@ -85,7 +85,7 @@ function pay_pal_token()
         $id =
 
 
-        $clientId = base64_encode(env('PAYPAL_CLIENT_ID'));
+    $clientId = base64_encode(env('PAYPAL_CLIENT_ID'));
     $clientSecret = base64_encode(env('PAYPAL_SECRET'));
 
     $apiUrl = "https://api-m.sandbox.paypal.com/v1/oauth2/token";
@@ -140,6 +140,48 @@ function get_sms_profile(){
 
 
     return $var->data[0]->id;
+
+
+
+}
+
+
+function sip_token(){
+
+    $auth = env('TELNYX');
+    $apiUrl = "https://api.telnyx.com/v2/telephony_credentials";
+    $connt_id = env('CONNTID');
+
+    $data = [
+        'connection_id' => $connt_id,
+    ];
+
+
+    
+
+
+    $options = [
+        CURLOPT_URL => $apiUrl,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => http_build_query($data),
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/x-www-form-urlencoded',
+            'Authorization: Basic ' . $auth,
+        ],
+    ];
+
+    $ch = curl_init();
+    curl_setopt_array($ch, $options);
+
+    $var = curl_exec($ch);
+
+    $var = json_decode($var);
+
+    dd($var, $connt_id, $auth);
+
+    curl_close($ch);
+
 
 
 
