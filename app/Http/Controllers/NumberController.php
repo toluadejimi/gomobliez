@@ -366,8 +366,6 @@ class NumberController extends Controller
                     'message' => "$error"
                 ], 404);
             } else {
-
-
                 $cost = $var->data->cost->amount;
                 $message = new Message();
                 $message->from_no = $sender;
@@ -377,6 +375,8 @@ class NumberController extends Controller
                 $message->user_id = Auth::id();
                 $message->cost = $cost;
                 $message->save();
+
+
 
                 $plan = MyPlan::where('user_id', Auth::id())->first()->plan_id ?? null;
                 if($plan == null){
@@ -412,6 +412,9 @@ class NumberController extends Controller
 
                 
             }
+
+
+            
         }else{
 
 
