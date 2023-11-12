@@ -302,14 +302,25 @@ class NumberController extends Controller
 
             $sender = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
             if ($sender == null) {
-
                 return response()->json([
                     'status' => false,
                     'message' => "No Number found, Get a phone number"
                 ], 404);
             }
 
-  
+
+
+            $sms_cost = Setting::where('id', 1)->first()->sms_cost;
+            if(Auth::user()->wallet < $sms_cost){
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Insufficient Funds, Fund your wallet"
+                ], 422);
+
+            }
+
+
             $profile = get_sms_profile();
 
             $payload = array(
@@ -343,23 +354,28 @@ class NumberController extends Controller
             curl_close($curl);
             $var = json_decode($var);
 
-
-            dd($var);
-
-
             if ($error) {
 
-            echo "cURL Error #:" . $error;
+                
+            return response()->json([
+                'status' => false,
+                'message' => "$error"
+            ], 404);
 
 
             } else {
 
+                $cost = $var->data->cost->amount;
+                User::where('id', Auth::id())->decrement('wallet',  $cost);
+                $data['message'] = "Message Sent Successfully";
+                return response()->json([
+                    'status' => true,
+                    'data' => $data
+                ], 200);
 
-            echo $response;
-            
             }
 
-              
+
 
 
 
