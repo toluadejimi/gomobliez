@@ -70,7 +70,7 @@ class VoiceController extends Controller
     {
 
     
-        $message ="SMS====>>>>".json_encode($request->all());
+        $message ="SMS====>>>>".json_encode($request->getParsedBody());
         send_notification($message);
 
     
@@ -80,7 +80,7 @@ class VoiceController extends Controller
     {
 
     
-        $message ="SMS2====>>>>".json_encode($request->all());
+        $message ="SMS2====>>>>".json_encode($request->getParsedBody());
         send_notification($message);
 
     
