@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Country;
+use App\Models\Message;
 use App\Models\MyPhoneNumber;
+use App\Models\MyPlan;
 use App\Models\Price;
 use App\Models\Setting;
 use App\Models\Transaction;
@@ -257,7 +259,7 @@ class NumberController extends Controller
             $var = curl_exec($curl);
             curl_close($curl);
 
-            dd( $var, $post_data);
+            dd($var, $post_data);
 
 
 
@@ -295,7 +297,12 @@ class NumberController extends Controller
     public function send_message(request $request)
     {
 
-        try {
+    
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/content/images'), $fileName); // Save the image to the "uploads" directory in the public folder
 
 
             $auth = env('TELNYX');
@@ -307,39 +314,38 @@ class NumberController extends Controller
                     'message' => "No Number found, Get a phone number"
                 ], 404);
             }
-
-
-
+    
             $sms_cost = Setting::where('id', 1)->first()->sms_cost;
-            if(Auth::user()->wallet < $sms_cost){
-
+            if (Auth::user()->wallet < $sms_cost) {
+    
                 return response()->json([
                     'status' => true,
                     'message' => "Insufficient Funds, Fund your wallet"
                 ], 422);
-
             }
 
+            $media_url = url('')."/storage/content/image/".$fileName;
 
             $profile = get_sms_profile();
-
             $payload = array(
-                "from" => "$sender",
+                "from" => $sender,
+                "media_urls" => array(
+                    $media_url
+                ),
                 "messaging_profile_id" => $profile,
-                "text" => "Hello, World!",
+                "text" => $request->message,
                 "to" => $request->receiver,
-                "type" => "SMS",
+                "type" => "MMS",
                 "use_profile_webhooks" => true,
-                "webhook_failover_url" => url('')."/api/sms-webhook2",
-                "webhook_url" => url('')."/api/sms-webhook"
+                "webhook_failover_url" => url('') . "/api/sms-webhook2",
+                "webhook_url" => url('') . "/api/sms-webhook"
             );
-
 
             $curl = curl_init();
             curl_setopt_array($curl, [
                 CURLOPT_HTTPHEADER => [
-                  "Authorization: Bearer $auth",
-                  "Content-Type: application/json"
+                    "Authorization: Bearer $auth",
+                    "Content-Type: application/json"
                 ],
                 CURLOPT_POSTFIELDS => json_encode($payload),
                 CURLOPT_URL => "https://api.telnyx.com/v2/messages",
@@ -355,46 +361,162 @@ class NumberController extends Controller
             $var = json_decode($var);
 
             if ($error) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "$error"
+                ], 404);
+            } else {
+
+
+                $cost = $var->data->cost->amount;
+                $message = new Message();
+                $message->from_no = $sender;
+                $message->to_no = $request->receiver;
+                $message->media = $media_url;
+                $message->text = $request->message;
+                $message->user_id = Auth::id();
+                $message->cost = $cost;
+                $message->save();
+
+                $plan = MyPlan::where('user_id', Auth::id())->first()->plan_id ?? null;
+                if($plan == null){
+                    User::where('id', Auth::id())->decrement('wallet',  $cost);
+                    $data['message'] = "MMS Sent Successfully";
+                    return response()->json([
+                        'status' => true,
+                        'data' => $data
+                    ], 200);
+                }
+
+
+                if($plan == 3 || $plan == 4 || $plan == 5){
+
+                    $data['message'] = "MMS Sent Successfully";
+                    return response()->json([
+                        'status' => true,
+                        'data' => $data
+                    ], 200);
+
+                }else{
+
+                    User::where('id', Auth::id())->decrement('wallet',  $cost);
+                    $data['message'] = "MMS Sent Successfully";
+                    return response()->json([
+                        'status' => true,
+                        'data' => $data
+                    ], 200);
+
+
+                }
+
 
                 
-            return response()->json([
-                'status' => false,
-                'message' => "$error"
-            ], 404);
+            }
+        }else{
 
 
+            $auth = env('TELNYX');
+
+            $sender = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
+            if ($sender == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "No Number found, Get a phone number"
+                ], 404);
+            }
+
+            $sms_cost = Setting::where('id', 1)->first()->sms_cost;
+            if (Auth::user()->wallet < $sms_cost) {
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Insufficient Funds, Fund your wallet"
+                ], 422);
+            }
+
+            $profile = get_sms_profile();
+            $payload = array(
+                "from" => $sender,
+                "messaging_profile_id" => $profile,
+                "text" => $request->message,
+                "to" => $request->receiver,
+                "type" => "SMS",
+                "use_profile_webhooks" => true,
+                "webhook_failover_url" => url('') . "/api/sms-webhook2",
+                "webhook_url" => url('') . "/api/sms-webhook"
+            );
+
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_HTTPHEADER => [
+                    "Authorization: Bearer $auth",
+                    "Content-Type: application/json"
+                ],
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_URL => "https://api.telnyx.com/v2/messages",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => "POST",
+            ]);
+
+
+
+            $var = curl_exec($curl);
+            $error = curl_error($curl);
+            curl_close($curl);
+            $var = json_decode($var);
+
+            if ($error) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "$error"
+                ], 404);
             } else {
 
                 $cost = $var->data->cost->amount;
-                User::where('id', Auth::id())->decrement('wallet',  $cost);
-                $data['message'] = "Message Sent Successfully";
-                return response()->json([
-                    'status' => true,
-                    'data' => $data
-                ], 200);
+                $message = new Message();
+                $message->from_no = $sender;
+                $message->to_no = $request->receiver;
+                $message->text = $request->message;
+                $message->user_id = Auth::id();
+                $message->cost = $cost;
+                $message->save();
+
+                $plan = MyPlan::where('user_id', Auth::id())->first()->plan_id ?? null;
+                if($plan == null){
+                    User::where('id', Auth::id())->decrement('wallet',  $cost);
+                    $data['message'] = "SMS Sent Successfully";
+                    return response()->json([
+                        'status' => true,
+                        'data' => $data
+                    ], 200);
+                }
+
+
+                if($plan == 3 || $plan == 4 || $plan == 5){
+
+                    $data['message'] = "SMS Sent Successfully";
+                    return response()->json([
+                        'status' => true,
+                        'data' => $data
+                    ], 200);
+
+                }else{
+
+                    User::where('id', Auth::id())->decrement('wallet',  $cost);
+                    $data['message'] = "SMS Sent Successfully";
+                    return response()->json([
+                        'status' => true,
+                        'data' => $data
+                    ], 200);
+
+
+                }
 
             }
+        
 
 
 
-
-
-
-
-
-
-
-
-
-
-        } catch (RestException $e) {
-            $statusCode = $e->getStatusCode();
-            $errorMessage = $e->getMessage();
-
-            return response()->json([
-                'status' => false,
-                'message' => $errorMessage
-            ], 404);
         }
     }
 }
