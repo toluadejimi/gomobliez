@@ -297,7 +297,7 @@ class NumberController extends Controller
     public function send_message(request $request)
     {
 
-    
+
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -314,10 +314,10 @@ class NumberController extends Controller
                     'message' => "No Number found, Get a phone number"
                 ], 404);
             }
-    
+
             $sms_cost = Setting::where('id', 1)->first()->sms_cost;
             if (Auth::user()->wallet < $sms_cost) {
-    
+
                 return response()->json([
                     'status' => true,
                     'message' => "Insufficient Funds, Fund your wallet"
@@ -360,12 +360,17 @@ class NumberController extends Controller
             curl_close($curl);
             $var = json_decode($var);
 
+            dd($var);
+
             if ($error) {
                 return response()->json([
                     'status' => false,
                     'message' => "$error"
                 ], 404);
-            } else {
+
+
+            }else{
+
                 $cost = $var->data->cost->amount;
                 $message = new Message();
                 $message->from_no = $sender;
@@ -410,11 +415,11 @@ class NumberController extends Controller
                 }
 
 
-                
+
             }
 
 
-            
+
         }else{
 
 
@@ -516,7 +521,7 @@ class NumberController extends Controller
                 }
 
             }
-        
+
 
 
 
