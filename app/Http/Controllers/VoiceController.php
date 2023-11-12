@@ -62,12 +62,30 @@ class VoiceController extends Controller
         $response = new VoiceResponse();
         $response->say('Hello, this is your Twilio voice response. Thank you for using Twilio.');
         return response($response);//->header('Content-Type', 'text/xml');
-
-
-     
-        
     
     }
+
+
+    public function sms_webhook(request $request)
+    {
+
+    
+        $message ="SMS====>>>>".json_encode($request->all());
+        send_notification($message);
+
+    
+    }
+
+    public function sms_webhook2(request $request)
+    {
+
+    
+        $message ="SMS2====>>>>".json_encode($request->all());
+        send_notification($message);
+
+    
+    }
+
 
 
 

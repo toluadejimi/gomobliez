@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '5fe104589fac4d8cb9119793dcf0e8935ca9e021',
+        'reference' => '1ce3a3f212fc2302b010283d519fa76a24eb48d2',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -499,7 +499,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '5fe104589fac4d8cb9119793dcf0e8935ca9e021',
+            'reference' => '1ce3a3f212fc2302b010283d519fa76a24eb48d2',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1711,6 +1711,15 @@
             'install_path' => __DIR__ . '/../symfony/yaml',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'telnyx/telnyx-php' => array(
+            'pretty_version' => '2.8.1',
+            'version' => '2.8.1.0',
+            'reference' => '46a2a40a6f47fad399e15fee4c1ad3ceea83782b',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../telnyx/telnyx-php',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'theseer/tokenizer' => array(
             'pretty_version' => '1.2.1',

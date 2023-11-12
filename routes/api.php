@@ -44,6 +44,14 @@ Route::post('callback', [VoiceController::class, 'callback']);
 Route::get('fallback', [VoiceController::class, 'fallback']);
 Route::post('voice_url', [VoiceController::class, 'voice_url']);
 
+Route::get('sms-webhook', [VoiceController::class, 'sms_webhook']);
+Route::get('sms-webhook2', [VoiceController::class, 'sms_webhook2']);
+
+
+
+
+
+
 
 
 

@@ -27,6 +27,7 @@
         "predis/predis": "^2.2",
         "pusher/pusher-php-server": "~7.0",
         "stripe/stripe-php": "^13.2",
+        "telnyx/telnyx-php": "^2.8",
         "twilio/sdk": "^7.12",
         "ultramsg/whatsapp-php-sdk": "^2.0"
     },
