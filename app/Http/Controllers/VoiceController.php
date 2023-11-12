@@ -78,12 +78,19 @@ class VoiceController extends Controller
 
         if($request->data['event_type'] == 'message.received'){
 
+
+            if($request->data['payload']['media'] == []){
+                $media = null;
+            }else{
+                $media = $request->data['payload']['media'][0]['url'];
+            }
+
             $user_id = MyPhoneNumber::where('phone_no',$request->data['payload']['from']['phone_number'])->first()->user_id ?? null;
             $messages = new Message();
             $messages->from_no = $request->data['payload']['from']['phone_number'];
             $messages->to_no = $request->data['payload']['to'][0]['phone_number'];
             $messages->text = $request->data['payload']['text'];
-            $messages->media = $request->data['payload']['media'][0]['url'];
+            $messages->media = $media;
             $messages->user_id = $user_id;
             $messages->save();
 
