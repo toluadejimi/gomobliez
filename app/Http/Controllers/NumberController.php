@@ -640,10 +640,9 @@ class NumberController extends Controller
 
 
         if($result == []){
-            $data['message']="No Recent Messages";
             return response()->json([
                 'status' => true,
-                'data' => $data
+                'data' => []
             ], 404);
         }
 
