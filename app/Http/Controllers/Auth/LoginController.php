@@ -113,6 +113,8 @@ class LoginController extends Controller
             $user['my_number'] = $phone_number;
             $user['pending_messages'] = $pending_messages;
             $user['message_credit'] = $message_credit;
+            $user['plans'] = $plans;
+
 
 
 
