@@ -566,6 +566,15 @@ class NumberController extends Controller
 
         $get_number = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
 
+        if($get_number == null){
+                $data['message']="Phone number not registred";
+                return response()->json([
+                    'status' => true,
+                    'data' => $data
+                ], 401);
+    
+        }
+
         $messages = Message::select('id', 'from_no', 'to_no', 'media', 'text', 'user_id', 'status', 'created_at')->where('to_no', $get_number)
         ->orWhere('from_no', $get_number)
             ->get();
