@@ -153,6 +153,10 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::get('get-user', [ProfileController::class, 'get_user']);
     Route::get('get-messages', [NumberController::class, 'get_message']);
     Route::get('open-message', [NumberController::class, 'open_message']);
+    Route::get('get-a-message', [NumberController::class, 'get_a_message']);
+
+
+
 
     
 

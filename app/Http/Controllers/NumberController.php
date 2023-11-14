@@ -609,6 +609,9 @@ class NumberController extends Controller
 
 
 
+ 
+
+
     public function open_message(request $request)
     {
 
@@ -618,7 +621,7 @@ class NumberController extends Controller
         ]);
 
 
-        $conversation = Message::select('id', 'from_no', 'to_no', 'media', 'text','created_at')->where('from_no', $request->phone_no)->get();
+        $conversation = Message::select('id', 'from_no', 'to_no','status', 'media', 'text','created_at')->where('from_no', $request->phone_no)->get();
         $result = [];
         foreach ($conversation as $data) {
             $result[] = $data;
