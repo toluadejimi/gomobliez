@@ -99,9 +99,11 @@ class LoginController extends Controller
         }
 
             $token = auth()->user()->createToken('API Token')->accessToken;
-
+            $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
+            $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
             $myplan = MyPlan::select('id','user_id', 'plan_id', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
             $phone_number = MyPhoneNumber::select('phone_no', 'status')->where('user_id', Auth::id())->first() ?? null;
+            $message_credit = MyPlan::where('user_id', Auth::id())->first()->message_credit ?? null;
             $plans = Plan::select('id','title','amount', 'period')->get();
             $billing = User::select('first_name', 'last_name','city', 'street', 'zipcode', 'country', 'state', 'phone')->where('id', Auth::id())->get();
             $user = Auth()->user();
@@ -109,12 +111,14 @@ class LoginController extends Controller
             $user['my_plan'] = $myplan;
             $user['billing_information'] = $billing;
             $user['my_number'] = $phone_number;
+            $user['pending_messages'] = $pending_messages;
+            $user['message_credit'] = $message_credit;
 
 
 
-            $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
-            $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
 
+
+          
             return response()->json([
                 'status' => $this->success,
                 'data' => $user,

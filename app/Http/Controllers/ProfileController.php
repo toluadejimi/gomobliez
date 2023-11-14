@@ -25,7 +25,11 @@ class ProfileController extends Controller
         }
 
 
+
+            $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
+            $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
             $myplan = MyPlan::select('id','user_id', 'plan_id', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
+            $message_credit = MyPlan::where('user_id', Auth::id())->first()->message_credit ?? null;
             $phone_number = MyPhoneNumber::select('phone_no', 'status')->where('user_id', Auth::id())->first() ?? null;
             $plans = Plan::select('id','title','amount', 'period')->get();
             $billing = User::select('first_name', 'last_name','city', 'street', 'zipcode', 'country', 'state', 'phone')->where('id', Auth::id())->get();
@@ -34,10 +38,12 @@ class ProfileController extends Controller
             $user['billing_information'] = $billing;
             $user['my_number'] = $phone_number;
             $user['plans'] = $plans;
+            $user['pending_messages'] = $pending_messages;
+            $user['message_credit'] = $message_credit;
 
 
-            $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
-            $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
+
+
 
 
 
@@ -45,7 +51,6 @@ class ProfileController extends Controller
             return response()->json([
                 'status' => true,
                 'data' => $user,
-                'pending_messages' => $pending_messages
             ], 200);
 
     }
