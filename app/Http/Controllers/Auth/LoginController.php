@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\ApiKey;
 use App\Models\Feature;
+use App\Models\Message;
 use App\Models\MyPhoneNumber;
 use App\Models\MyPlan;
 use App\Models\OauthAccessToken;
@@ -110,22 +111,14 @@ class LoginController extends Controller
             $user['my_number'] = $phone_number;
 
 
-            $user['plans'] = $plans;
 
-
-            $keys = ApiKey::select('vendor', 'encrypted_public', 'encrypted_secret')->get();
-            foreach ($keys as $data){
-                $key[] = $data;
-            }
-
-
-
-
+            $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
+            $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
 
             return response()->json([
                 'status' => $this->success,
                 'data' => $user,
-                'keys' => $key
+                'pending_messages' => $pending_messages
             ], 200);
 
     }

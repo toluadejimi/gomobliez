@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\MyPhoneNumber;
 use App\Models\MyPlan;
 use App\Models\Plan;
@@ -35,10 +36,16 @@ class ProfileController extends Controller
             $user['plans'] = $plans;
 
 
+            $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
+            $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
+
+
+
 
             return response()->json([
                 'status' => true,
                 'data' => $user,
+                'pending_messages' => $pending_messages
             ], 200);
 
     }
