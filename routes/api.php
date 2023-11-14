@@ -60,6 +60,10 @@ Route::post('sms-webhook2', [VoiceController::class, 'sms_webhook2']);
 
 
 
+
+
+
+
 //login
 Route::post('login', [LoginController::class, 'login']);
 
@@ -147,7 +151,10 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('delete-number', [NumberController::class, 'delete_number']);
     Route::post('send-message', [NumberController::class, 'send_message']);
     Route::get('get-user', [ProfileController::class, 'get_user']);
+    Route::get('get-messages', [NumberController::class, 'get_message']);
+    Route::get('open-message', [NumberController::class, 'open_message']);
 
+    
 
     
 

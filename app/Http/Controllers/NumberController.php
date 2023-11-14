@@ -23,7 +23,7 @@ class NumberController extends Controller
     {
 
 
-      
+
 
         $countries = Country::select('code', 'name', 'flag')->orderByDesc('name')->get();
 
@@ -284,16 +284,19 @@ class NumberController extends Controller
             //     ]);
 
 
-                $data['message'] = "$request->phone_no is now yours";
-                return response()->json([
+            $data['message'] = "$request->phone_no is now yours";
+            return response()->json([
 
-                    'status' => true,
-                    'data' => $data
+                'status' => true,
+                'data' => $data
 
 
-                ], 200);
+            ], 200);
         }
     }
+
+
+
 
 
 
@@ -439,8 +442,6 @@ class NumberController extends Controller
                         ], 200);
                     }
                 }
-
-
             } catch (Exception $e) {
 
                 return response()->json([
@@ -448,8 +449,6 @@ class NumberController extends Controller
                     'message' => "$error"
                 ], 404);
             }
-
-
         } else {
 
 
@@ -557,5 +556,79 @@ class NumberController extends Controller
                 ], 404);
             }
         }
+    }
+
+
+
+    public function get_message(request $request)
+    {
+
+
+        $get_number = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
+
+        $messages = Message::select('id', 'from_no', 'to_no', 'media', 'text', 'user_id', 'status', 'created_at')->where('to_no', $get_number)
+        ->orWhere('from_no', $get_number)
+            ->get();
+
+
+        $message_count = Message::select('id', 'from_no', 'to_no', 'media', 'text', 'user_id', 'status', 'created_at')->where('to_no', $get_number)
+            ->where('status', 0)
+            ->count();
+
+
+        $result = [];
+        foreach ($messages as $data) {
+            $result[] = $data;
+        }
+
+
+        if($result == []){
+            $data['message']="No Recent Messages";
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ], 401);
+        }
+
+
+        $result['pending_message_count']=$message_count;
+        return response()->json([
+            'status' => true,
+            'data' => $result
+        ], 200);
+    }
+
+
+
+    public function open_message(request $request)
+    {
+
+
+        Message::where('from_no', $request->phone_no)->update([
+            'status' => 1
+        ]);
+
+
+        $conversation = Message::select('id', 'from_no', 'to_no', 'media', 'text','created_at')->where('from_no', $request->phone_no)->get();
+        $result = [];
+        foreach ($conversation as $data) {
+            $result[] = $data;
+        }
+
+
+
+        if($result == []){
+            $data['message']="No Recent Messages";
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ], 200);
+        }
+
+
+        return response()->json([
+            'status' => true,
+            'data' => $result
+        ], 200);
     }
 }
