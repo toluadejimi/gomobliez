@@ -567,7 +567,7 @@ class NumberController extends Controller
         $get_number = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
 
         if($get_number == null){
-                $data['message']="Phone number not registred";
+                $data['message']="Phone number not registered";
                 return response()->json([
                     'status' => true,
                     'data' => $data
