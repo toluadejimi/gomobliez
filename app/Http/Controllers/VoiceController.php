@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Call;
 use App\Models\Message;
 use App\Models\MyPhoneNumber;
+use App\Models\Recent;
 use Exception;
 use Illuminate\Http\Request;
 use Twilio\Rest\Client;
@@ -94,8 +96,50 @@ class VoiceController extends Controller
             $messages->user_id = $user_id;
             $messages->save();
 
+            $check = Recent::where('user_id', $user_id)->where('to_no', $request->data['payload']['from']['phone_number'])->first()->to_no ?? null;
+            if($check == null){
+                $recent= new Recent();
+                $recent->user_id = $user_id;
+                $recent->from_no = $request->data['payload']['from']['phone_number'];
+                $recent->to_no = $request->data['payload']['to'][0]['phone_number'];
+                $recent->status = 0;
+                $recent->text = $request->data['payload']['text'];
+                $recent->save();
+
+            }else{
+
+                Recent::where('user_id', $user_id)->where('to_no', $request->data['payload']['from']['phone_number'])->update([
+                    'text' => $request->data['payload']['text']
+                ]);
+
+
+            }
+
+
 
         }
+
+
+
+        if($request->data['event_type'] == 'call.initiated'){
+
+
+            $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
+
+            Call::where('user_id', $user_id)->where('call_id', null)->update([
+                
+                'call_id' => $request->data['payload']['connection_id'],
+                'intiate_time' => $request->data['payload']['occurred_at']
+                
+            ]);
+
+
+
+          
+
+
+        }
+
 
       
     

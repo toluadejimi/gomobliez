@@ -8,6 +8,7 @@ use App\Models\Message;
 use App\Models\MyPhoneNumber;
 use App\Models\MyPlan;
 use App\Models\Price;
+use App\Models\Recent;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
@@ -394,7 +395,7 @@ class NumberController extends Controller
                 $var = json_decode($var);
                 $error = $var->errors[0]->detail ?? null;
 
-
+               
 
                 if ($error) {
                     return response()->json([
@@ -411,8 +412,33 @@ class NumberController extends Controller
                     $message->text = $request->message;
                     $message->user_id = Auth::id();
                     $message->cost = $cost;
+                    $message->name = $request->name;
                     $message->save();
 
+
+
+                    $check = Recent::where('user_id', Auth::id())->where('to_no', $request->receiver)->first()->to_no ?? null;
+                    if($check == null){
+                        $recent= new Recent();
+                        $recent->user_id = Auth::id();
+                        $recent->from_no = $sender;
+                        $recent->to_no = $request->receiver;
+                        $recent->status = 1;
+                        $recent->text = $request->message;
+                        $recent->name = $request->name;
+                        $recent->save();
+
+                    }else{
+
+                        Recent::where('user_id', Auth::id())->where('to_no', $request->receiver)->update([
+                            'text' => $request->message
+                        ]);
+
+
+                    }
+
+
+                  
 
 
                     $plan = MyPlan::where('user_id', Auth::id())->first()->plan_id ?? null;
@@ -443,6 +469,9 @@ class NumberController extends Controller
                         ], 200);
                     }
                 }
+
+
+
             } catch (Exception $e) {
 
                 return response()->json([
@@ -521,6 +550,28 @@ class NumberController extends Controller
                     $message->cost = $cost;
                     $message->save();
 
+
+                    $check = Recent::where('user_id', Auth::id())->where('to_no', $request->receiver)->first()->to_no ?? null;
+                    if($check == null){
+                        $recent= new Recent();
+                        $recent->user_id = Auth::id();
+                        $recent->from_no = $sender;
+                        $recent->to_no = $request->receiver;
+                        $recent->status = 1;
+                        $recent->text = $request->message;
+                        $recent->name = $request->name;
+                        $recent->save();
+
+                    }else{
+
+                        Recent::where('user_id', Auth::id())->where('to_no', $request->receiver)->update([
+                            'text' => $request->message
+                        ]);
+
+
+                    }
+
+
                     $plan = MyPlan::where('user_id', Auth::id())->first()->plan_id ?? null;
                     if ($plan == null) {
                         User::where('id', Auth::id())->decrement('wallet',  $cost);
@@ -565,9 +616,8 @@ class NumberController extends Controller
     {
 
 
-        $get_number = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
-
-        if($get_number == null){
+        $number = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
+        if($number == null){
                 $data['message']="Phone number not registered";
                 return response()->json([
                     'status' => true,
@@ -576,15 +626,12 @@ class NumberController extends Controller
     
         }
 
-        $messages = Message::select('id', 'from_no', 'to_no', 'media', 'text', 'user_id', 'status', 'created_at')->where('to_no', $get_number)
-        ->orWhere('from_no', $get_number)
-            ->get();
 
+        $messages = Recent::select('name', 'from_no', 'to_no', 'status', 'text')->where('from_no', $number)
+        ->orWhere('to_no', $number)
+        ->get();
 
-        $message_count = Message::select('id', 'from_no', 'to_no', 'media', 'text', 'user_id', 'status', 'created_at')->where('to_no', $get_number)
-            ->where('status', 0)
-            ->count();
-
+        
 
         $result = [];
         foreach ($messages as $data) {
@@ -597,11 +644,10 @@ class NumberController extends Controller
             return response()->json([
                 'status' => true,
                 'data' => $data
-            ], 401);
+            ], 404);
         }
 
 
-        $result['pending_message_count']=$message_count;
         return response()->json([
             'status' => true,
             'data' => $result
@@ -618,6 +664,10 @@ class NumberController extends Controller
 
 
         Message::where('from_no', $request->phone_no)->update([
+            'status' => 1
+        ]);
+
+        Recent::where('user_id', Auth::id())->where('from_no', $request->phone_no)->update([
             'status' => 1
         ]);
 
