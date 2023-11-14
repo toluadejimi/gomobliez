@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Call;
 use App\Models\Country;
 use App\Models\Message;
 use App\Models\MyPhoneNumber;
@@ -643,4 +644,50 @@ class NumberController extends Controller
             'data' => $result
         ], 200);
     }
+
+
+
+    public function start_call(request $request)
+    {
+
+
+        $plans = MyPlan::where('user_id', Auth::id())->first()->status ?? null;
+        if($plans == null || $plans == 0){
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "No active subscription, Subscribe to a plan to make a call"
+                ], 422);
+    
+
+        }
+
+
+
+        $call = new Call();
+        $call->user_id = Auth::id();
+        $call->name = $request->name;
+        $call->to_phone = $request->phone_no;
+        $call->save();
+
+
+        $data['message'] = "Call Initiated Successfully";
+        return response()->json([
+          'status' => true,
+           'data' => $data
+        ], 200);
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
 }
