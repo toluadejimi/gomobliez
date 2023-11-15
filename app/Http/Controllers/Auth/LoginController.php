@@ -103,7 +103,12 @@ class LoginController extends Controller
             $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
             $myplan = MyPlan::select('id','user_id', 'plan_id', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
             $phone_number = MyPhoneNumber::select('phone_no', 'status')->where('user_id', Auth::id())->first() ?? null;
-            $message_credit = MyPlan::where('user_id', Auth::id())->first()->message_credit ?? null;
+            $m_credit = MyPlan::where('user_id', Auth::id())->first()->message_credit ?? null;
+            if($m_credit == 0){
+                $message_credit = null;
+            }else{
+                $message_credit = $m_credit;
+            }
             $plans = Plan::select('id','title','amount', 'period')->get();
             $billing = User::select('first_name', 'last_name','city', 'street', 'zipcode', 'country', 'state', 'phone')->where('id', Auth::id())->get();
             $user = Auth()->user();
