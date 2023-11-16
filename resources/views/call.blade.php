@@ -44,7 +44,7 @@
         </div>
         <div style="height: 20px;"></div>
         <div id="name" style="font-weight: 700; font-size: 18px;">
-            {{ $name }}
+            {{ $name ?? $phone_no }}
         </div>
         <div id="number" style="font-weight: 600; font-size: 16px;">
             {{ $phone_no }}

@@ -730,9 +730,10 @@ class NumberController extends Controller
         }
 
 
+        $data['url'] = $call_url;
         return response()->json([
           'status' => true,
-           'data' => $call_url
+           'data' => $data
         ], 200);
 
 
