@@ -23,9 +23,21 @@ class VoiceController extends Controller
 {
 
 
-    public function call(request $request)
+    public function call_africa(request $request)
     {
-        return view('call');
+
+        $name = $request->name;
+        $phone_no = $request->phone_no;
+
+        return view('call', compact('name', 'phone_no'));
+    }
+
+    public function call_other(request $request)
+    {
+        $name = $request->name;
+        $phone_no = $request->phone_no;
+
+        return view('call', compact('name', 'phone_no'));
     }
 
     public function callback(request $request)
@@ -140,7 +152,7 @@ class VoiceController extends Controller
 
         if($request->data['event_type'] == 'call.answered'){
 
-            
+
 
 
 

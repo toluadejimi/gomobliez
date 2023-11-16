@@ -56,7 +56,11 @@ Route::get('processing', [PaymentController::class, 'processing']);
 
 
 
-Route::get('make-call', [VoiceController::class, 'call']);
+Route::get('call-africa', [VoiceController::class, 'call']);
+Route::get('call-other', [VoiceController::class, 'call_other']);
+
+
+
 
 Route::post('call', [VoiceController::class, 'initiateCall']);
 
@@ -65,7 +69,7 @@ Route::post('call', [VoiceController::class, 'initiateCall']);
 
 
 // After
-//Route::get('/dialer', \App\Http\Livewire\Dialer::class);  
+//Route::get('/dialer', \App\Http\Livewire\Dialer::class);
 
 
 

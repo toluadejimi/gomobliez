@@ -17,6 +17,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Twilio\Exceptions\RestException;
 use Twilio\Rest\Client;
+use Illuminate\Support\Str;
+
 
 class NumberController extends Controller
 {
@@ -395,7 +397,7 @@ class NumberController extends Controller
                 $var = json_decode($var);
                 $error = $var->errors[0]->detail ?? null;
 
-               
+
 
                 if ($error) {
                     return response()->json([
@@ -438,7 +440,7 @@ class NumberController extends Controller
                     }
 
 
-                  
+
 
 
                     $plan = MyPlan::where('user_id', Auth::id())->first()->plan_id ?? null;
@@ -623,7 +625,7 @@ class NumberController extends Controller
                     'status' => true,
                     'data' => $data
                 ], 401);
-    
+
         }
 
 
@@ -631,7 +633,7 @@ class NumberController extends Controller
         ->orWhere('to_no', $number)
         ->get();
 
-        
+
 
         $result = [];
         foreach ($messages as $data) {
@@ -655,7 +657,7 @@ class NumberController extends Controller
 
 
 
- 
+
 
 
     public function open_message(request $request)
@@ -706,11 +708,9 @@ class NumberController extends Controller
                     'status' => true,
                     'message' => "No active subscription, Subscribe to a plan to make a call"
                 ], 422);
-    
+
 
         }
-
-
 
         $call = new Call();
         $call->user_id = Auth::id();
@@ -718,11 +718,21 @@ class NumberController extends Controller
         $call->to_phone = $request->phone_no;
         $call->save();
 
+        $phone = ['+234', '+254', '+256', '+255'];
+        if (Str::contains($request->phone_no, $phone)) {
 
-        $data['message'] = "Call Initiated Successfully";
+            $call_url = url('')."/call-africa?phone=$request->phone_no&name=$request->name";
+
+        } else {
+
+            $call_url = url('')."/call-other?phone=$request->phone_no&name=$request->name";
+
+        }
+
+
         return response()->json([
           'status' => true,
-           'data' => $data
+           'data' => $call_url
         ], 200);
 
 
