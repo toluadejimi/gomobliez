@@ -40,7 +40,7 @@
         </div>
         <div style="height: 50px;"></div>
         <div>
-            <img src = "{{ url('') }}/assets/svg/web_call_image.svg" alt="My Happy SVG"/>
+            <img src = "{{ url('') }}/public/assets/svg/web_call_image.svg" alt="My Happy SVG"/>
         </div>
         <div style="height: 20px;"></div>
         <div id="name" style="font-weight: 700; font-size: 18px;">
@@ -52,17 +52,17 @@
         <div style="height: 45px;"></div>
         <div style="display: flex;">
              <div id="audio" style="background-color: #0000007e; padding: 12px; border-radius: 100%;" onclick="mute()">
-                <img src = "{{ url('') }}/assets/svg/web_mute.svg" alt="My Happy SVG"/>
+                <img src = "{{ url('') }}/public/assets/svg/web_mute.svg" alt="My Happy SVG"/>
             </div>
             <div style="width: 50px;"></div>
             <div id="loudspeaker"style="background-color: #0000007e; padding: 12px; border-radius: 100%;" onclick="loudspeaker()">
-                <img src = "{{ url('') }}/assets/svg/web_loudspeaker.svg" alt="My Happy SVG"/>
+                <img src = "{{ url('') }}/public/assets/svg/web_loudspeaker.svg" alt="My Happy SVG"/>
             </div>
         </div>
         <div style="height: 60px;"></div>
 
             <div id ='end' onclick="hangup()">
-                <img src = "{{ url('') }}/assets/svg/web_cancel.svg" alt="My Happy SVG"/>
+                <img src = "{{ url('') }}/public/assets/svg/web_cancel.svg" alt="My Happy SVG"/>
             </div>
             <div style="visibility: hidden;">
                 <div>
