@@ -25,6 +25,7 @@
         "paypal/paypal-checkout-sdk": "^1.0",
         "paypal/rest-api-sdk-php": "^1.6",
         "predis/predis": "^2.2",
+        "propaganistas/laravel-phone": "^5.0",
         "pusher/pusher-php-server": "~7.0",
         "stripe/stripe-php": "^13.2",
         "telnyx/telnyx-php": "^2.8",

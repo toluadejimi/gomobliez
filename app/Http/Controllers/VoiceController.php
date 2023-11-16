@@ -34,8 +34,18 @@ class VoiceController extends Controller
 
     public function call_other(request $request)
     {
+
+
+        function localize_us_number($phone) {
+            // $numbers_only = preg_replace("/[^\d]/", "", $phone);
+            return preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $phone);
+          }
+
+
         $name = $request->name;
-        $phone_no = $request->phone;
+        $phone = $request->phone;
+
+        $phone_no = localize_us_number($phone);
 
         return view('call', compact('name', 'phone_no'));
     }
