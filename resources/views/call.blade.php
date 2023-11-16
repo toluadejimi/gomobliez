@@ -130,8 +130,8 @@
 
         client = new TelnyxWebRTC.TelnyxRTC({
           env: 'production',
-          login:'adewaletolu57512',
-          password: 'FsLopXYV',
+          login: "{{ env('SIPUSERNAME') }}",
+          password: "{{ env('SIPPASS') }}",
           ringtoneFile: './assets/web-call-out-tune.mp3',
         });
 
@@ -255,7 +255,7 @@
         const params = {
           callerName: 'Caller Name',
           callerNumber: 'Caller Number',
-          destinationNumber: '+15304262488',
+          destinationNumber: "{{ $number }}",
         };
 
         client.enableMicrophone();

@@ -28,8 +28,10 @@ class VoiceController extends Controller
 
         $name = $request->name;
         $phone_no = $request->phone;
+        $number = $request->phone;
 
-        return view('call', compact('name', 'phone_no'));
+
+        return view('call', compact('name', 'phone_no', 'number'));
     }
 
     public function call_other(request $request)
@@ -39,15 +41,15 @@ class VoiceController extends Controller
         function localize_us_number($phone) {
             // $numbers_only = preg_replace("/[^\d]/", "", $phone);
             return preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $phone);
-          }
-
+        }
 
         $name = $request->name;
         $phone = $request->phone;
-
         $phone_no = localize_us_number($phone);
+        $number = $request->phone;
 
-        return view('call', compact('name', 'phone_no'));
+
+        return view('call', compact('name', 'phone_no', 'number'));
     }
 
     public function callback(request $request)
