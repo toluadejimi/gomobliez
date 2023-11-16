@@ -718,6 +718,10 @@ class NumberController extends Controller
         $call->to_phone = $request->phone_no;
         $call->save();
 
+        
+
+
+
         $phone = ['+234', '+254', '+256', '+255'];
         if (Str::contains($request->phone_no, $phone)) {
 
