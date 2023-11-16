@@ -40,33 +40,33 @@ class VoiceController extends Controller
 
         return $response;
 
-       
-    
+
+
     }
 
     public function fallback(request $request)
     {
-        
-     
+
+
         $response = new VoiceResponse();
         $response->play('https://api.twilio.com/cowbell.mp3');
-        
+
         return $response;
 
-    
+
     }
 
     public function voice_url(request $request)
     {
 
-    
+
         $message ="Voice====>>>>".json_encode($request->all());
         send_notification($message);
 
         $response = new VoiceResponse();
         $response->say('Hello, this is your Twilio voice response. Thank you for using Twilio.');
         return response($response);//->header('Content-Type', 'text/xml');
-    
+
     }
 
 
@@ -87,7 +87,8 @@ class VoiceController extends Controller
                 $media = $request->data['payload']['media'][0]['url'];
             }
 
-            $user_id = MyPhoneNumber::where('phone_no',$request->data['payload']['from']['phone_number'])->first()->user_id ?? null;
+            $user_id = MyPhoneNumber::where('phone_no',$request->data['payload']['to'][0]['phone_number'])->first()->user_id ?? null;
+
             $messages = new Message();
             $messages->from_no = $request->data['payload']['from']['phone_number'];
             $messages->to_no = $request->data['payload']['to'][0]['phone_number'];
@@ -96,6 +97,7 @@ class VoiceController extends Controller
             $messages->user_id = $user_id;
             $messages->save();
 
+
             $check = Recent::where('user_id', $user_id)->where('to_no', $request->data['payload']['from']['phone_number'])->first()->to_no ?? null;
             if($check == null){
                 $recent= new Recent();
@@ -103,13 +105,13 @@ class VoiceController extends Controller
                 $recent->from_no = $request->data['payload']['from']['phone_number'];
                 $recent->to_no = $request->data['payload']['to'][0]['phone_number'];
                 $recent->status = 0;
-                $recent->text = $request->data['payload']['text'];
+                $recent->text = $request->data['payload']['text'] ?? "image";
                 $recent->save();
 
             }else{
 
                 Recent::where('user_id', $user_id)->where('to_no', $request->data['payload']['from']['phone_number'])->update([
-                    'text' => $request->data['payload']['text']
+                    'text' => $request->data['payload']['text'] ?? "image",
                 ]);
 
 
@@ -127,33 +129,33 @@ class VoiceController extends Controller
             $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
 
             Call::where('user_id', $user_id)->where('call_id', null)->update([
-                
+
                 'call_id' => $request->data['payload']['connection_id'],
                 'intiate_time' => $request->data['payload']['occurred_at']
-                
+
             ]);
 
 
 
-          
+
 
 
         }
 
 
-      
-    
-    
+
+
+
     }
 
     public function sms_webhook2(request $request)
     {
 
-    
+
         $message ="SMS2====>>>>".json_encode($request->all());
         send_notification($message);
 
-    
+
     }
 
 
@@ -192,7 +194,7 @@ class VoiceController extends Controller
         $token->addGrant($voiceGrant);
 
         // render token to string
-        
+
 
 
 
