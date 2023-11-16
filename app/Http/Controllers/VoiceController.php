@@ -27,7 +27,7 @@ class VoiceController extends Controller
     {
 
         $name = $request->name;
-        $phone_no = $request->phone_no;
+        $phone_no = $request->phone;
 
         return view('call', compact('name', 'phone_no'));
     }
@@ -35,7 +35,7 @@ class VoiceController extends Controller
     public function call_other(request $request)
     {
         $name = $request->name;
-        $phone_no = $request->phone_no;
+        $phone_no = $request->phone;
 
         return view('call', compact('name', 'phone_no'));
     }
