@@ -127,15 +127,20 @@ class VoiceController extends Controller
 
 
             $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
-
             Call::where('user_id', $user_id)->where('call_id', null)->update([
 
                 'call_id' => $request->data['payload']['connection_id'],
-                'intiate_time' => $request->data['payload']['occurred_at']
+                'time_initiated' => $request->data['occurred_at'],
+                'status' => 1,
 
             ]);
 
+        }
 
+
+        if($request->data['event_type'] == 'call.answered'){
+
+            
 
 
 
