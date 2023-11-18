@@ -251,11 +251,13 @@
       /**
        * Hangup the currentCall if present
        */
-      function hangup() {
+       function hangup() {
         if (currentCall) {
-          currentCall.hangup();
+            currentCall.hangup();
         }
-      }
+
+        window.location.href = "/home";
+        }
 
       function saveInLocalStorage(e) {
         var key = e.target.name || e.target.id;
@@ -358,10 +360,7 @@
 
                     if (data.data === false) {
                         endCall();
-                        
-
-
-
+                        window.location.href = "/home";
                      } else {
                          // Continue charging with a delay
                          setTimeout(chargeUser, 60000);
