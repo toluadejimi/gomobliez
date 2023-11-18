@@ -29,9 +29,11 @@ class VoiceController extends Controller
         $name = $request->name;
         $phone_no = $request->phone;
         $number = $request->phone;
+        $plan = $request->plan;
+        $user_id = $request->user_id;
 
 
-        return view('call', compact('name', 'phone_no', 'number'));
+        return view('call', compact('name', 'phone_no', 'number','plan','user_id'));
     }
 
     public function call_other(request $request)
@@ -47,9 +49,12 @@ class VoiceController extends Controller
         $phone = $request->phone;
         $phone_no = localize_us_number($phone);
         $number = $request->phone;
+        $plan = $request->plan;
+        $user_id = $request->user_id;
 
 
-        return view('call', compact('name', 'phone_no', 'number'));
+
+        return view('africa-call', compact('name', 'phone_no', 'number','plan','user_id'));
     }
 
     public function callback(request $request)

@@ -34,7 +34,7 @@
             0:00
         </div>
 
-        
+
         <div style="height: 50px;"></div>
         <div>
             <img src="{{ url('') }}/public/assets/svg/web_call_image.svg" alt="My Happy SVG" />
@@ -277,33 +277,46 @@
       }
 
 
-      var startTime;
-var timerInterval;
-
-function handleCallUpdate(call) {
-    currentCall = call;
-    switch (call.state) {
-        // ... Existing cases ...
-
-        case 'active': // Call has become active
-            document.getElementById('connectStatus').innerHTML = 'Call Connected';
-            startTimer();
-            break;
-
-        case 'hangup': // Call is over
-            document.getElementById('connectStatus').innerHTML = 'Call Ended';
-            stopTimer();
-            break;
-
-        // ... Existing cases ...
+      function endCall() {
+        if (currentCall) {
+            currentCall.hangup();
+        }
     }
-}
+
+        var startTime;
+        var timerInterval;
+
+        function handleCallUpdate(call) {
+            currentCall = call;
+            switch (call.state) {
+                // ... Existing cases ...
+
+                case 'active': // Call has become active
+                    document.getElementById('connectStatus').innerHTML = 'Call Connected';
+                    startTimer();
+                    break;
+
+                case 'hangup': // Call is over
+                    document.getElementById('connectStatus').innerHTML = 'Call Ended';
+                    stopTimer();
+                    break;
+
+                // ... Existing cases ...
+            }
+        }
 
         function startTimer() {
             startTime = new Date();
 
             // Update the timer every second
-            timerInterval = setInterval(updateTimer, 1000);
+            timerInterval = setInterval(function () {
+                updateTimer();
+                
+                // Charge the user every 60 seconds
+                if (Math.floor((new Date() - startTime) / 1000) % 60 === 0) {
+                    chargeUser();
+                }
+            }, 1000);
         }
 
         function stopTimer() {
@@ -323,6 +336,52 @@ function handleCallUpdate(call) {
             // Update the timer element
             document.getElementById('callTimer').innerHTML = timerDisplay;
         }
+
+
+        @if($plan == 0)
+        function chargeUser() {
+            // Perform the logic to charge the user
+            // You can make an AJAX request to your server here
+            // For example, using the Fetch API
+            fetch('/api/charge', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any additional headers if needed
+                },
+                // Add the user ID or any other data needed for the charging process
+                body: JSON.stringify({ userId: "{{ $user_id }}" }),
+            })
+                .then(response => response.json())
+                .then(data => {
+
+
+                    if (data.data === false) {
+                        endCall();
+                        
+
+
+
+                     } else {
+                         // Continue charging with a delay
+                         setTimeout(chargeUser, 60000);
+                     }
+                    // Handle the response from the server if needed
+                    console.log(data);
+
+                   
+                })
+                .catch(error => {
+                    // Handle errors if the request fails
+                    console.error('Error:', error);
+                });
+        }
+        @endif
+
+
+        
+
+        
 
         </script>
 </body>

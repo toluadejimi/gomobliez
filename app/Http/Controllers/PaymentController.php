@@ -22,10 +22,6 @@ class PaymentController extends Controller
     {
 
 
-
-
-
-
         if ($request->vendor == 'pay_pal')
         {
             $token = pay_pal_token();

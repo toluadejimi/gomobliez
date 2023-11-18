@@ -133,6 +133,8 @@ Route::post('email-login', [LoginController::class, 'email_login']);
 
 Route::post('update-device', [LoginController::class, 'update_device_identifier']);
 
+Route::post('charge', [NumberController::class, 'charge']);
+
 
 //Contact
 Route::get('contact', [ProfileController::class, 'contact']);

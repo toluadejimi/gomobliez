@@ -673,7 +673,7 @@ class NumberController extends Controller
         ]);
 
 
-        $conversation = Message::select('id', 'from_no', 'to_no','status', 'media', 'text','created_at')->where('from_no', $request->phone_no)->get();
+        $conversation = Message::select('id', 'from_no', 'to_no','status', 'media', 'text','created_at')->where('to_no', $request->phone_no)->get();
         $result = [];
         foreach ($conversation as $data) {
             $result[] = $data;
@@ -703,14 +703,13 @@ class NumberController extends Controller
 
         $plans = MyPlan::where('user_id', Auth::id())->first()->status ?? null;
         if($plans == null || $plans == 0){
-
-                return response()->json([
-                    'status' => true,
-                    'message' => "No active subscription, Subscribe to a plan to make a call"
-                ], 422);
-
-
+            $plan = 0;
+        }else{
+            $plan = 0;
         }
+
+        $user_id = Auth::id();
+
 
         $call = new Call();
         $call->user_id = Auth::id();
@@ -718,18 +717,18 @@ class NumberController extends Controller
         $call->to_phone = $request->phone_no;
         $call->save();
 
-        
+
 
 
 
         $phone = ['+234', '+254', '+256', '+255'];
         if (Str::contains($request->phone_no, $phone)) {
 
-            $call_url = url('')."/call-africa?phone=$request->phone_no&name=$request->name";
+            $call_url = url('')."/call-africa?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id";
 
         } else {
 
-            $call_url = url('')."/call-other?phone=$request->phone_no&name=$request->name";
+            $call_url = url('')."/call-other?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id";
 
         }
 
@@ -745,6 +744,37 @@ class NumberController extends Controller
 
     }
 
+
+
+
+    public function charge(request $request)
+    {
+
+        $wallet = User::where('id', $request->userId)->first()->wallet;
+        $call_cost = Setting::where('id', 1)->first()->call_cost;
+
+
+        if($call_cost > $wallet){
+
+            return response()->json([
+                'data' => false,
+                'wallet' => $wallet
+
+            ]);
+
+        }
+
+        User::where('id', $request->userId)->decrement('wallet', $call_cost);
+
+        return response()->json([
+            'data' => true,
+            'wallet' => $wallet
+
+        ]);
+
+
+
+    }
 
 
 
