@@ -724,11 +724,11 @@ class NumberController extends Controller
         $phone = ['+234', '+254', '+256', '+255'];
         if (Str::contains($request->phone_no, $phone)) {
 
-            $call_url = url('')."/call-africa?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id";
+            $call_url = url('')."/call-africa?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
 
         } else {
 
-            $call_url = url('')."/call-other?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id";
+            $call_url = url('')."/call-other?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
 
         }
 
