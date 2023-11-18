@@ -52,9 +52,7 @@ class VoiceController extends Controller
         $plan = $request->plan;
         $user_id = $request->user_id;
 
-
-
-        return view('africa-call', compact('name', 'phone_no', 'number','plan','user_id'));
+        return view('call', compact('name', 'phone_no', 'number','plan','user_id'));
     }
 
     public function callback(request $request)

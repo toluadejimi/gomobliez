@@ -62,8 +62,8 @@ Route::get('call-other', [VoiceController::class, 'call_other']);
 
 
 
-Route::post('call', [VoiceController::class, 'initiateCall']);
-Route::get('africa-call', [VoiceController::class, 'call_other']);
+// Route::post('call', [VoiceController::class, 'initiateCall']);
+// Route::get('africa-call', [VoiceController::class, 'call_other']);
 
 
 
