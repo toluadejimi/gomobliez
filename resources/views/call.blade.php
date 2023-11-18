@@ -229,8 +229,9 @@
           case 'hangup': // Call is over
            document.getElementById( 'connectStatus').innerHTML = 'Call Ended'
             break;
-          case 'destroy': // Call has been destroyed
-        //   route to home
+          case 'destroy': // Call has been destroye
+          window.location.href = "/home";
+          
             currentCall = null;
             break;
         }
@@ -255,8 +256,6 @@
         if (currentCall) {
             currentCall.hangup();
         }
-
-        window.location.href = "/home";
         }
 
       function saveInLocalStorage(e) {
