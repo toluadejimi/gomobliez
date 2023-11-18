@@ -782,7 +782,7 @@ class NumberController extends Controller
 
 
     public function recent_calls(request $request)
-    {
+    {}
 
 
 
