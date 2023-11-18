@@ -673,7 +673,10 @@ class NumberController extends Controller
         ]);
 
 
-        $conversation = Message::select('id', 'from_no', 'to_no','status', 'media', 'text','created_at')->where('to_no', $request->phone_no)->get();
+        $conversation = Message::select('id', 'from_no', 'to_no','status', 'media', 'text','created_at')
+        ->where('to_no', $request->phone_no)
+        ->orWhere('from_no', $request->phone_no)
+        ->get();
         $result = [];
         foreach ($conversation as $data) {
             $result[] = $data;
