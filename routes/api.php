@@ -158,6 +158,12 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::get('get-a-message', [NumberController::class, 'get_a_message']);
     Route::post('initiate-call', [NumberController::class, 'start_call']);
 
+    Route::get('recent-call', [NumberController::class, 'recent_calls']);
+    Route::get('all-transaction', [NumberController::class, 'recent_transaction']);
+
+
+
+    
 
 
 

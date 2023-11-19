@@ -782,7 +782,53 @@ class NumberController extends Controller
 
 
     public function recent_calls(request $request)
-    {}
+    {
+
+        $calls = Call::select('to_phone', 'name', 'created_at')->where('user_id', Auth::id())->get() ?? null;
+
+        if($calls == null){
+            $data['calls'] = [];
+        }else{
+            $data['calls'] = $calls;
+        }
+
+
+         return response()->json([
+          'status' => true,
+           'data' => $data
+        ], 200);
+
+
+
+    }
+
+
+    public function recent_transaction(request $request)
+    {
+
+
+        $trx = Transaction::select('trx_id', 'status', 'type')->where('user_id', Auth::id())->get() ?? null;
+
+        if($trx == null){
+            $data['transactions'] = [];
+        }else{
+            $data['transactions'] = $trx;
+        }
+
+         return response()->json([
+          'status' => true,
+           'data' => $data
+        ], 200);
+
+
+
+
+
+    }
+
+
+
+
 
 
 
