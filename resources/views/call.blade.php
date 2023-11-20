@@ -146,7 +146,7 @@
 
         client.on('telnyx.error', function (error) {
           console.error('telnyx error:', error);
-          //alert(error.message)
+          alert(error.message)
 
 
         document.getElementById( 'connectStatus').innerHTML = 'Disconnected';
@@ -156,11 +156,7 @@
 
 
         client.on('telnyx.notification', handleNotification);
-
-
          document.getElementById( 'connectStatus').innerHTML = 'Connecting...';
-        
-        
          client.connect();
       
     }
