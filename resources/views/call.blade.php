@@ -134,8 +134,9 @@
         }
 
         client.on('telnyx.ready', function () {
-          document.getElementById( 'connectStatus').innerHTML = 'Connected';
+            document.getElementById( 'connectStatus').innerHTML = 'Connected';
         });
+
 
         client.on('telnyx.socket.close', function () {
            document.getElementById( 'connectStatus').innerHTML = 'Disconnected';
@@ -145,22 +146,37 @@
 
         client.on('telnyx.error', function (error) {
           console.error('telnyx error:', error);
-          alert(error.message)
+          //alert(error.message)
+
+
         document.getElementById( 'connectStatus').innerHTML = 'Disconnected';
           client.disconnect();
           detachListeners(client);
         });
 
+
         client.on('telnyx.notification', handleNotification);
 
+
          document.getElementById( 'connectStatus').innerHTML = 'Connecting...';
-        client.connect();
-      }
+        
+        
+         client.connect();
+      
+    }
 
       function disconnect() {
          document.getElementById( 'connectStatus').innerHTML = 'Disconnecting...';
         client.disconnect();
       }
+
+
+      //client.on('telnyx.ready', () => console.log('ready to call'))
+      
+
+
+
+
 
       function mute(){
          if(document.getElementById( 'audio').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
@@ -204,8 +220,13 @@
         switch (call.state) {
           case 'new': // Setup the UI
             break;
+
+
           case 'trying': // You are trying to call someone and he's ringing now
-            break;
+          document.getElementById( 'connectStatus').innerHTML = 'Ringing'
+          break;
+
+
           case 'recovering': // Call is recovering from a previous session
             if (confirm('Recover the previous call?')) {
               currentCall.answer();
@@ -213,8 +234,11 @@
               currentCall.hangup();
             }
             break;
+            
           case 'ringing': // Someone is calling you
             //used to avoid alert block audio play, I delayed to audio play first.
+
+
             setTimeout(function () {
               if (confirm('Pick up the call?')) {
                 currentCall.answer();
@@ -223,9 +247,13 @@
               }
             }, 1000);
             break;
+
+
           case 'active': // Call has become active
-           document.getElementById( 'connectStatus').innerHTML = 'Call Connected'
+           document.getElementById( 'connectStatus').innerHTML = 'Call Conn'
             break;
+
+
           case 'hangup': // Call is over
            document.getElementById( 'connectStatus').innerHTML = 'Call Ended'
             break;
@@ -256,7 +284,7 @@
             currentCall.hangup();
         }
 
-        window.location.href = "/home";
+       // window.location.href = "/home";
         }
 
       function saveInLocalStorage(e) {

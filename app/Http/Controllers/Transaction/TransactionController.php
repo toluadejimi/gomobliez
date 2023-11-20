@@ -2,25 +2,40 @@
 
 namespace App\Http\Controllers\Transaction;
 
-use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 
 
 class TransactionController extends Controller
 {
 
-    public $success = true;
-    public $failed = false;
+
+
+    public function recent_transaction(request $request)
+    {
+
+
+        $trx = Transaction::select('trx_id', 'status', 'type')->where('user_id', Auth::id())->get() ?? null;
+
+        if($trx == null){
+            $data['transactions'] = [];
+        }else{
+            $data['transactions'] = $trx;
+        }
+
+         return response()->json([
+          'status' => true,
+           'data' => $data
+        ], 200);
 
 
 
-    public function fund_webhook(request $request){
+
 
     }
-
-
 
     
 
