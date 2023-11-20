@@ -145,7 +145,7 @@
 
         client.on('telnyx.error', function (error) {
           console.error('telnyx error:', error);
-          alert(error.message)
+          //alert(error.message)
         document.getElementById( 'connectStatus').innerHTML = 'Disconnected';
           client.disconnect();
           detachListeners(client);
