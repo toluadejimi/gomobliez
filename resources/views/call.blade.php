@@ -170,8 +170,6 @@
         client.disconnect();
       }
 
-
-      //client.on('telnyx.ready', () => console.log('ready to call'))
       
 
 
@@ -284,7 +282,7 @@
             currentCall.hangup();
         }
 
-       // window.location.href = "/home";
+        window.location.href = "/home";
         }
 
       function saveInLocalStorage(e) {
