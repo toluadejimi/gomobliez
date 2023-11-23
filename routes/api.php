@@ -61,6 +61,22 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     //Payment
     Route::post('pay-now', [PaymentController::class, 'create_order']);
     Route::post('verify-payment', [PaymentController::class, 'verify_payment']);
+    Route::post('saved-card-payment', [PaymentController::class, 'saved_card_charge']);
+    Route::get('saved-cards', [PaymentController::class, 'saved_cards']);
+    Route::post('delete-card', [PaymentController::class, 'delete_card']);
+
+
+    
+
+
+    //subscribtion
+    Route::get('my-subscription', [ProfileController::class, 'my_subscription']);
+    Route::get('get-plans', [ProfileController::class, 'get_plans']);
+    Route::post('cancle-subscription', [ProfileController::class, 'cancle_subscription']);
+
+    
+
+    
 
 
     //sms messages
@@ -86,6 +102,9 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
     //TRANSACTIONS
     Route::get('all-transaction', [TransactionController::class, 'recent_transaction']);
+
+
+
 
 
 

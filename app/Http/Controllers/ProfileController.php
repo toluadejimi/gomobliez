@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Message;
-use App\Models\MyPhoneNumber;
-use App\Models\MyPlan;
+use Carbon\Carbon;
 use App\Models\Plan;
 use App\Models\User;
+use App\Models\MyPlan;
+use App\Models\Message;
+use App\Models\Setting;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\MyPhoneNumber;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
@@ -59,4 +62,122 @@ class ProfileController extends Controller
             ], 200);
 
     }
+
+
+    public function my_subscription(Request $request)
+    {
+
+
+        $p = MyPlan::where('user_id', Auth::id())->first()->status ?? null;
+        if ($p == 1) {
+
+
+            $e_date = MyPlan::where('user_id', Auth::id())->first()->expires_at ?? null;
+            $nowDate = date('Y-m-d');
+            $endDate = Carbon::parse($e_date);
+            $differenceInDays = $endDate->diffInDays($nowDate);
+
+            MyPlan::where('user_id', Auth::id())->update([
+                'days_remaining' => $differenceInDays,
+            ]);
+
+            MyPlan::where('user_id', Auth::id())->update([
+                'days_remaining' => $differenceInDays,
+            ]);
+        }
+
+        $active = MyPlan::select('id', 'title', 'days_remaining', 'subscribe_at', 'expires_at', 'status')->where('user_id', Auth::id())->where('status', 1)->get();
+        $sub_list = Transaction::where('type', 4)->where('user_id', 2)->get();
+
+
+
+        $data['active_plan'] = $active;
+        $data['subscription_list'] = $sub_list;
+
+        return response()->json([
+            'status' => true,
+            'data' => $data,
+        ], 200);
+
+
+    }
+
+
+
+    public function cancle_subscription(Request $request)
+    {
+
+
+
+        $p = MyPlan::where('id', $request->id)->first() ?? null;
+        $amount = Setting::where('id', 1)->first()->call_cost ?? 0;
+
+        if ($p->status == 1) {
+
+            $days = $p->days_remaining;
+            $amt = $amount * 60 * $days;
+
+            User::where('id', Auth::id())->increment('wallet', $amt);
+            $p = MyPlan::where('id', $request->id)->delete();
+
+
+            $trx = new Transaction();
+            $trx->type = 8;
+            $trx->amount = $amt;
+            $trx->status = 1;
+            $trx->save();
+
+
+            $body['message'] = "USD $amt has been refunded back to your wallet";
+            return response()->json([
+                'status' => true,
+                'data' => $body,
+            ], 200);
+
+
+
+
+
+        }
+
+        
+    }
+
+
+    public function get_plans(Request $request)
+    {
+
+        $plans = Plan::select('id', 'title', 'type', 'amount', 'sms_credit', 'period', 'note')->get();
+
+        $body['plans'] = $plans;
+
+            return response()->json([
+                'status' => true,
+                'data' => $body,
+            ], 200);
+
+
+    }
+
+
+
+    public function contact_us(Request $request)
+    {
+
+        $set = Setting::where('id', 1)->first();
+
+        $body['phone_no'] = $set->phone_no;
+        $body['email'] = $set->email;
+
+        
+            return response()->json([
+                'status' => true,
+                'data' => $body,
+            ], 200);
+
+
+    }
+
+
+
 }

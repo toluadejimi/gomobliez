@@ -101,7 +101,7 @@ class LoginController extends Controller
             $token = auth()->user()->createToken('API Token')->accessToken;
             $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
             $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
-            $myplan = MyPlan::select('id','user_id', 'plan_id', 'message_credit', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
+            $myplan = MyPlan::select('id', 'plan_id', 'sms_credit', 'expires_at', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
             $phone_number = MyPhoneNumber::select('phone_no', 'status')->where('user_id', Auth::id())->first() ?? null;
             $m_credit = MyPlan::where('user_id', Auth::id())->first()->message_credit ?? null;
             if($m_credit == 0){

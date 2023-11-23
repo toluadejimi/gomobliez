@@ -24,8 +24,7 @@
 </head>
 
 <body style="padding: 0px; margin: 0px; background-color: #FFC700;">
-    <div class="container"
-        style="background-color: #FFC700; max-width: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; height:100vh">
+    <div class="container" style="background-color: #FFC700; max-width: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; height:100vh">
         <div id="connectStatus">
             Connecting...
         </div>
@@ -52,10 +51,13 @@
                 <img src="{{ url('') }}/public/assets/svg/web_mute.svg" alt="My Happy SVG" />
             </div>
             <div style="width: 50px;"></div>
-            <div id="loudspeaker" style="background-color: #0000007e; padding: 12px; border-radius: 100%;"
+            {{-- <div id="loudspeaker" style="background-color: #0000007e; padding: 12px; border-radius: 100%;"
                 onclick="loudspeaker()">
                 <img src="{{ url('') }}/public/assets/svg/web_loudspeaker.svg" alt="My Happy SVG" />
-            </div>
+            </div> --}}
+
+            <button id="switchButton">Switch Audio Output</button>
+
         </div>
         <div style="height: 60px;"></div>
 
@@ -79,6 +81,82 @@
             </div>
 
         </div>
+
+
+        <script>
+            let audioOutputDevices = [];
+            let audioOutputDeviceId;
+        
+            // Get the audio output devices and populate the dropdown
+            function getAudioOutputDevices() {
+              navigator.mediaDevices.enumerateDevices()
+                .then(devices => {
+                  audioOutputDevices = devices.filter(device => device.kind === 'audiooutput');
+                  updateAudioOutputDropdown();
+                })
+                .catch(error => {
+                  console.error('Error enumerating audio output devices:', error);
+                });
+            }
+        
+            // Update the dropdown with available audio output devices
+            function updateAudioOutputDropdown() {
+              const switchButton = document.getElementById('switchButton');
+              const dropdown = document.createElement('select');
+        
+              audioOutputDevices.forEach(device => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.text = device.label;
+                dropdown.add(option);
+              });
+        
+              switchButton.innerHTML = '';
+              switchButton.appendChild(dropdown);
+        
+              // Set the initial audio output device
+              audioOutputDeviceId = audioOutputDevices.length > 0 ? audioOutputDevices[0].deviceId : null;
+            }
+        
+            // Switch the audio output device after the call has started
+            function switchAudioOutput() {
+              const switchButton = document.getElementById('switchButton');
+              audioOutputDeviceId = switchButton.firstChild.value;
+        
+              // Create a new audio element
+              const newAudio = new Audio();
+              
+              // Set the new audio element's sinkId
+              newAudio.setSinkId(audioOutputDeviceId)
+                .then(() => {
+                  console.log(`Audio output switched to device with ID: ${audioOutputDeviceId}`);
+                  
+                  // Route WebRTC audio to the new audio element
+                  // Replace 'yourWebRTCStream' with your actual WebRTC audio stream
+                  newAudio.srcObject = yourWebRTCStream;
+                  newAudio.play();
+                })
+                .catch(error => {
+                  console.error('Error switching audio output:', error);
+                });
+            }
+        
+            // Get audio output devices when the page loads
+            window.onload = getAudioOutputDevices;
+        
+            document.getElementById('switchButton').addEventListener('click', switchAudioOutput);
+          </script>
+
+
+
+
+
+
+
+
+
+
+
         <script type="text/javascript">
             var client;
       var currentCall = null;
@@ -145,7 +223,7 @@
 
         client.on('telnyx.error', function (error) {
           console.error('telnyx error:', error);
-          //alert(error.message)
+          alert(error.message)
         document.getElementById( 'connectStatus').innerHTML = 'Disconnected';
           client.disconnect();
           detachListeners(client);
@@ -256,7 +334,7 @@
             currentCall.hangup();
         }
 
-        window.location.href = "/home";
+        //window.location.href = "/home";
         }
 
       function saveInLocalStorage(e) {
