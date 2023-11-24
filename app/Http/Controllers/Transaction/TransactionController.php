@@ -19,7 +19,7 @@ class TransactionController extends Controller
     {
 
 
-        $trx = Transaction::select('trx_id', 'status', 'type')->where('user_id', Auth::id())->get() ?? null;
+        $trx = Transaction::latest()->select('trx_id', 'status', 'type','created_at', 'amount')->where('user_id', Auth::id())->get() ?? null;
 
         if($trx == null){
             $data['transactions'] = [];

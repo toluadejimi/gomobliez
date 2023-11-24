@@ -7,6 +7,7 @@ use App\Models\Plan;
 use App\Models\User;
 use App\Models\MyPlan;
 use App\Models\Message;
+use App\Models\OldUser;
 use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -174,6 +175,27 @@ class ProfileController extends Controller
                 'status' => true,
                 'data' => $body,
             ], 200);
+
+
+    }
+
+
+
+    public function delete_account(Request $request)
+    {
+
+        $usr = new OldUser();
+        $usr->email = Auth::user()->email ?? null;
+        $request->user()->token()->revoke();
+
+        User::where('id', Auth::id())->delete();
+
+        $body['message'] = "Account has been successfully deleted";
+        return response()->json([
+            'status' => true,
+            'data' => $body,
+        ], 200);
+
 
 
     }

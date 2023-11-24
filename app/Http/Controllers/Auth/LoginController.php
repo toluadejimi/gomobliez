@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use App\Models\Plan;
+use App\Models\User;
 use App\Models\ApiKey;
+use App\Models\MyPlan;
 use App\Models\Feature;
 use App\Models\Message;
-use App\Models\MyPhoneNumber;
-use App\Models\MyPlan;
-use App\Models\OauthAccessToken;
-use App\Models\Plan;
+use App\Models\PayInfo;
 use App\Models\Setting;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\MyPhoneNumber;
+use Laravel\Passport\Passport;
+use App\Models\OauthAccessToken;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Passport\Passport;
 
 class LoginController extends Controller
 {
@@ -62,7 +63,7 @@ class LoginController extends Controller
 
         $get_token = OauthAccessToken::where('user_id', Auth::id())->first()->user_id ?? null;
 
-        if($get_token != null){
+        if ($get_token != null) {
             OauthAccessToken::where('user_id', Auth::id())->delete();
         }
 
@@ -98,40 +99,62 @@ class LoginController extends Controller
             ], 401);
         }
 
-            $token = auth()->user()->createToken('API Token')->accessToken;
-            $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
-            $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
-            $myplan = MyPlan::select('id', 'plan_id', 'sms_credit', 'expires_at', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
-            $phone_number = MyPhoneNumber::select('phone_no', 'status')->where('user_id', Auth::id())->first() ?? null;
-            $m_credit = MyPlan::where('user_id', Auth::id())->first()->message_credit ?? null;
-            if($m_credit == 0){
-                $message_credit = null;
-            }else{
-                $message_credit = $m_credit;
+        $p = MyPlan::where('user_id', Auth::id())->first() ?? null;
+
+        if ($p != null) {
+            if ($p->status == 1) {
+
+
+                $e_date = MyPlan::where('user_id', Auth::id())->first()->expires_at ?? null;
+                $nowDate = date('Y-m-d');
+                $endDate = Carbon::parse($e_date);
+                $differenceInDays = $endDate->diffInDays($nowDate);
+
+                MyPlan::where('user_id', Auth::id())->update([
+                    'days_remaining' => $differenceInDays,
+                ]);
+
+                MyPlan::where('user_id', Auth::id())->update([
+                    'days_remaining' => $differenceInDays,
+                ]);
             }
-            $plans = Plan::select('id','title','amount', 'period')->get();
-            $billing = User::select('first_name', 'last_name','city', 'street', 'zipcode', 'country', 'state', 'phone')->where('id', Auth::id())->get();
-            $user = Auth()->user();
-            $user['token'] = $token;
-            $user['my_plan'] = $myplan;
-            $user['billing_information'] = $billing;
-            $user['my_number'] = $phone_number;
-            $user['pending_messages'] = $pending_messages;
-            $user['message_credit'] = $message_credit;
-            $user['plans'] = $plans;
+        }
 
 
+        $token = auth()->user()->createToken('API Token')->accessToken;
+        $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
+        $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
+        $myplan = MyPlan::select('id', 'plan_id', 'sms_credit', 'days_remaining', 'expires_at', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
+        $phone_number = MyPhoneNumber::select('phone_no', 'status')->where('user_id', Auth::id())->first() ?? null;
+        $m_credit = MyPlan::where('user_id', Auth::id())->first()->message_credit ?? null;
+        $saved_cards = PayInfo::latest()->select('id', 'name', 'customer_id', 'last4', 'exp_month', 'exp_year')->where('user_id', Auth::id())->get();
+
+        if ($m_credit == 0) {
+            $message_credit = null;
+        } else {
+            $message_credit = $m_credit;
+        }
+        $plans = Plan::select('id', 'title', 'amount', 'period')->get();
+        $billing = User::select('first_name', 'last_name', 'city', 'street', 'zipcode', 'country', 'state', 'phone')->where('id', Auth::id())->get();
+        $user = Auth()->user();
+        $user['token'] = $token;
+        $user['my_plan'] = $myplan;
+        $user['billing_information'] = $billing;
+        $user['my_number'] = $phone_number;
+        $user['pending_messages'] = $pending_messages;
+        $user['message_credit'] = $message_credit;
+        $user['plans'] = $plans;
+        $user['saved_cards'] = $saved_cards;
 
 
+        return response()->json([
+            'status' => $this->success,
+            'data' => $user,
+            'pending_messages' => $pending_messages
+        ], 200);
 
-
-          
-            return response()->json([
-                'status' => $this->success,
-                'data' => $user,
-                'pending_messages' => $pending_messages
-            ], 200);
-
+        
     }
+
 
 }

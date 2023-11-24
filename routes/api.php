@@ -99,6 +99,21 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
     //PROFILE
     Route::get('get-user', [ProfileController::class, 'get_user']);
+    Route::get('contact-us', [ProfileController::class, 'contact_us']);
+    Route::get('delete-account', [ProfileController::class, 'delete_account']);
+    Route::get('log-out', [ProfileController::class, 'log_out']);
+    Route::get('copyright', [ProfileController::class, 'copyright']);
+    Route::get('gdpr', [ProfileController::class, 'gdpr']);
+    Route::get('privacy', [ProfileController::class, 'privacy']);
+
+
+
+
+
+
+
+
+
 
     //TRANSACTIONS
     Route::get('all-transaction', [TransactionController::class, 'recent_transaction']);

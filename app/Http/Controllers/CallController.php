@@ -28,11 +28,6 @@ class CallController extends Controller
         $user_id = Auth::id();
 
 
-        $call = new Call();
-        $call->user_id = Auth::id();
-        $call->name = $request->name;
-        $call->to_phone = $request->phone_no;
-        $call->save();
 
 
 
@@ -43,9 +38,29 @@ class CallController extends Controller
 
             $call_url = url('')."/call-africa?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
 
+            $call = new Call();
+            $call->user_id = Auth::id();
+            $call->name = $request->name;
+            $call->time_initiated = date('h:i');
+            $call->call_time = "0:00";
+            $call->end_time = "0:00";
+            $call->to_phone = $request->phone_no;
+            $call->call_url = $call_url;
+            $call->save();
+
         } else {
 
             $call_url = url('')."/call-other?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
+
+            $call = new Call();
+            $call->user_id = Auth::id();
+            $call->name = $request->name;
+            $call->time_initiated = date('h:i');
+            $call->call_time = "0:00";
+            $call->end_time = "0:00";
+            $call->to_phone = $request->phone_no;
+            $call->call_url = $call_url;
+            $call->save();
 
         }
 
@@ -98,7 +113,7 @@ class CallController extends Controller
     public function recent_calls(request $request)
     {
 
-        $calls = Call::select('to_phone', 'name', 'created_at')->where('user_id', Auth::id())->get() ?? null;
+        $calls = Call::latest()->select('to_phone', 'name', 'call_url', 'created_at')->where('user_id', Auth::id())->get() ?? null;
 
         if($calls == null){
             $data['calls'] = [];
