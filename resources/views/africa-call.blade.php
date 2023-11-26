@@ -98,7 +98,7 @@
                 const params = {
                     sounds: {
                         dialing: "{{ url('') }}/public/assets/calling.mp3",
-                        ringing: '/sounds/ring.mp3',
+                        ringing: "{{ url('') }}/public/assets/calling.mp3",
                     },
                 };
 
