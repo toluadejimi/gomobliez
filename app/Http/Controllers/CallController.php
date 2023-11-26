@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use SamuelMwangiW\Africastalking\Facades\Africastalking;
+use SamuelMwangiW\Africastalking\Response\VoiceResponse;
+
 
 
 
@@ -188,6 +190,7 @@ class CallController extends Controller
     {
 
 
+
         $message ="Callback====>>>>".json_encode($request->all());
         send_notification($message);
 
@@ -199,52 +202,27 @@ class CallController extends Controller
         $duration =  "5";
         $sequential = "true";
 
-
-
-
-
+        
 
         if ($isActive == 1)  {
+        $options = " phoneNumbers=\"$destinationNumber\"";
+        $options .= " sequential=\"$sequential\"";
+        $options .= " record=\"$record\"";
+        $options .= " ringBackTone=\"{$url_ring}\"";
+        $options .= " callerId=\"{$phoneNo}\"";
 
 
-
-            return africastalking()->voice()
-
-            ->dial(
-                phoneNumbers: [$phoneNo],
-                record: true,
-                ringBackTone: 'https://gomobilez.bplux.store/public/assets/calling.mp3',
-                maxDuration: 5,
-                sequential: false,
-                callerId: $destinationNumber,
-            );
-
-
-
-
-
-
-
-
-            // Forward by dialing customer service numbers and record the conversation
-            // Compose the response
-
-            /** $response  = '<?xml version="1.0" encoding="UTF-8">';
+            $response  = '<?xml version="1.0" encoding="UTF-8">';
             $response .= '<Response>';
-            $response .= '<Dial record="false" sequential="true" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" phoneNumbers="+2348105059613" />';
+            $response .= "<Dial{$options}/>";
             $response .= '</Response>';
-
-            // Print the response onto the page so that our gateway can read it
-
-
-            */
 
             // $message = $response;
             // send_notification($message);
 
 
-            // header('Content-type: application/xml');
-            // return $response;
+            header('Content-type: application/xml');
+            echo $response;
 
      
 
