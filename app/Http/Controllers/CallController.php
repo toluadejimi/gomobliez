@@ -192,9 +192,12 @@ class CallController extends Controller
         send_notification($message);
 
         $isActive  = $request->isActive;
-        $phoneNo =   $request->clientDialedNumber;
-        $url_ring =  "https://gomobilez.bplux.store/public/assets/calling.mp3";
-        $duration =  5;
+        $phoneNo =   strval($request->clientDialedNumber);
+        $url_ring =  strval("https://gomobilez.bplux.store/public/assets/calling.mp3");
+        $record =  "false";
+        $duration =  "5";
+        $sequential = "true";
+
 
 
 
@@ -205,7 +208,7 @@ class CallController extends Controller
             // Compose the response
             $response  = '<?xml version="1.0" encoding="UTF-8"?>';
             $response .= '<Response>';
-            $response .= "<Dial phoneNumbers=".$phoneNo."\n ringbackTone=".$url_ring."\nrecord=".false." \n maxDuration=".$duration." \n sequential=".true." />";
+            $response .= "<Dial phoneNumbers=".$phoneNo."ringbackTone=".$url_ring."record=".$record."maxDuration=".$duration."sequential=".$sequential." />";
             $response .= '</Response>';
 
             // Print the response onto the page so that our gateway can read it
