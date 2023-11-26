@@ -190,7 +190,6 @@ class CallController extends Controller
     {
 
 
-
         $message ="Callback====>>>>".json_encode($request->all());
         //send_notification($message);
 
@@ -215,14 +214,12 @@ class CallController extends Controller
 
         $response  = '<?xml version="1.0" encoding="UTF-8"?>';
         $response .= '<Response>';
-        $response .= '<Dial record="true" sequential="true" phoneNumbers="+2348105059613" ringbackTone="http://mymediafile.com/playme.mp3" />';
+        $response .= '<Dial record="true" sequential="true" phoneNumbers="+2348105059613" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" />';
         $response .= '</Response>';
 
-        //header('Content-type: application/xml');
-        //echo($response);
-
-
-        return $response;
+        // Print the response onto the page so that our gateway can read it
+        header('Content-type: application/xml');
+        echo $response;
 
      
 
