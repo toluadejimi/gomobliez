@@ -118,7 +118,7 @@ function pay_pal_token()
 }
 
 function get_sms_profile(){
-             
+
 
     $auth = env('TELNYX');
 
@@ -156,10 +156,6 @@ function sip_token(){
         'connection_id' => $connt_id,
     ];
 
-
-    
-
-
     $options = [
         CURLOPT_URL => $apiUrl,
         CURLOPT_RETURNTRANSFER => true,
@@ -181,6 +177,58 @@ function sip_token(){
     dd($var, $connt_id, $auth);
 
     curl_close($ch);
+
+
+
+
+}
+
+
+
+function africa_token(){
+
+    $apikey = env('AFRICA_APIKEY');
+    $username = env('AFRICA_USERNAME');
+    $clientName = env('AFRICA_CLIENTNAME');
+    $phoneNumber= env('AFRICA_PHONE');
+
+
+    
+    $databody = array(
+
+        "username" => $username,
+        'clientName' => $clientName,
+        'phoneNumber' => $phoneNumber
+
+    );
+
+    $body = json_encode($databody);
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://webrtc.africastalking.com/capability-token/request',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS =>$body,
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
+        "apikey: $apikey",
+        'Content-Type: application/json'
+      ),
+    ));
+    
+
+    $var = curl_exec($curl);
+    curl_close($curl);
+    $var = json_decode($var);
+
+
+    return $var->token;
 
 
 

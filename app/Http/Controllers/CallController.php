@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+
 use App\Models\Call;
 use App\Models\User;
 use App\Models\MyPlan;
@@ -11,6 +13,9 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use SamuelMwangiW\Africastalking\Facades\Africastalking;
+
+
 
 class CallController extends Controller
 {
@@ -36,7 +41,17 @@ class CallController extends Controller
         $phone = ['+234', '+254', '+256', '+255'];
         if (Str::contains($request->phone_no, $phone)) {
 
-            $call_url = url('')."/call-africa?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
+
+        $clientName = auth()->user()?->name ?? 'Browser';
+
+        $token = africastalking()
+            ->voice()
+            ->webrtc()
+            ->for($clientName)
+            ->token();
+
+
+        $call_url = url('')."/call-africa?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt&token=$token->token&clientName=$token->clientName";
 
             $call = new Call();
             $call->user_id = Auth::id();
@@ -132,7 +147,42 @@ class CallController extends Controller
     }
 
 
-    
+
+    public function call_africa(request $request)
+    {
+
+
+        $name = $request->name;
+        $phone_no = $request->phone;
+        $number = $request->phone;
+        $plan = $request->plan;
+        $user_id = $request->user_id;
+
+        $token = africa_token() ?? null;
+
+        return view('africa-call', compact('name', 'token', 'phone_no', 'number','plan','user_id'));
+    }
+
+    public function call_other(request $request)
+    {
+
+
+        function localize_us_number($phone) {
+            // $numbers_only = preg_replace("/[^\d]/", "", $phone);
+            return preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $phone);
+        }
+
+        $name = $request->name;
+        $phone = $request->phone;
+        $phone_no = localize_us_number($phone);
+        $number = $request->phone;
+        $plan = $request->plan;
+        $user_id = $request->user_id;
+
+        return view('call', compact('name', 'phone_no', 'number','plan','user_id'));
+    }
+
+
 
 
 

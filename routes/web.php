@@ -1,12 +1,13 @@
 <?php
 
-use App\Events\RealTimeMessage;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\VoiceController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\ProfileController;
 use App\Events\NewMessage;
+use App\Events\RealTimeMessage;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CallController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\VoiceController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Auth\ProfileController;
 
 
 /*
@@ -56,8 +57,8 @@ Route::get('processing', [PaymentController::class, 'processing']);
 
 
 
-Route::get('call-africa', [VoiceController::class, 'call']);
-Route::get('call-other', [VoiceController::class, 'call_other']);
+Route::get('call-africa', [CallController::class, 'call_africa']);
+Route::get('call-other', [CallController::class, 'call_other']);
 
 
 

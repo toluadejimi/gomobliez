@@ -1,0 +1,75 @@
+{
+    "name": "saloonphp/laravel-plugin",
+    "description": "Laravel plugin for Saloon",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "sammyjo20",
+        "saloon",
+        "sdk",
+        "api",
+        "api-integrations"
+    ],
+    "authors": [
+        {
+            "name": "Sam Carré",
+            "email": "29132017+Sammyjo20@users.noreply.github.com",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://github.com/saloonphp/laravel-plugin",
+    "require": {
+        "php": "^8.1",
+        "illuminate/console": "^10.0",
+        "illuminate/http": "^10.0",
+        "illuminate/support": "^10.0",
+        "saloonphp/saloon": "^3.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.5",
+        "orchestra/testbench": "^v7.30 || ^v8.10",
+        "pestphp/pest": "^v1.23",
+        "phpstan/phpstan": "^1.9"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Saloon\\Laravel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Saloon\\Laravel\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "aliases": {
+                "Saloon": "Saloon\\Laravel\\Facades\\Saloon"
+            },
+            "providers": [
+                "Saloon\\Laravel\\SaloonServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php ./vendor/bin/testbench package:discover --ansi"
+        ],
+        "fix-code": [
+            "./vendor/bin/php-cs-fixer fix --allow-risky=yes"
+        ],
+        "test": [
+            "./vendor/bin/pest"
+        ],
+        "pstan": [
+            "./vendor/bin/phpstan analyse"
+        ]
+    }
+}

@@ -17,6 +17,7 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
+        "africastalking-client": "^1.0.7",
         "socket.io-client": "^4.7.2"
     }
 }
