@@ -209,6 +209,9 @@ class CallController extends Controller
             // Print the response onto the page so that our gateway can read it
             header('Content-type: application/xml');
 
+            header('Content-type: application/xml');
+            echo $response;
+
             $message = $response;
             send_notification($message);
 
