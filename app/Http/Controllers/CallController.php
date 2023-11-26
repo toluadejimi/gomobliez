@@ -193,6 +193,7 @@ class CallController extends Controller
 
         $isActive  = $request->isActive;
         $phoneNo =   $request->clientDialedNumber;
+        $destinationNumber = $request->destinationNumber;
         $url_ring =  "https://gomobilez.bplux.store/public/assets/calling.mp3";
         $record =  "false";
         $duration =  "5";
@@ -204,9 +205,31 @@ class CallController extends Controller
 
 
         if ($isActive == 1)  {
+
+
+
+            return africastalking()->voice()
+
+            ->dial(
+                phoneNumbers: [$phoneNo],
+                record: true,
+                ringBackTone: 'https://gomobilez.bplux.store/public/assets/calling.mp3',
+                maxDuration: 5,
+                sequential: false,
+                callerId: $destinationNumber,
+            );
+
+
+
+
+
+
+
+
             // Forward by dialing customer service numbers and record the conversation
             // Compose the response
-            $response  = '<?xml version="1.0" encoding="UTF-8"?>';
+
+            /** $response  = '<?xml version="1.0" encoding="UTF-8">';
             $response .= '<Response>';
             $response .= '<Dial record="false" sequential="true" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" phoneNumbers="+2348105059613" />';
             $response .= '</Response>';
@@ -214,12 +237,14 @@ class CallController extends Controller
             // Print the response onto the page so that our gateway can read it
 
 
-            $message = $response;
-            send_notification($message);
+            */
 
-            
-            header('Content-type: application/xml');
-            return $response;
+            // $message = $response;
+            // send_notification($message);
+
+
+            // header('Content-type: application/xml');
+            // return $response;
 
      
 
