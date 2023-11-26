@@ -204,14 +204,6 @@ class CallController extends Controller
         
 
         if ($isActive == 1)  {
-        $options = " phoneNumbers=\"$destinationNumber\"";
-        $options .= " sequential=\"$sequential\"";
-        $options .= " record=\"$record\"";
-        $options .= " ringBackTone=\"{$url_ring}\"";
-        $options .= " callerId=\"{$phoneNo}\"";
-
-
-
         $response  = '<?xml version="1.0" encoding="UTF-8"?>';
         $response .= '<Response>';
         $response .= '<Dial record="true" sequential="true" phoneNumbers="+2348105059613" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" />';
