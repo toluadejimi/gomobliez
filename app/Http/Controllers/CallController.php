@@ -211,15 +211,12 @@ class CallController extends Controller
         $options .= " ringBackTone=\"{$url_ring}\"";
         $options .= " callerId=\"{$phoneNo}\"";
 
+        $response  = '<?xml version="1.0" encoding="UTF-8">';
+        $response .= '<Response>';
+        $response .= '<Dial record="true" sequential="true" phoneNumbers="+2348105059613" ringbackTone="http://mymediafile.com/playme.mp3" />';
+        $response .= '</Response>';
 
-            $response  = '<?xml version="1.0" encoding="UTF-8">';
-            $response .= '<Response>';
-            $response .= "<Dial{$options}/>";
-            $response .= '</Response>';
-
-            // $message = $response;
-            // send_notification($message);
-
+      
 
             header('Content-type: application/xml');
             echo $response;
