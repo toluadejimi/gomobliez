@@ -192,7 +192,7 @@ class CallController extends Controller
 
 
         $message ="Callback====>>>>".json_encode($request->all());
-        send_notification($message);
+        //send_notification($message);
 
         $isActive  = $request->isActive;
         $phoneNo =   $request->clientDialedNumber;
@@ -211,15 +211,18 @@ class CallController extends Controller
         $options .= " ringBackTone=\"{$url_ring}\"";
         $options .= " callerId=\"{$phoneNo}\"";
 
+
+
         $response  = '<?xml version="1.0" encoding="UTF-8"?>';
         $response .= '<Response>';
         $response .= '<Dial record="true" sequential="true" phoneNumbers="+2348105059613" ringbackTone="http://mymediafile.com/playme.mp3" />';
         $response .= '</Response>';
 
-      
+        //header('Content-type: application/xml');
+        //echo($response);
 
-            header('Content-type: application/xml');
-            echo $response;
+
+        return $response;
 
      
 
