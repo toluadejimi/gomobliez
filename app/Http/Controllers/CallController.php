@@ -194,6 +194,8 @@ class CallController extends Controller
         $isActive  = $request->isActive;
         $phoneNo =   $request->clientDialedNumber;
         $url_ring =  "https://gomobilez.bplux.store/public/assets/calling.mp3";
+        $duration =  5;
+
 
 
 
@@ -203,7 +205,7 @@ class CallController extends Controller
             // Compose the response
             $response  = '<?xml version="1.0" encoding="UTF-8"?>';
             $response .= '<Response>';
-            $response .= "<Dial phoneNumbers=".$phoneNo."\n ringbackTone=".$url_ring." \nrecord="false" \nmaxDuration="5" \nsequential="true" />";
+            $response .= "<Dial phoneNumbers=".$phoneNo."\n ringbackTone=".$url_ring."\nrecord=".false." \n maxDuration=".$duration." \n sequential=".true." />";
             $response .= '</Response>';
 
             // Print the response onto the page so that our gateway can read it
