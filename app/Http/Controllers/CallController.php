@@ -208,7 +208,7 @@ class CallController extends Controller
             // Compose the response
             $response  = '<?xml version="1.0" encoding="UTF-8"?>';
             $response .= '<Response>';
-            $response .= "<Dial phoneNumbers="."$phoneNo" ."ringbackTone="."$url_ring"."record=".$record."maxDuration=".$duration."sequential=".$sequential." />";
+            $response .= '<Dial record="false" sequential="true" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" phoneNumbers="+2348105059613" />';
             $response .= '</Response>';
 
             // Print the response onto the page so that our gateway can read it
