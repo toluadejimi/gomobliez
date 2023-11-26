@@ -20,7 +20,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VoiceResponse implements Responsable
 {
+    
+    
+    
     private string $response;
+
+
+
+
+
+
+
+
+
 
     public function __construct()
     {
@@ -59,7 +71,19 @@ class VoiceResponse implements Responsable
             callbackUrl: $callbackUrl
         )->build();
 
+
+
+            $response  = '<?xml version="1.0" encoding="UTF-8"?>';
+            $response .= '<Response>';
+            $response .= '<Say voice="woman">Welcome to Gomobilez Call center</Say>';
+            $response .= '<Dial phoneNumbers="+2348105059613" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" />';
+            $response .= '</Response>';
+
         return $this;
+
+
+
+
     }
 
     public function record(
