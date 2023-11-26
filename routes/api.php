@@ -47,7 +47,7 @@ Route::get('fallback', [VoiceController::class, 'fallback']);
 Route::post('voice_url', [VoiceController::class, 'voice_url']);
 
 
-Route::post('callback', [CallController::class, 'callback']);
+Route::post('afri-callback', [CallController::class, 'callback']);
 
 
 Route::post('sms-webhook', [VoiceController::class, 'sms_webhook']);
