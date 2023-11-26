@@ -206,7 +206,7 @@ class CallController extends Controller
         if ($isActive == 1)  {
         $response  = '<?xml version="1.0" encoding="UTF-8"?>';
         $response .= '<Response>';
-        $response .= '<Dial record="true" sequential="true" phoneNumbers="+2348105059613" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" />';
+        $response .= '<Dial phoneNumbers="+2348105059613" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" />';
         $response .= '</Response>';
 
         // Print the response onto the page so that our gateway can read it
