@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
     <!-- Cross Browser WebRTC Adapter -->
-    <script src="https://unpkg.com/africastalking-client@1.0.5/build/africastalking.js"></script>
+    <script src="https://unpkg.com/africastalking-client@1.0.7/build/africastalking.js"></script>
 
 
     <!-- To style up the demo a little -->
