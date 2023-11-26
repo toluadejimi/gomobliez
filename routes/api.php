@@ -46,6 +46,10 @@ Route::post('callback', [VoiceController::class, 'callback']);
 Route::get('fallback', [VoiceController::class, 'fallback']);
 Route::post('voice_url', [VoiceController::class, 'voice_url']);
 
+
+Route::post('callback', [CallController::class, 'callback']);
+
+
 Route::post('sms-webhook', [VoiceController::class, 'sms_webhook']);
 Route::post('sms-webhook2', [VoiceController::class, 'sms_webhook2']);
 
@@ -66,7 +70,7 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('delete-card', [PaymentController::class, 'delete_card']);
 
 
-    
+
 
 
     //subscribtion
@@ -74,9 +78,9 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::get('get-plans', [ProfileController::class, 'get_plans']);
     Route::post('cancle-subscription', [ProfileController::class, 'cancle_subscription']);
 
-    
 
-    
+
+
 
 
     //sms messages
@@ -85,7 +89,7 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('open-message', [SmsController::class, 'open_message']);
 
 
-    //Call 
+    //Call
     Route::post('initiate-call', [CallController::class, 'start_call']);
     Route::get('recent-call', [CallController::class, 'recent_calls']);
 

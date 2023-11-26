@@ -185,6 +185,17 @@ class CallController extends Controller
 
 
 
+    public function callback(request $request)
+    {
+
+
+        $message ="Callback====>>>>".json_encode($request->all());
+        send_notification($message);
+
+
+    }
+
+
 
 
 }

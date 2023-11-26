@@ -123,7 +123,6 @@
 
                     try {
                         client.call(phoneNo);
-                        client.muteAudio();
                     } catch (error) {
                         console.error('Error making the call:', error);
                     }
