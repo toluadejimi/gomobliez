@@ -158,9 +158,7 @@ class CallController extends Controller
         $plan = $request->plan;
         $user_id = $request->user_id;
 
-        $token = africa_token() ?? null;
-
-        return view('africa-call', compact('name', 'token', 'phone_no', 'number','plan','user_id'));
+        return view('africa-call', compact('name', 'phone_no', 'number','plan','user_id'));
     }
 
     public function call_other(request $request)
