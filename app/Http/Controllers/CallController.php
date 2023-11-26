@@ -193,7 +193,7 @@ class CallController extends Controller
 
         $isActive  = $request->isActive;
         $phoneNo =   $request->clientDialedNumber;
-        $url_ring =  "https://gomobilez.bplux.store/public/assets/calling.mp3")
+        $url_ring =  "https://gomobilez.bplux.store/public/assets/calling.mp3";
         $record =  "false";
         $duration =  "5";
         $sequential = "true";
