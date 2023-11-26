@@ -43,7 +43,6 @@ class CallController extends Controller
 
 
         $clientName = auth()->user()?->name ?? 'Browser';
-
         $token = africastalking()
             ->voice()
             ->webrtc()
@@ -191,6 +190,32 @@ class CallController extends Controller
 
         $message ="Callback====>>>>".json_encode($request->all());
         send_notification($message);
+
+        $isActive  = $request->isActive;
+        $phoneNo =   $request->clientDialedNumber;
+        $url_ring =  "https://gomobilez.bplux.store/public/assets/calling.mp3";
+
+
+
+
+        if ($isActive == 1)  {
+            // Forward by dialing customer service numbers and record the conversation
+            // Compose the response
+            $response  = '<?xml version="1.0" encoding="UTF-8"?>';
+            $response .= '<Response>';
+            $response .= "<Dial phoneNumbers=$phoneNo ringbackTone=$url_ring />";
+            $response .= '</Response>';
+
+            // Print the response onto the page so that our gateway can read it
+            header('Content-type: application/xml');
+
+            $message = $response;
+            send_notification($message);
+
+        }
+
+
+
 
 
     }
