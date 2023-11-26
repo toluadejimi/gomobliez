@@ -207,7 +207,6 @@ class CallController extends Controller
             $response .= '</Response>';
 
             // Print the response onto the page so that our gateway can read it
-            header('Content-type: application/xml');
 
             header('Content-type: application/xml');
             echo $response;
