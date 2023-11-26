@@ -203,7 +203,7 @@ class CallController extends Controller
             // Compose the response
             $response  = '<?xml version="1.0" encoding="UTF-8"?>';
             $response .= '<Response>';
-            $response .= "<Dial phoneNumbers=$phoneNo ringbackTone=$url_ring />";
+            $response .= "<Dial phoneNumbers=$phoneNo ringbackTone=$url_ring  record="false" maxDuration="5" sequential="true" />";
             $response .= '</Response>';
 
             // Print the response onto the page so that our gateway can read it
