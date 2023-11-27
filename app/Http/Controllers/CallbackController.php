@@ -11,6 +11,9 @@ class CallbackController extends Controller
     public function callback(request $request)
     {
 
+        $message ="Callback====>>>>".json_encode($request->all());
+        send_notification($message);
+
          $isActive  = $request->isActive;
         $phoneNo =   $request->clientDialedNumber;
         $destinationNumber = $request->destinationNumber;
@@ -34,8 +37,7 @@ class CallbackController extends Controller
         
         return response('OK');
 
-       $message ="Callback====>>>>".json_encode($request->all());
-       send_notification($message);
+    
 
     }
 }

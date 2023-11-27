@@ -93,6 +93,7 @@
 
         var client;
 
+        /**
 
             if (typeof Africastalking !== 'undefined') {
                 const params = {
@@ -137,101 +138,106 @@
                 }
             }
 
+        */
 
 
 
+        if (typeof Africastalking !== 'undefined') {
+            const params = {
+                sounds: {
+                    dialing: "{{ url('') }}/public/assets/calling.mp3",
+                    ringing: "{{ url('') }}/public/assets/calling.mp3",
+                },
+            };
 
 
-      /**
-       * Hangup the currentCall if present
-       */
-       function hangup() {
-        if (currentCall) {
-            currentCall.hangup();
-        }
+                try {
+                    // Initialize the client variable
+                    client = new Africastalking.Client(token, params);
 
-        //window.location.href = "/home";
-        }
+                    console.log(client);
 
-      function saveInLocalStorage(e) {
-        var key = e.target.name || e.target.id;
-        localStorage.setItem('telnyx.example.' + key, e.target.value);
-      }
+                    // Set up event listeners
+                    client.onCallEstablished(() => {
+                        updateCallStatus('Connected');
+                        console.log('Call established. Start the timer!');
+                        startTimer();
+                    });
 
-      function ready(callback) {
-        if (document.readyState != 'loading') {
-          callback();
-        } else if (document.addEventListener) {
-          document.addEventListener('DOMContentLoaded', callback);
-        } else {
-          document.attachEvent('onreadystatechange', function () {
-            if (document.readyState != 'loading') {
-              callback();
-            }
-          });
-        }
-      }
+                    client.onRinging(() => {
+                        updateCallStatus('Ringing');
+                        console.log('Ringing...');
+                    });
 
+                    client.onDisconnected(() => {
+                        updateCallStatus('Disconnected');
+                        console.log('Call disconnected.');
+                    });
 
-      function endCall() {
-        if (currentCall) {
-            currentCall.hangup();
-        }
-    }
-
-        var startTime;
-        var timerInterval;
-
-        function handleCallUpdate(call) {
-            currentCall = call;
-            switch (call.state) {
-                // ... Existing cases ...
-
-                case 'active': // Call has become active
-                    document.getElementById('connectStatus').innerHTML = 'Call Connected';
-                    startTimer();
-                    break;
-
-                case 'hangup': // Call is over
-                    document.getElementById('connectStatus').innerHTML = 'Call Ended';
-                    stopTimer();
-                    break;
-
-                // ... Existing cases ...
-            }
-        }
-
-        function startTimer() {
-            startTime = new Date();
-
-            // Update the timer every second
-            timerInterval = setInterval(function () {
-                updateTimer();
-
-                // Charge the user every 60 seconds
-                if (Math.floor((new Date() - startTime) / 1000) % 60 === 0) {
-                    chargeUser();
+                    // Call the function on page load
+                    makeCall();
+                } catch (error) {
+                    console.error('Error initializing Africastalking client:', error);
                 }
-            }, 1000);
-        }
+            } else {
+                console.error('Africastalking SDK is not loaded.');
+            }
 
-        function stopTimer() {
-            clearInterval(timerInterval);
-        }
+            function makeCall() {
+                // Check if the client is defined
+                if (client) {
+                    try {
+                        client.call(phoneNo);
+                    } catch (error) {
+                        console.error('Error making the call:', error);
+                    }
+                } else {
+                    console.error('Africastalking client is not initialized.');
+                }
+            }
 
-        function updateTimer() {
-            var currentTime = new Date();
-            var elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+            function startTimer() {
+                let startTime = new Date().getTime();
 
-            var minutes = Math.floor(elapsedSeconds / 60);
-            var seconds = elapsedSeconds % 60;
+                // Update the timer every second
+                setInterval(() => {
+                    let currentTime = new Date().getTime();
+                    let elapsedTime = Math.floor((currentTime - startTime) / 1000);
 
-            // Format the timer display
-            var timerDisplay = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+                    // Display the elapsed time or perform any other actions
+                    console.log('Elapsed Time:', elapsedTime, 'seconds');
+                }, 1000);
+            }
 
-            // Update the timer element
-            document.getElementById('callTimer').innerHTML = timerDisplay;
-        }
+            function endCall() {
+                // Check if the client is defined
+                if (client) {
+                    try {
+                        client.hangup();
+                    } catch (error) {
+                        console.error('Error ending the call:', error);
+                    }
+                } else {
+                    console.error('Africastalking client is not initialized.');
+                }
+            }
+
+            function updateCallStatus(status) {
+                document.getElementById('callStatus').innerText = 'Call Status: ' + status;
+            }
+
+
+
+
+
+   
+
+
+
+
+
+
+
 
 
         @if($plan == 0)
@@ -273,10 +279,12 @@
 
 
 
+    </script>
 
 
 
-        </script>
+
+
 </body>
 
 </html>
