@@ -1,30 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
-
-
-
-use DOMDocument;
 use App\Models\Call;
 use App\Models\User;
 use App\Models\MyPlan;
 use App\Models\Setting;
-use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use SamuelMwangiW\Africastalking\Facades\Africastalking;
+use Illuminate\Support\Facades\Response;
 use SamuelMwangiW\Africastalking\Response\VoiceResponse;
-
-
-
 
 class CallController extends Controller
 {
     public function start_call(request $request)
     {
-
 
         $plans = MyPlan::where('user_id', Auth::id())->first()->status ?? null;
         if($plans == null || $plans == 0){
@@ -34,10 +25,6 @@ class CallController extends Controller
         }
 
         $user_id = Auth::id();
-
-
-
-
 
 
 
@@ -187,61 +174,7 @@ class CallController extends Controller
 
 
 
-    public function callback(request $request)
-    {
-
-
-        $message ="Callback====>>>>".json_encode($request->all());
-        //send_notification($message);
-
-        $isActive  = $request->isActive;
-        $phoneNo =   $request->clientDialedNumber;
-        $destinationNumber = $request->destinationNumber;
-        $url_ring =  "https://gomobilez.bplux.store/public/assets/calling.mp3";
-        $record =  "false";
-        $duration =  "5";
-        $sequential = "true";
-
-        
-
-        if ($isActive == 1)  {
-       
-       
-        //$response  = '<?xml version="1.0" encoding="UTF-8">';
-        // $response .= '<Response>';
-        // $response .= '<Dial record="true" sequential="true" phoneNumbers="+2348105059613" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" />';
-        // $response .= '</Response>';
-
-      
-
-        // $dom = new DOMDocument;
-        // $dom->preserveWhiteSpace = false;
-        // $dom->formatOutput = true;
-        // $dom->loadXML($response);
-
-        // $cleanedXmlString = $dom->saveXML();
-
-        // header('Content-type: application/xml');
-        // echo $cleanedXmlString;
-
-
-        $response = "hello";
-        //$response .= '<Response>';
-
-
-        echo $response;
-
-
-
-     
-
-        }
-
-
-
-
-
-    }
+  
 
 
 

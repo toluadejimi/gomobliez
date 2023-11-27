@@ -7,6 +7,7 @@ use App\Http\Controllers\VoiceController;
 use App\Http\Controllers\NumberController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CallbackController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterationController;
 use App\Http\Controllers\Transaction\EnkpayposController;
@@ -47,7 +48,7 @@ Route::get('fallback', [VoiceController::class, 'fallback']);
 Route::post('voice_url', [VoiceController::class, 'voice_url']);
 
 
-Route::post('afri-callback', [CallController::class, 'callback']);
+Route::post('afri-callback', [CallbackController::class, 'callback']);
 
 
 Route::post('sms-webhook', [VoiceController::class, 'sms_webhook']);
