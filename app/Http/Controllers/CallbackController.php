@@ -12,7 +12,7 @@ class CallbackController extends Controller
     {
 
          $isActive  = $request->isActive;
-        $phoneNo =   "+".$request->clientDialedNumber;
+        $phoneNo =   $request->clientDialedNumber;
         $destinationNumber = $request->destinationNumber;
         $url_ring =  "https://gomobilez.bplux.store/public/assets/calling.mp3";
         $record =  "false";

@@ -88,8 +88,8 @@
 
         <script type="text/javascript">
             var token = "{{ $token }}"
-        const phoneNo = "{{ $phone_no }}";
-
+            var phone = "{{$phone_no}}";
+            let phoneNo = phone.replace(/\s/g, '');
 
         var client;
 
@@ -97,8 +97,8 @@
             if (typeof Africastalking !== 'undefined') {
                 const params = {
                     sounds: {
-                        dialing: "{{ url('') }}/assets/calling.mp3",
-                        ringing: "{{ url('') }}/assets/calling.mp3",
+                        dialing: "{{ url('') }}/public/assets/calling.mp3",
+                        ringing: "{{ url('') }}/public/assets/calling.mp3",
                     },
                 };
 
@@ -124,7 +124,7 @@
 
                     try {
                         client.call(phoneNo);
-                        console.log(phoneNo);
+                       console.log(phoneNo);
 
                     } catch (error) {
                         console.error('Error making the call:', error);

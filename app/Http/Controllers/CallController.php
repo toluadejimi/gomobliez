@@ -39,8 +39,11 @@ class CallController extends Controller
             ->for($clientName)
             ->token();
 
+        $phone = trim($request->phone_no);
 
-        $call_url = url('')."/call-africa?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt&token=$token->token&clientName=$token->clientName";
+
+
+        $call_url = url('')."/call-africa?phone=$phone&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt&token=$token->token&clientName=$token->clientName";
 
             $call = new Call();
             $call->user_id = Auth::id();
