@@ -26,7 +26,7 @@ class CallbackController extends Controller
                         phoneNumbers: [$phoneNo],
                         record: true,
                         ringBackTone: 'https://gomobilez.bplux.store/public/assets/calling.mp3',
-                        maxDuration: 5,
+                        maxDuration: 300,
                         sequential: false,
                         callerId: $destinationNumber,
                        );
