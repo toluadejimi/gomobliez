@@ -88,7 +88,7 @@
 
         <script type="text/javascript">
             var token = "{{ $token }}"
-            var phone = "{{$phone_no}}";
+            var phone = "+{{$phone_no}}";
             let phoneNo = phone.replace(/\s/g, '');
 
         var client;
