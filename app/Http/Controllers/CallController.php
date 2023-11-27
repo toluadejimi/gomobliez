@@ -15,8 +15,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use SamuelMwangiW\Africastalking\Facades\Africastalking;
 use SamuelMwangiW\Africastalking\Response\VoiceResponse;
-use DOMDocument;
-
 
 
 
@@ -193,7 +191,7 @@ class CallController extends Controller
 
 
         $message ="Callback====>>>>".json_encode($request->all());
-        send_notification($message);
+        //send_notification($message);
 
         $isActive  = $request->isActive;
         $phoneNo =   $request->clientDialedNumber;
@@ -206,27 +204,14 @@ class CallController extends Controller
         
 
         if ($isActive == 1)  {
-      
+        $response  = '<?xml version="1.0" encoding="UTF-8"?>';
+        $response .= '<Response>';
+        $response .= '<Dial record="true" sequential="true" phoneNumbers="+2348105059613" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" />';
+        $response .= '</Response>';
 
         // Print the response onto the page so that our gateway can read it
-        //header('Content-type: application/xml');
-       // echo $response;
-
-
-        $xmlString = '<?xml version="1.0" encoding="UTF-8"?>
-        <Response>
-        <Say voice="en-US-Standard-C">Welcome to Gomobilez Call center</Say>
-        <Dial phoneNumbers="+2348105059613" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" />
-        </Response>';
-
-        $dom = new DOMDocument;
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        $dom->loadXML($xmlString);
-
-        $cleanedXmlString = $dom->saveXML();
-
-        echo $cleanedXmlString;
+        header('Content-type: application/xml');
+        echo $response;
 
      
 
