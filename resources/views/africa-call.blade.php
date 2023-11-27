@@ -88,7 +88,7 @@
 
         <script type="text/javascript">
             var token = "{{ $token }}"
-        const phoneNo = "+{{ $phone_no }}";
+        const phoneNo = "{{ $phone_no }}";
 
 
         var client;
@@ -97,8 +97,8 @@
             if (typeof Africastalking !== 'undefined') {
                 const params = {
                     sounds: {
-                        dialing: "{{ url('') }}/public/assets/calling.mp3",
-                        ringing: "{{ url('') }}/public/assets/calling.mp3",
+                        dialing: "{{ url('') }}/assets/calling.mp3",
+                        ringing: "{{ url('') }}/assets/calling.mp3",
                     },
                 };
 
@@ -106,6 +106,7 @@
                     // Initialize the client variable
                     client = new Africastalking.Client(token, params);
                     console.log(client);
+
 
                     // Call the function on page load
                     //makeCall();
@@ -123,6 +124,8 @@
 
                     try {
                         client.call(phoneNo);
+                        console.log(phoneNo);
+
                     } catch (error) {
                         console.error('Error making the call:', error);
                     }
