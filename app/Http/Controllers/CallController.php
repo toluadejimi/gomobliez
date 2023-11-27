@@ -225,7 +225,9 @@ class CallController extends Controller
         // echo $cleanedXmlString;
 
 
-        $response = '<Response>';
+        $response = "hello";
+        //$response .= '<Response>';
+
 
         echo $response;
 
