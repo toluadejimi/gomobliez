@@ -21,7 +21,7 @@ class CallbackController extends Controller
 
         if ($request->input('isActive')){
             return africastalking()->voice()
-                       ->say('Welcome to Gomobilez Call Center')
+                       //->say('Welcome to Gomobilez Call Center')
                        ->dial(
                         phoneNumbers: [$phoneNo],
                         record: true,
