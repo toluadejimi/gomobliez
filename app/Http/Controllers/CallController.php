@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 
+use DOMDocument;
 use App\Models\Call;
 use App\Models\User;
 use App\Models\MyPlan;
@@ -209,9 +210,20 @@ class CallController extends Controller
         $response .= '<Dial record="true" sequential="true" phoneNumbers="+2348105059613" ringbackTone="https://gomobilez.bplux.store/public/assets/calling.mp3" />';
         $response .= '</Response>';
 
-        // Print the response onto the page so that our gateway can read it
+      
+
+        $dom = new DOMDocument;
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->loadXML($response);
+
+        $cleanedXmlString = $dom->saveXML();
+
         header('Content-type: application/xml');
-        echo $response;
+        echo $cleanedXmlString;
+
+
+
 
      
 
