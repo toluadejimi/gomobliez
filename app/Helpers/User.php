@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Twilio\Jwt\AccessToken;
+use Illuminate\Http\Request;
 use Twilio\Jwt\Grants\VoiceGrant;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -233,4 +234,17 @@ function africa_token(){
 
 
 
+}
+
+
+function calculateCallTime($costPerSecond, $walletAmount)
+{
+
+    if (Auth::user()->wallet < 0) {
+        return "Insufficient funds";
+    }
+
+    $callTimeSeconds = $walletAmount / $costPerSecond;
+    $callTimeFormatted = gmdate("H:i:s", $callTimeSeconds);
+    return $callTimeFormatted;
 }

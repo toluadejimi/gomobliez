@@ -50,13 +50,6 @@ class ProfileController extends Controller
             $user['pending_messages'] = $pending_messages;
             $user['message_credit'] = $message_credit;
 
-
-
-
-
-
-
-
             return response()->json([
                 'status' => true,
                 'data' => $user,
@@ -108,8 +101,6 @@ class ProfileController extends Controller
     public function cancle_subscription(Request $request)
     {
 
-
-
         $p = MyPlan::where('id', $request->id)->first() ?? null;
         $amount = Setting::where('id', 1)->first()->call_cost ?? 0;
 
@@ -141,7 +132,7 @@ class ProfileController extends Controller
 
         }
 
-        
+
     }
 
 
@@ -170,7 +161,7 @@ class ProfileController extends Controller
         $body['phone_no'] = $set->phone_no;
         $body['email'] = $set->email;
 
-        
+
             return response()->json([
                 'status' => true,
                 'data' => $body,
@@ -186,6 +177,8 @@ class ProfileController extends Controller
 
         $usr = new OldUser();
         $usr->email = Auth::user()->email ?? null;
+        $usr->save();
+
         $request->user()->token()->revoke();
 
         User::where('id', Auth::id())->delete();
@@ -196,6 +189,24 @@ class ProfileController extends Controller
             'data' => $body,
         ], 200);
 
+
+
+    }
+
+
+
+    public function legal(Request $request)
+    {
+
+        $data['gdpr'] = url('')."/gdpr";
+        $data['policy'] = url('')."/policy";
+        $data['copyrite'] = url('')."/copyrite";
+
+
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+            ], 200);
 
 
     }

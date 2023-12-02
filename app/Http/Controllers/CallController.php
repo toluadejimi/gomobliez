@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Call;
 use App\Models\User;
 use App\Models\MyPlan;
@@ -18,9 +19,9 @@ class CallController extends Controller
     {
 
         $plans = MyPlan::where('user_id', Auth::id())->first()->status ?? null;
-        if($plans == null || $plans == 0){
+        if ($plans == null || $plans == 0) {
             $plan = 0;
-        }else{
+        } else {
             $plan = 0;
         }
 
@@ -32,14 +33,14 @@ class CallController extends Controller
         if (Str::contains($request->phone_no, $phone)) {
 
 
-        $clientName = auth()->user()?->name ?? 'Browser';
-        $token = africastalking()
-            ->voice()
-            ->webrtc()
-            ->for($clientName)
-            ->token();
+            $clientName = auth()->user()?->name ?? 'Browser';
+            $token = africastalking()
+                ->voice()
+                ->webrtc()
+                ->for($clientName)
+                ->token();
 
-        $call_url = url('')."/call-africa?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt&token=$token->token&clientName=$token->clientName";
+            $call_url = url('') . "/call-africa?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt&token=$token->token&clientName=$token->clientName";
 
             $call = new Call();
             $call->user_id = Auth::id();
@@ -50,10 +51,18 @@ class CallController extends Controller
             $call->to_phone = $request->phone_no;
             $call->call_url = $call_url;
             $call->save();
+
+            $data['call_url']=$call_url;
+            
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ], 200);
+
 
         } else {
 
-            $call_url = url('')."/call-other?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
+            $call_url = url('') . "/call-other?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
 
             $call = new Call();
             $call->user_id = Auth::id();
@@ -65,18 +74,25 @@ class CallController extends Controller
             $call->call_url = $call_url;
             $call->save();
 
+
+            $costPerSecond = Setting::where('id', 1)->first()->call_cost;
+            $walletAmount = Auth::user()->wallet;
+            $callTime = calculateCallTime($costPerSecond, $walletAmount);
+
+
+            $data['key'] = env('TELNYX');
+            $data['sip_username'] = env('SIPUSERNAME');
+            $data['sip_pass'] = env('SIPPASS');
+            $data['conntid'] = env('CONNTID');
+            $data['total_time_call'] = $callTime;
+            $data['wallet_amount'] = Auth::user()->wallet;
+
+
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ], 200);
         }
-
-
-        $data['url'] = $call_url;
-        return response()->json([
-          'status' => true,
-           'data' => $data
-        ], 200);
-
-
-
-
     }
 
 
@@ -89,14 +105,13 @@ class CallController extends Controller
         $call_cost = Setting::where('id', 1)->first()->call_cost;
 
 
-        if($call_cost > $wallet){
+        if ($call_cost > $wallet) {
 
             return response()->json([
                 'data' => false,
                 'wallet' => $wallet
 
             ]);
-
         }
 
         User::where('id', $request->userId)->decrement('wallet', $call_cost);
@@ -106,9 +121,6 @@ class CallController extends Controller
             'wallet' => $wallet
 
         ]);
-
-
-
     }
 
 
@@ -118,20 +130,17 @@ class CallController extends Controller
 
         $calls = Call::latest()->select('to_phone', 'name', 'call_url', 'created_at')->where('user_id', Auth::id())->get() ?? null;
 
-        if($calls == null){
+        if ($calls == null) {
             $data['calls'] = [];
-        }else{
+        } else {
             $data['calls'] = $calls;
         }
 
 
-         return response()->json([
-          'status' => true,
-           'data' => $data
+        return response()->json([
+            'status' => true,
+            'data' => $data
         ], 200);
-
-
-
     }
 
 
@@ -148,14 +157,15 @@ class CallController extends Controller
 
         $token = $request->token; //africa_token() ?? null;
 
-        return view('africa-call', compact('name', 'token', 'phone_no', 'number','plan','user_id'));
+        return view('africa-call', compact('name', 'token', 'phone_no', 'number', 'plan', 'user_id'));
     }
 
     public function call_other(request $request)
     {
 
 
-        function localize_us_number($phone) {
+        function localize_us_number($phone)
+        {
             // $numbers_only = preg_replace("/[^\d]/", "", $phone);
             return preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $phone);
         }
@@ -167,15 +177,6 @@ class CallController extends Controller
         $plan = $request->plan;
         $user_id = $request->user_id;
 
-        return view('call', compact('name', 'phone_no', 'number','plan','user_id'));
+        return view('call', compact('name', 'phone_no', 'number', 'plan', 'user_id'));
     }
-
-
-
-
-  
-
-
-
-
 }

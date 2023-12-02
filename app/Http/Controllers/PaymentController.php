@@ -23,8 +23,7 @@ class PaymentController extends Controller
     {
 
 
-        if ($request->vendor == 'pay_pal')
-        {
+        if ($request->vendor == 'pay_pal') {
             $token = pay_pal_token();
             $trxID = "GFUND-" . date('ymd-his');
 
@@ -104,7 +103,7 @@ class PaymentController extends Controller
             curl_close($curl);
 
             $var = json_decode($var);
-            $link =$var->links[1]->href ?? null;
+            $link = $var->links[1]->href ?? null;
             $query = parse_url($link, PHP_URL_QUERY);
             parse_str($query, $query_params);
             $token = $query_params['token'];
@@ -134,9 +133,6 @@ class PaymentController extends Controller
                     'status' => true,
                     'data' => $body,
                 ], 200);
-
-
-
             } else {
 
 
@@ -152,7 +148,7 @@ class PaymentController extends Controller
 
             $email = Auth::user()->email;
             $id = Auth::user()->id;
-            $body['href'] = url('')."/stripe?amount=$request->amount&email=$email&id=$id";
+            $body['href'] = url('') . "/stripe?amount=$request->amount&email=$email&id=$id";
 
 
 
@@ -160,67 +156,88 @@ class PaymentController extends Controller
                 'status' => true,
                 'data' => $body,
             ], 200);
-
-
-
-
         }
-
-
-
-
     }
 
 
-    public function charge(request $request){
+    public function charge(request $request)
+    {
 
 
-
-        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        $cost = Plan::where('id', 1)->first()->amount;
         $tok = $request->stripeToken;
-        // $final = str_replace(" ", "", $tok);
-
-        $customer = \Stripe\Customer::create([
-            'source' => $tok,
-            'email' => $request->email,
-        ]);
+        $final = str_replace(" ", "", $tok);
 
 
-       $stripe =  Stripe\Charge::create ([
-                "amount" => $request->amount*100,
-                "currency" => "USD",
+        if ($request->save_payinfo == 'on') {
+
+            $customer = \Stripe\Customer::create([
+                'source' => $tok,
+                'email' => $request->email,
+            ]);
+
+
+            $stripe = \Stripe\Charge::create([
+                'amount' => $request->amount * 100,
+                'currency' => 'usd',
                 'customer' => $customer->id,
-                "description" => "Wallet funding on Gomobilez",
-        ]);
+            ]);
 
 
+            $ck = PayInfo::where("last4", $stripe->source->last4)->first()->last4 ?? null;
+            if ($ck != $stripe->source->last4) {
+                $pay = new PayInfo();
+                $pay->user_id = $request->id;
+                $pay->customer_id = $customer->id;
+                $pay->name = $request->name_on_card;
+                $pay->brand = $stripe->source->brand;
+                $pay->last4 = $stripe->source->last4;
+                $pay->exp_month = $stripe->source->exp_month;
+                $pay->exp_year = $stripe->source->exp_year;
+                $pay->save();
+            }
+
+            $status = $stripe->status ?? null;
+
+            if ($status == 'succeeded') {
+
+                User::where('email', $request->email)->increment('wallet', $request->amount);
+
+                $ref = "FUND" . random_int(0000, 9999) . date("his");
+
+                $amount = $request->amount;
 
 
-        if($request->save_payinfo == 'on'){
+                $trx = new Transaction();
+                $trx->type = 1;
+                $trx->amount = $amount;
+                $trx->status = 1;
+                $trx->save();
 
-        $pay = new PayInfo();
-        $pay->user_id = $request->id;
-        $pay->customer_id = $customer->id;
-        $pay->name = $request->name_on_card;
-        $pay->brand = $stripe->source->brand;
-        $pay->last4 = $stripe->source->last4;
-        $pay->exp_month = $stripe->source->exp_month;
-        $pay->exp_year = $stripe->source->exp_year;
-        $pay->save();
-
+                return view('success', compact('ref', 'amount'));
+            } else {
+                return view('decline', compact('ref', 'amount'));
+            }
         }
 
 
+        $stripe =  Stripe\Charge::create([
+            "amount" => $request->amount * 100,
+            "currency" => "USD",
+            'source' => $tok,
+            "description" => "Wallet funding on Gomobilez",
+        ]);
 
 
         $status = $stripe->status ?? null;
 
-        if($status == 'succeeded'){
+        if ($status == 'succeeded') {
+
 
             User::where('email', $request->email)->increment('wallet', $request->amount);
 
-            $ref = "FUND".random_int(0000,9999).date("his");
+            $ref = "FUND" . random_int(0000, 9999) . date("his");
 
             $amount = $request->amount;
 
@@ -231,34 +248,83 @@ class PaymentController extends Controller
             $trx->status = 1;
             $trx->save();
 
+
             return view('success', compact('ref', 'amount'));
 
 
             echo "Payment_successful";
-
-        }else{
-                echo "Payment_declined";
+        } else {
+            echo "Payment_declined";
         }
-
-
-
-
-
-
-
-
-
     }
 
 
-    public function saved_card_charge(request $request){
 
-        
+    public function charge_saved_cards(request $request)
+    {
+
+        try {
+
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            $customerId = $request->customer_id;
+
+            $stripe = \Stripe\Charge::create([
+                'amount' => $request->amount * 100,
+                'currency' => 'usd',
+                'customer' => $customerId,
+                'description' => 'Charge for Subscription',
+            ]);
+
+
+            $status = $stripe->status ?? null;
+
+
+            if ($status == 'succeeded') {
+
+
+                User::where('email', $request->email)->increment('wallet', $request->amount);
+
+                $ref = "FUND" . random_int(0000, 9999) . date("his");
+
+                $amount = $request->amount;
+
+
+                $trx = new Transaction();
+                $trx->type = 1;
+                $trx->amount = $amount;
+                $trx->status = 1;
+                $trx->save();
+
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Payment completed"
+                ], 200);
+            } else {
+
+                return response()->json([
+                    'status' => false,
+                    'message' => $th->getMessage()
+                ], 500);
+            }
+        } catch (\Exception $th) {
+
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function saved_card_charge(request $request)
+    {
+
+
         Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
 
         $stripe = \Stripe\Charge::create([
-            'amount' => $request->amount*100, 
+            'amount' => $request->amount * 100,
             'currency' => 'usd',
             'customer' => $request->customer_id,
             'description' => 'Wallet Funding',
@@ -267,11 +333,11 @@ class PaymentController extends Controller
 
         $status = $stripe->status ?? null;
 
-        if($status == 'succeeded'){
+        if ($status == 'succeeded') {
 
             User::where('email', $request->email)->increment('wallet', $request->amount);
 
-            $ref = "FUND".random_int(0000,9999).date("his");
+            $ref = "FUND" . random_int(0000, 9999) . date("his");
             $amount = $request->amount;
 
 
@@ -286,29 +352,27 @@ class PaymentController extends Controller
 
 
             return view('success', compact('ref', 'amount'));
-
-        }else{
-                echo "Payment_declined";
+        } else {
+            echo "Payment_declined";
         }
-
-
     }
 
 
-    public function saved_cards(request $request){
+    public function saved_cards(request $request)
+    {
 
-            $info = PayInfo::select('id','customer_id','name')->where('user_id', Auth::id())->get() ?? null;
-            $body['info'] = $info;
+        $info = PayInfo::select('id', 'customer_id', 'name')->where('user_id', Auth::id())->get() ?? null;
+        $body['info'] = $info;
 
-            return response()->json([
-                'status' => true,
-                'data' => $body,
-            ], 200);
-
+        return response()->json([
+            'status' => true,
+            'data' => $body,
+        ], 200);
     }
 
 
-    public function delete_card(request $request){
+    public function delete_card(request $request)
+    {
 
         PayInfo::where('id', $request->id)->delete() ?? null;
         $body['message'] = "Card deleted successfully";
@@ -317,21 +381,20 @@ class PaymentController extends Controller
             'status' => true,
             'data' => $body,
         ], 200);
-
-}
-
+    }
 
 
 
-    public function success(request $request){
+
+    public function success(request $request)
+    {
 
 
-        if($request->ref == null || $request->amount == null ){
-            $ref = "FUND".random_int(0000,9999).date("his");
-        }else{
+        if ($request->ref == null || $request->amount == null) {
+            $ref = "FUND" . random_int(0000, 9999) . date("his");
+        } else {
             $ref = $request->ref;
             $amount = $request->amount;
-
         }
 
 
@@ -341,24 +404,27 @@ class PaymentController extends Controller
     }
 
 
-    public function decline(){
+    public function decline()
+    {
 
-        $ref = "FUND".random_int(0000,9999).date("his");
+        $ref = "FUND" . random_int(0000, 9999) . date("his");
 
 
         return view('decline', compact('ref'));
     }
 
-    public function processing(){
+    public function processing()
+    {
 
-        $ref = "FUND".random_int(0000,9999).date("his");
+        $ref = "FUND" . random_int(0000, 9999) . date("his");
 
 
         return view('processing', compact('ref'));
     }
 
 
-    public function stripe(request $request){
+    public function stripe(request $request)
+    {
         $amount = $request->amount;
         $email = $request->email;
         $id = $request->id;
@@ -368,8 +434,6 @@ class PaymentController extends Controller
 
 
         return view('stripe', compact('amount', 'email', 'id'));
-
-
     }
 
 

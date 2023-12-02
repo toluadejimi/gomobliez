@@ -69,6 +69,10 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('saved-card-payment', [PaymentController::class, 'saved_card_charge']);
     Route::get('saved-cards', [PaymentController::class, 'saved_cards']);
     Route::post('delete-card', [PaymentController::class, 'delete_card']);
+    Route::post('charge-saved-cards', [PaymentController::class, 'charge_saved_cards']);
+
+
+
 
 
 
@@ -107,9 +111,8 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::get('contact-us', [ProfileController::class, 'contact_us']);
     Route::get('delete-account', [ProfileController::class, 'delete_account']);
     Route::get('log-out', [ProfileController::class, 'log_out']);
-    Route::get('copyright', [ProfileController::class, 'copyright']);
-    Route::get('gdpr', [ProfileController::class, 'gdpr']);
-    Route::get('privacy', [ProfileController::class, 'privacy']);
+    Route::get('legal', [ProfileController::class, 'legal']);
+
 
 
 
