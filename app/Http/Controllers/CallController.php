@@ -78,6 +78,7 @@ class CallController extends Controller
             $costPerSecond = Setting::where('id', 1)->first()->call_cost;
             $walletAmount = Auth::user()->wallet;
             $callTime = calculateCallTime($costPerSecond, $walletAmount);
+            $cost = Setting::where('id', 1)->first()->call_cost;
 
 
             $data['key'] = env('TELNYX');
@@ -87,11 +88,10 @@ class CallController extends Controller
             $data['total_time_call'] = $callTime;
             $data['wallet_amount'] = Auth::user()->wallet;
 
-            if(Auth::user()->wallet < 0){
+            if(Auth::user()->wallet < $cost){
                 $data['make_call'] = false;
             }else{
                 $data['make_call'] = true;
-
             }
 
             $status = MyPlan::where('user_id', Auth::id())->first()->status ?? null;
