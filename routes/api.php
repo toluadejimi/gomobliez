@@ -72,12 +72,6 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('charge-saved-cards', [PaymentController::class, 'charge_saved_cards']);
 
 
-
-
-
-
-
-
     //subscribtion
     Route::get('my-subscription', [ProfileController::class, 'my_subscription']);
     Route::get('get-plans', [ProfileController::class, 'get_plans']);
