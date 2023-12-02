@@ -194,7 +194,7 @@ function africa_token(){
     $phoneNumber= env('AFRICA_PHONE');
 
 
-    
+
     $databody = array(
 
         "username" => $username,
@@ -222,7 +222,7 @@ function africa_token(){
         'Content-Type: application/json'
       ),
     ));
-    
+
 
     $var = curl_exec($curl);
     curl_close($curl);
@@ -244,7 +244,7 @@ function calculateCallTime($costPerSecond, $walletAmount)
         return "Insufficient funds";
     }
 
-    $callTimeSeconds = $walletAmount / $costPerSecond;
+    $callTimeSeconds = $walletAmount / $costPerSecond * 60;
     $callTimeFormatted = gmdate("H:i:s", $callTimeSeconds);
     return $callTimeFormatted;
 }

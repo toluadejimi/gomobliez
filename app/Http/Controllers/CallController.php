@@ -53,7 +53,7 @@ class CallController extends Controller
             $call->save();
 
             $data['call_url']=$call_url;
-            
+
             return response()->json([
                 'status' => true,
                 'data' => $data
@@ -86,6 +86,24 @@ class CallController extends Controller
             $data['conntid'] = env('CONNTID');
             $data['total_time_call'] = $callTime;
             $data['wallet_amount'] = Auth::user()->wallet;
+
+            if(Auth::user()->wallet < 0){
+                $data['make_call'] = false;
+            }else{
+                $data['make_call'] = true;
+
+            }
+
+            $status = MyPlan::where('user_id', Auth::id())->first()->status ?? null;
+
+            if($status == 0 || $status == null){
+                $data['plan'] = false;
+            }else{
+                $data['plan'] = true;
+            }
+
+
+
 
 
             return response()->json([
