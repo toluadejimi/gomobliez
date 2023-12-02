@@ -103,9 +103,6 @@ class CallController extends Controller
             }
 
 
-
-
-
             return response()->json([
                 'status' => true,
                 'data' => $data
