@@ -79,45 +79,54 @@
             </div>
 
         </div>
+        <label for="audioOutput">Select Audio Output:</label>
+        <select id="audioOutput">
+          <!-- Options will be dynamically populated using JavaScript -->
+        </select>
+      
+        <audio id="myAudio" controls>
+          <source src="your-audio-file.mp3" type="audio/mp3">
+          Your browser does not support the audio element.
+        </audio>
 
-        <label for="audioOutput">Select Audio Output Device:</label>
-        <select id="audioOutput"></select>
-
+        
         <script>
             document.addEventListener('DOMContentLoaded', async () => {
-              const audioOutputSelect = document.getElementById('audioOutput');
-              const audioElement = document.getElementById('myAudio');
-        
-              try {
-                const devices = await navigator.mediaDevices.enumerateDevices();
-        
-                devices.forEach(device => {
-                  if (device.kind === 'audiooutput') {
-                    const option = document.createElement('option');
-                    option.value = device.deviceId;
-                    option.text = device.label || `Output ${audioOutputSelect.length + 1}`;
-                    audioOutputSelect.add(option);
-                  }
-                });
-              } catch (error) {
-                console.error('Error enumerating devices:', error);
-              }
-        
-              audioOutputSelect.addEventListener('change', () => {
-                const selectedDeviceId = audioOutputSelect.value;
-                audioElement.setSinkId(selectedDeviceId)
-                  .then(() => {
-                    console.log(`Audio output set to device with ID: ${selectedDeviceId}`);
-                  })
-                  .catch(error => {
-                    console.error('Error setting audio output:', error);
+                const audioOutputSelect = document.getElementById('audioOutput');
+                const audioElement = document.getElementById('myAudio');
+          
+                // Populate the audio output options using JavaScript
+                try {
+                  const devices = await navigator.mediaDevices.enumerateDevices();
+          
+                  devices.forEach(device => {
+                    if (device.kind === 'audiooutput') {
+                      const option = document.createElement('option');
+                      option.value = device.deviceId;
+                      option.text = device.label || `Output ${audioOutputSelect.length + 1}`;
+                      audioOutputSelect.add(option);
+                    }
                   });
+                } catch (error) {
+                  console.error('Error enumerating devices:', error);
+                }
+          
+                audioOutputSelect.addEventListener('change', () => {
+                  const selectedDeviceId = audioOutputSelect.value;
+                  console.log(`Selected Audio Output Device ID: ${selectedDeviceId}`);
+          
+                  // If you need to use setSinkId, you can uncomment the following lines
+                  // audioElement.setSinkId(selectedDeviceId)
+                  //   .then(() => {
+                  //     console.log(`Audio output set to device with ID: ${selectedDeviceId}`);
+                  //   })
+                  //   .catch(error => {
+                  //     console.error('Error setting audio output:', error);
+                  //   });
+                });
               });
-            });
-          </script>
-
-
-
+         </script>
+        
 
 
 
