@@ -192,6 +192,7 @@
       function hold(){
          if(document.getElementById( 'loudspeaker').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
             document.getElementById( 'loudspeaker').style.backgroundColor = '#000';
+            document.getElementById( 'remoteVideo').volume = 1;
 
             if (currentCall) {
                 //currentCall.hold();
