@@ -52,8 +52,8 @@
             </div>
             <div style="width: 50px;"></div>
             <div id="loudspeaker" style="background-color: #0000007e; padding: 12px; border-radius: 100%;"
-                onclick="loudspeaker()">
-                <img src="{{ url('') }}/public/assets/svg/web_loudspeaker.svg" alt="My Happy SVG" />
+                onclick="hold()">
+                <img src="{{ url('') }}/public/assets/svg/hold.svg" alt="My Happy SVG" />
             </div>
 
         </div>
@@ -79,53 +79,6 @@
             </div>
 
         </div>
-        <label for="audioOutput">Select Audio Output:</label>
-        <select id="audioOutput">
-          <!-- Options will be dynamically populated using JavaScript -->
-        </select>
-      
-        <audio id="myAudio" controls>
-          <source src="your-audio-file.mp3" type="audio/mp3">
-          Your browser does not support the audio element.
-        </audio>
-
-        
-        <script>
-            document.addEventListener('DOMContentLoaded', async () => {
-                const audioOutputSelect = document.getElementById('audioOutput');
-                const audioElement = document.getElementById('myAudio');
-          
-                // Populate the audio output options using JavaScript
-                try {
-                  const devices = await navigator.mediaDevices.enumerateDevices();
-          
-                  devices.forEach(device => {
-                    if (device.kind === 'audiooutput') {
-                      const option = document.createElement('option');
-                      option.value = device.deviceId;
-                      option.text = device.label || `Output ${audioOutputSelect.length + 1}`;
-                      audioOutputSelect.add(option);
-                    }
-                  });
-                } catch (error) {
-                  console.error('Error enumerating devices:', error);
-                }
-          
-                audioOutputSelect.addEventListener('change', () => {
-                  const selectedDeviceId = audioOutputSelect.value;
-                  console.log(`Selected Audio Output Device ID: ${selectedDeviceId}`);
-          
-                  // If you need to use setSinkId, you can uncomment the following lines
-                  // audioElement.setSinkId(selectedDeviceId)
-                  //   .then(() => {
-                  //     console.log(`Audio output set to device with ID: ${selectedDeviceId}`);
-                  //   })
-                  //   .catch(error => {
-                  //     console.error('Error setting audio output:', error);
-                  //   });
-                });
-              });
-         </script>
         
 
 
@@ -144,6 +97,7 @@
         document.getElementById('audio').checked = audio === '1';
         document.getElementById( 'remoteVideo').volume = 0.3;
         connect();
+        makeCall();
 
 
       });
@@ -220,27 +174,38 @@
             console.log( client._audioConstraints)
             if (currentCall) {
                 currentCall.muteAudio();
+                document.getElementById( 'connectStatus').innerHTML = 'Audio Muted';
+            }else{
+                document.getElementById( 'connectStatus').innerHTML = 'Call Connected';
             }
             document.getElementById( 'audio').style.backgroundColor = '#000';
          }else{
             if (currentCall) {
                 currentCall.unmuteAudio();
-            }
-            console.log( currentCall.unmuteAudio())
+                document.getElementById( 'connectStatus').innerHTML = 'Call Connected';
 
+            }
             document.getElementById( 'audio').style.backgroundColor = '#0000007e';
          }
       }
 
-      function loudspeaker(){
+      function hold(){
          if(document.getElementById( 'loudspeaker').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
             document.getElementById( 'loudspeaker').style.backgroundColor = '#000';
-            client.enableSpeakerPhone(true);
-            document.getElementById( 'remoteVideo').volume = 1;
+
+            if (currentCall) {
+                //currentCall.hold();
+            }
+
+
 
          }else{
             document.getElementById( 'loudspeaker').style.backgroundColor = '#0000007e';
             document.getElementById( 'remoteVideo').volume = 0.3;
+
+            if (currentCall) {
+               // currentCall.unhold();
+            }
          }
       }
 
@@ -269,6 +234,8 @@
               currentCall.answer();
             } else {
               currentCall.hangup();
+              document.getElementById('connectStatus').innerHTML = 'Call Ended';
+
             }
             break;
           case 'ringing': // Someone is calling you
@@ -278,11 +245,12 @@
                 currentCall.answer();
               } else {
                 currentCall.hangup();
+                document.getElementById('connectStatus').innerHTML = 'Call Ended';
               }
             }, 1000);
             break;
           case 'active': // Call has become active
-           document.getElementById( 'connectStatus').innerHTML = 'Call Connected'
+           document.getElementById( 'connectStatus').innerHTML = 'Call Active'
             break;
           case 'hangup': // Call is over
            document.getElementById( 'connectStatus').innerHTML = 'Call Ended'
@@ -312,6 +280,9 @@
        function hangup() {
         if (currentCall) {
             currentCall.hangup();
+            stopTimer();
+            document.getElementById('connectStatus').innerHTML = 'Call Ended';
+
         }
 
         //window.location.href = "/home";
@@ -356,7 +327,7 @@
                 // ... Existing cases ...
 
                 case 'active': // Call has become active
-                    document.getElementById('connectStatus').innerHTML = 'Call Connected';
+                    document.getElementById('connectStatus').innerHTML = 'Call Active';
                     startTimer();
                     break;
 
