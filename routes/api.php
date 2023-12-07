@@ -109,23 +109,8 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
 
 
-
-
-
-
-
-
-
-
     //TRANSACTIONS
     Route::get('all-transaction', [TransactionController::class, 'recent_transaction']);
-
-
-
-
-
-
-
 
 
 

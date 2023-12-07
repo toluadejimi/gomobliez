@@ -82,45 +82,10 @@
 
 
 
-        <label for="audioOutput">Select Audio Output Device:</label>
-        <select id="audioOutput"></select>
 
 
 
 
-
-        <script>
-            document.addEventListener('DOMContentLoaded', async () => {
-              const audioOutputSelect = document.getElementById('audioOutput');
-              const audioElement = document.getElementById('myAudio');
-        
-              try {
-                const devices = await navigator.mediaDevices.enumerateDevices();
-        
-                devices.forEach(device => {
-                  if (device.kind === 'audiooutput') {
-                    const option = document.createElement('option');
-                    option.value = device.deviceId;
-                    option.text = device.label || `Output ${audioOutputSelect.length + 1}`;
-                    audioOutputSelect.add(option);
-                  }
-                });
-              } catch (error) {
-                console.error('Error enumerating devices:', error);
-              }
-        
-              audioOutputSelect.addEventListener('change', () => {
-                const selectedDeviceId = audioOutputSelect.value;
-                audioElement.setSinkId(selectedDeviceId)
-                  .then(() => {
-                    console.log(`Audio output set to device with ID: ${selectedDeviceId}`);
-                  })
-                  .catch(error => {
-                    console.error('Error setting audio output:', error);
-                  });
-              });
-            });
-          </script>
 
 
 
@@ -141,7 +106,7 @@
         document.getElementById('audio').checked = audio === '1';
         document.getElementById( 'remoteVideo').volume = 0.3;
         connect();
-
+        makeCall();
 
       });
 
@@ -215,16 +180,10 @@
          if(document.getElementById( 'audio').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
             console.log( client._audioConstraints)
             console.log( client._audioConstraints)
-            if (currentCall) {
-                currentCall.muteAudio();
-            }
+            client.disableMicrophone()
             document.getElementById( 'audio').style.backgroundColor = '#000';
          }else{
-            if (currentCall) {
-                currentCall.unmuteAudio();
-            }
-            console.log( currentCall.unmuteAudio())
-
+            client.enableMicrophone()
             document.getElementById( 'audio').style.backgroundColor = '#0000007e';
          }
       }
@@ -232,7 +191,7 @@
       function loudspeaker(){
          if(document.getElementById( 'loudspeaker').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
             document.getElementById( 'loudspeaker').style.backgroundColor = '#000';
-            client.enableSpeakerPhone(true);
+
             document.getElementById( 'remoteVideo').volume = 1;
 
          }else{
@@ -313,10 +272,6 @@
 
         //window.location.href = "/home";
         }
-
-
-
-       
 
       function saveInLocalStorage(e) {
         var key = e.target.name || e.target.id;
