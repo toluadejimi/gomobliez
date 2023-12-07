@@ -80,14 +80,8 @@
 
         </div>
 
-
-
         <label for="audioOutput">Select Audio Output Device:</label>
         <select id="audioOutput"></select>
-
-
-
-
 
         <script>
             document.addEventListener('DOMContentLoaded', async () => {
