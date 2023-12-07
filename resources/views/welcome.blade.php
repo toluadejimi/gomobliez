@@ -1,189 +1,414 @@
+<!DOCTYPE html>
 <html>
 
 <head>
+    <title>Telnyx WebRTC Call </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-    </script>
+    <!-- Cross Browser WebRTC Adapter -->
+    <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 
-    <style>
+    <!-- Include the Telnyx WEBRTC JS SDK -->
+    <script type="text/javascript" src="https://unpkg.com/@telnyx/webrtc"></script>
+
+    <!-- <script
+    type="text/javascript"
+    src="../../lib/bundle.js"
+  ></script> -->
+
+    <!-- To style up the demo a little -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="shortcut icon" href="./favicon.ico" />
+</head>
+
+<body style="padding: 0px; margin: 0px; background-color: #FFC700;">
+    <div class="container" style="background-color: #FFC700; max-width: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; height:100vh">
+        <div id="connectStatus">
+            Connecting...
+        </div>
+
+        <div style="font-weight: 700; font-size: 20px;" id="callTimer">
+            0:00
+        </div>
 
 
-        body{
-            background:#eee;
+        <div style="height: 50px;"></div>
+        <div>
+            <img src="{{ url('') }}/public/assets/svg/web_call_image.svg" alt="My Happy SVG" />
+        </div>
+        <div style="height: 20px;"></div>
+        <div id="name" style="font-weight: 700; font-size: 18px;">
+            {{ $name ?? "No Name" }}
+        </div>
+        <div id="number" style="font-weight: 600; font-size: 16px;">
+            {{ $phone_no }}
+        </div>
+        <div style="height: 45px;"></div>
+        <div style="display: flex;">
+            <div id="audio" style="background-color: #0000007e; padding: 12px; border-radius: 100%;" onclick="mute()">
+                <img src="{{ url('') }}/public/assets/svg/web_mute.svg" alt="My Happy SVG" />
+            </div>
+            <div style="width: 50px;"></div>
+            <div id="loudspeaker" style="background-color: #0000007e; padding: 12px; border-radius: 100%;"
+                onclick="loudspeaker()">
+                <img src="{{ url('') }}/public/assets/svg/hold.svg" alt="My Happy SVG" />
+            </div>
+
+        </div>
+        <div style="height: 60px;"></div>
+
+        <div id='end' onclick="hangup()">
+            <img src="{{ url('') }}/public/assets/svg/web_cancel.svg" alt="My Happy SVG" />
+        </div>
+        <div style="visibility: hidden;">
+            <div>
+                <video id="localVideo" autoplay="true" playsinline="true" class="w-100" style="
+                background-color: #000;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                height: 0px;
+              "></video>
+                <video id="remoteVideo" autoplay="true" playsinline="true" class="w-100" style="
+                background-color: #000;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                height: 0px;
+              "></video>
+            </div>
+
+        </div>
+        
+
+
+
+    <script type="text/javascript">
+            var client;
+      var currentCall = null;
+
+      var username = localStorage.getItem('telnyx.example.username') || '';
+      var password = localStorage.getItem('telnyx.example.password') || '';
+      var number = localStorage.getItem('telnyx.example.number') || '';
+      var audio = localStorage.getItem('telnyx.example.audio') || '1';
+      var video = localStorage.getItem('telnyx.example.video') || '1';
+
+      ready(function () {
+        document.getElementById('audio').checked = audio === '1';
+        document.getElementById( 'remoteVideo').volume = 0.3;
+        connect();
+        makeCall();
+
+
+      });
+
+
+      function detachListeners(client){
+        if(client) {
+          client.off('telnyx.error');
+          client.off('telnyx.ready');
+          client.off('telnyx.notification');
+          client.off('telnyx.socket.close');
+
+        }
+      }
+
+
+
+      function connect() {
+        const env = 'production';
+
+        client = new TelnyxWebRTC.TelnyxRTC({
+          env: 'production',
+          login: "{{ env('SIPUSERNAME') }}",
+          password: "{{ env('SIPPASS') }}",
+          ringtoneFile: './assets/web-call-out-tune.mp3',
+        });
+
+
+        client.remoteElement = 'remoteVideo';
+        client.localElement = 'localVideo';
+
+        document.getElementById( 'remoteVideo').mute =false;
+
+        if (document.getElementById('audio').checked) {
+            console.log('audio')
+            console.log(document.getElementById('audio'))
+          client.enableMicrophone();
+        } else {
+          client.disableMicrophone();
         }
 
+        client.on('telnyx.ready', function () {
+          document.getElementById( 'connectStatus').innerHTML = 'Connected';
+        });
 
-        .card {
-            box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+        client.on('telnyx.socket.close', function () {
+           document.getElementById( 'connectStatus').innerHTML = 'Disconnected';
+          client.disconnect();
+          detachListeners(client);
+        });
+
+        client.on('telnyx.error', function (error) {
+          console.error('telnyx error:', error);
+          alert(error.message)
+        document.getElementById( 'connectStatus').innerHTML = 'Disconnected';
+          client.disconnect();
+          detachListeners(client);
+        });
+
+        client.on('telnyx.notification', handleNotification);
+
+         document.getElementById( 'connectStatus').innerHTML = 'Connecting...';
+        client.connect();
+      }
+
+      function disconnect() {
+         document.getElementById( 'connectStatus').innerHTML = 'Disconnecting...';
+        client.disconnect();
+      }
+
+      function mute(){
+         if(document.getElementById( 'audio').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
+            console.log( client._audioConstraints)
+            console.log( client._audioConstraints)
+            if (currentCall) {
+                currentCall.muteAudio();
+                document.getElementById( 'connectStatus').innerHTML = 'Audio Muted';
+            }else{
+                document.getElementById( 'connectStatus').innerHTML = 'Call Connected';
+            }
+            document.getElementById( 'audio').style.backgroundColor = '#000';
+         }else{
+            if (currentCall) {
+                currentCall.unmuteAudio();
+                document.getElementById( 'connectStatus').innerHTML = 'Call Connected';
+
+            }
+            document.getElementById( 'audio').style.backgroundColor = '#0000007e';
+         }
+      }
+
+      function loudspeaker(){
+         if(document.getElementById( 'loudspeaker').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
+            document.getElementById( 'loudspeaker').style.backgroundColor = '#000';
+            document.getElementById( 'remoteVideo').volume = 1
+
+
+
+         }else{
+            document.getElementById( 'loudspeaker').style.backgroundColor = '#0000007e';
+            document.getElementById( 'remoteVideo').volume = 0.3;
+         }
+      }
+
+      function handleNotification(notification) {
+        switch (notification.type) {
+          case 'callUpdate':
+            handleCallUpdate(notification.call);
+            break;
+          case 'userMediaError':
+            console.log(
+              'Permission denied or invalid audio/video params on getUserMedia'
+            );
+            break;
         }
-        .card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 0 solid rgba(0,0,0,.125);
-            border-radius: 1rem;
+      }
+
+      function handleCallUpdate(call) {
+        currentCall = call;
+        switch (call.state) {
+          case 'new': // Setup the UI
+            break;
+          case 'trying': // You are trying to call someone and he's ringing now
+            break;
+          case 'recovering': // Call is recovering from a previous session
+            if (confirm('Recover the previous call?')) {
+              currentCall.answer();
+            } else {
+              currentCall.hangup();
+              document.getElementById('connectStatus').innerHTML = 'Call Ended';
+
+            }
+            break;
+          case 'ringing': // Someone is calling you
+            //used to avoid alert block audio play, I delayed to audio play first.
+            setTimeout(function () {
+              if (confirm('Pick up the call?')) {
+                currentCall.answer();
+              } else {
+                currentCall.hangup();
+                document.getElementById('connectStatus').innerHTML = 'Call Ended';
+              }
+            }, 1000);
+            break;
+          case 'active': // Call has become active
+           document.getElementById( 'connectStatus').innerHTML = 'Call Active'
+            break;
+          case 'hangup': // Call is over
+           document.getElementById( 'connectStatus').innerHTML = 'Call Ended'
+            break;
+          case 'destroy': // Call has been destroyed
+        //   route to home
+            currentCall = null;
+            break;
         }
-        .img-thumbnail {
-            padding: .25rem;
-            background-color: #ecf2f5;
-            border: 1px solid #dee2e6;
-            border-radius: .25rem;
-            max-width: 100%;
-            height: auto;
+      }
+
+      function makeCall() {
+        const params = {
+          callerName: 'Caller Name',
+          callerNumber: 'Caller Number',
+          destinationNumber: "{{ $number }}",
+        };
+
+        client.enableMicrophone();
+
+        currentCall = client.newCall(params);
+      }
+
+      /**
+       * Hangup the currentCall if present
+       */
+       function hangup() {
+        if (currentCall) {
+            currentCall.hangup();
+            stopTimer();
+            document.getElementById('connectStatus').innerHTML = 'Call Ended';
+
         }
-        .avatar-lg {
-            height: 150px;
-            width: 150px;
+
+        //window.location.href = "/home";
         }
+
 
 
        
 
+      function saveInLocalStorage(e) {
+        var key = e.target.name || e.target.id;
+        localStorage.setItem('telnyx.example.' + key, e.target.value);
+      }
 
-    </style>
-</head>
-
-<body>
-    <div class="container content" >
-        <div class="row">
-                <div class="card">
-                    <div class="card-body my-4">
-
-                       
-                    </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="container">
-        <br>
-        <div class="row">
-            <div class="col-lg-5 col-md-7 mx-auto my-auto">
-                <div class="card">
-                    <div class="card-body px-lg-5 py-lg-5 text-center">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" class="rounded-circle avatar-lg img-thumbnail mb-4" alt="profile-image">
-                        <h2 class="text-info">2FA Security</h2>
-                        <p class="mb-4">Enter 6-digits code from your athenticatior app.</p>
-                        <form>
-                            <div class="row mb-4">
-                                <div class="col-lg-2 col-md-2 col-2 ps-0 ps-md-2">
-                                    <input type="text" class="form-control text-lg text-center" placeholder="_" aria-label="2fa">
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-2 ps-0 ps-md-2">
-                                    <input type="text" class="form-control text-lg text-center" placeholder="_" aria-label="2fa">
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-2 ps-0 ps-md-2">
-                                    <input type="text" class="form-control text-lg text-center" placeholder="_" aria-label="2fa">
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-2 pe-0 pe-md-2">
-                                    <input type="text" class="form-control text-lg text-center" placeholder="_" aria-label="2fa">
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-2 pe-0 pe-md-2">
-                                    <input type="text" class="form-control text-lg text-center" placeholder="_" aria-label="2fa">
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-2 pe-0 pe-md-2">
-                                    <input type="text" class="form-control text-lg text-center" placeholder="_" aria-label="2fa">
-                                </div>
-                            </div>
-                            <div class="text-center">
-                                <button type="button" class="btn bg-info btn-lg my-4">Continue</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+      function ready(callback) {
+        if (document.readyState != 'loading') {
+          callback();
+        } else if (document.addEventListener) {
+          document.addEventListener('DOMContentLoaded', callback);
+        } else {
+          document.attachEvent('onreadystatechange', function () {
+            if (document.readyState != 'loading') {
+              callback();
+            }
+          });
+        }
+      }
 
 
+      function endCall() {
+        if (currentCall) {
+            currentCall.hangup();
+        }
+    }
+
+        var startTime;
+        var timerInterval;
+
+        function handleCallUpdate(call) {
+            currentCall = call;
+            switch (call.state) {
+                // ... Existing cases ...
+
+                case 'active': // Call has become active
+                    document.getElementById('connectStatus').innerHTML = 'Call Active';
+                    startTimer();
+                    break;
+
+                case 'hangup': // Call is over
+                    document.getElementById('connectStatus').innerHTML = 'Call Ended';
+                    stopTimer();
+                    break;
+
+                // ... Existing cases ...
+            }
+        }
+
+        function startTimer() {
+            startTime = new Date();
+
+            // Update the timer every second
+            timerInterval = setInterval(function () {
+                updateTimer();
+
+                // Charge the user every 60 seconds
+                if (Math.floor((new Date() - startTime) / 1000) % 60 === 0) {
+                    chargeUser();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function updateTimer() {
+            var currentTime = new Date();
+            var elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+
+            var minutes = Math.floor(elapsedSeconds / 60);
+            var seconds = elapsedSeconds % 60;
+
+            // Format the timer display
+            var timerDisplay = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+
+            // Update the timer element
+            document.getElementById('callTimer').innerHTML = timerDisplay;
+        }
+
+
+        @if($plan == 0)
+        function chargeUser() {
+            // Perform the logic to charge the user
+            // You can make an AJAX request to your server here
+            // For example, using the Fetch API
+            fetch('/api/charge', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any additional headers if needed
+                },
+                // Add the user ID or any other data needed for the charging process
+                body: JSON.stringify({ userId: "{{ $user_id }}" }),
+            })
+                .then(response => response.json())
+                .then(data => {
+
+
+                    if (data.data === false) {
+                        endCall();
+                        window.location.href = "/home";
+                     } else {
+                         // Continue charging with a delay
+                         setTimeout(chargeUser, 60000);
+                     }
+                    // Handle the response from the server if needed
+                    console.log(data);
+
+
+                })
+                .catch(error => {
+                    // Handle errors if the request fails
+                    console.error('Error:', error);
+                });
+        }
+        @endif
 
 
 
 
 
 
-
-
-
-
+        </script>
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
-
-
-
-
-
-
-
-
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-<script type="text/javascript">
-    $(function() {
-  var $form = $(".require-validation");
-  $('form.require-validation').bind('submit', function(e) {
-    var $form = $(".require-validation"),
-    inputSelector = ['input[type=email]', 'input[type=password]', 'input[type=text]', 'input[type=file]', 'textarea'].join(', '),
-    $inputs = $form.find('.required').find(inputSelector),
-    $errorMessage = $form.find('div.error'),
-    valid = true;
-    $errorMessage.addClass('hide');
-    $('.has-error').removeClass('has-error');
-    $inputs.each(function(i, el) {
-        var $input = $(el);
-        if ($input.val() === '') {
-            $input.parent().addClass('has-error');
-            $errorMessage.removeClass('hide');
-            e.preventDefault();
-        }
-    });
-    if (!$form.data('cc-on-file')) {
-      e.preventDefault();
-      Stripe.setPublishableKey($form.data('stripe-publishable-key'));
-      Stripe.createToken({
-          number: $('.card-number').val(),
-          cvc: $('.card-cvc').val(),
-          exp_month: $('.card-expiry-month').val(),
-          exp_year: $('.card-expiry-year').val()
-      }, stripeResponseHandler);
-    }
-  });
-
-  function stripeResponseHandler(status, response) {
-      if (response.error) {
-          $('.error')
-              .removeClass('hide')
-              .find('.alert')
-              .text(response.error.message);
-      } else {
-          /* token contains id, last4, and card type */
-          var token = response['id'];
-          $form.find('input[type=text]').empty();
-          $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
-          $form.get(0).submit();
-      }
-  }
-});
-</script>
