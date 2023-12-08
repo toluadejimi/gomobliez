@@ -99,7 +99,7 @@
 
 
     <script type="text/javascript">
-            var client;
+    var client;
       var currentCall = null;
 
       var username = localStorage.getItem('telnyx.example.username') || '';
