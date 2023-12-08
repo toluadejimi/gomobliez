@@ -9,6 +9,8 @@ use App\Models\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\CallLimit;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use SamuelMwangiW\Africastalking\Response\VoiceResponse;
@@ -22,8 +24,24 @@ class CallController extends Controller
         if ($plans == null || $plans == 0) {
             $plan = 0;
         } else {
-            $plan = 0;
+            $plan = $plans;
         }
+
+
+        if($plans == 1){
+
+            $ck = CallLimit::where('user_id', Auth::id())->whereDate('created_at', Carbon::today())->first() ?? null;
+            if($ck == null){
+                $cl = new CallLimit();
+                $cl->user_id = Auth::id();
+                $cl->call_limit = 0;
+                $cl->save();
+            }
+
+        }
+
+
+
 
         $user_id = Auth::id();
 
@@ -62,6 +80,9 @@ class CallController extends Controller
 
         } else {
 
+
+
+
             $call_url = url('') . "/call-other?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
 
             $call = new Call();
@@ -74,14 +95,23 @@ class CallController extends Controller
             $call->call_url = $call_url;
             $call->save();
 
-
             $costPerSecond = Setting::where('id', 1)->first()->call_cost;
             $walletAmount = Auth::user()->wallet;
             $callTime = calculateCallTime($costPerSecond, $walletAmount);
             $cost = Setting::where('id', 1)->first()->call_cost;
 
 
-            $call_url = url('') . "/call-other?tk=$callTime&phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
+
+
+
+            if($plan == 0){
+                $tk = $callTime;
+            }else{
+                $tk = callLimit();
+            }
+
+
+            $call_url = url('') . "/call-other?tk=$tk&phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
             $data['call_url']=$call_url;
             return response()->json([
                 'status' => true,

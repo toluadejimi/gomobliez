@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\User;
+use App\Models\Setting;
+use App\Models\CallLimit;
 use Twilio\Jwt\AccessToken;
 use Illuminate\Http\Request;
 use Twilio\Jwt\Grants\VoiceGrant;
@@ -245,4 +248,12 @@ function calculateCallTime($costPerSecond, $walletAmount)
     $callTimeSeconds = $walletAmount / $costPerSecond * 60;
     $callTimeFormatted = $callTimeSeconds;
     return $callTimeFormatted;
+}
+
+
+function callLimit(){
+    $DailyCallLimit = Setting::where('id', 1)->first()->daily_call_limit;
+    $UserCallLimit = CallLimit::where('id', Auth::id())->first()->call_limit ?? 0;
+    $CallTimeRemains =  $DailyCallLimit - $UserCallLimit;
+    return $CallTimeRemains;
 }

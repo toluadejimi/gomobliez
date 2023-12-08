@@ -267,10 +267,19 @@
       }
 
       function makeCall() {
+
+        var phone = "+{{$number}}";
+        let phoneNo = phone.replace(/\s/g, '');
+
+        console.log(phoneNo);
+
+
+
+
         const params = {
           callerName: 'Caller Name',
           callerNumber: 'Caller Number',
-          destinationNumber: "{{ $number }}",
+          destinationNumber: phoneNo,
         };
 
         client.enableMicrophone();

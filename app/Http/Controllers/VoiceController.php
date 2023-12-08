@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Call;
-use App\Models\Message;
-use App\Models\MyPhoneNumber;
-use App\Models\Recent;
+use DateTime;
 use Exception;
-use Illuminate\Http\Request;
+use App\Models\Call;
+use App\Models\User;
+use App\Models\MyPlan;
+use App\Models\Recent;
+use App\Models\Message;
+use App\Models\Setting;
 use Twilio\Rest\Client;
-use app\Services\TwiloService;
-use Twilio\Exceptions\RestException;
-use Twilio\Jwt\Grants\VoiceGrant;
+use App\Models\CallLimit;
 use Twilio\Jwt\AccessToken;
+use Illuminate\Http\Request;
+use App\Models\MyPhoneNumber;
+use app\Services\TwiloService;
 use Twilio\TwiML\VoiceResponse;
+use Twilio\Jwt\Grants\VoiceGrant;
+use Twilio\Exceptions\RestException;
 
 
 
@@ -75,6 +80,10 @@ class VoiceController extends Controller
         send_notification($message);
 
 
+
+
+
+
         if($request->data['event_type'] == 'message.received'){
 
 
@@ -126,7 +135,7 @@ class VoiceController extends Controller
             $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
             Call::where('user_id', $user_id)->where('call_id', null)->update([
 
-                'call_id' => $request->data['payload']['connection_id'],
+                'call_id' => $request->data['payload']['call_session_id'],
                 'time_initiated' => $request->data['occurred_at'],
                 'status' => 1,
 
@@ -135,10 +144,39 @@ class VoiceController extends Controller
         }
 
 
-        if($request->data['event_type'] == 'call.answered'){
+        if($request->data['event_type'] == 'call.hangup'){
+
+             $user_id =  Call::where('call_id', $request->data['payload']['call_session_id'])->first()->user_id;
+
+             $calltime = $request->data['payload']['end_time'];
+             $dateTime = new DateTime($calltime);
+             $time = $dateTime->getTimestamp();
+
+             $plan = MyPlan::where('user_id', $user_id)->first()->status ?? null;
+             $cost = Setting::where('id', 1)->first()->call_cost ?? null;
+
+             $callcost = $time * $cost;
+
+
+             if($time > 45){
+
+                if($plan == 1){
+                    CallLimit::where('user_id', $user_id)->increment('call_limit', $time);
+                }
+
+                if($plan == 0){
+
+                    CallLimit::where('user_id', $user_id)->increment('call_limit', $time);
+                    User::where('id', $user_id)->decrement('wallet', $callcost);
+
+                }
+
+             }
 
 
 
+             $message ="plan====>>>>".$plan. "cost====>>>>".$callcost. "time====>>>>".$time;
+             send_notification($message);
 
 
 
