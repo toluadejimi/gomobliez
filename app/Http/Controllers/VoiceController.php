@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DateTime;
 use Exception;
+use Carbon\Carbon;
 use App\Models\Call;
 use App\Models\User;
 use App\Models\MyPlan;
@@ -149,8 +150,8 @@ class VoiceController extends Controller
              $user_id =  Call::where('call_id', $request->data['payload']['call_session_id'])->first()->user_id;
 
              $calltime = $request->data['payload']['end_time'];
-             $dateTime = new DateTime($calltime);
-             $time = $dateTime->getTimestamp();
+             $carbon = Carbon::parse($calltime);
+             $time = $carbon->second;
 
              $plan = MyPlan::where('user_id', $user_id)->first()->status ?? null;
              $cost = Setting::where('id', 1)->first()->call_cost ?? null;
@@ -158,7 +159,7 @@ class VoiceController extends Controller
              $callcost = $time * $cost;
 
 
-             if($time > 45){
+             if($time > 35){
 
                 if($plan == 1){
                     CallLimit::where('user_id', $user_id)->increment('call_limit', $time);
