@@ -81,32 +81,15 @@ class CallController extends Controller
             $cost = Setting::where('id', 1)->first()->call_cost;
 
 
-            $data['key'] = env('TELNYX');
-            $data['sip_username'] = env('SIPUSERNAME');
-            $data['sip_pass'] = env('SIPPASS');
-            $data['conntid'] = env('CONNTID');
-            $data['total_time_call'] = $callTime;
-            $data['wallet_amount'] = Auth::user()->wallet;
-
-            if(Auth::user()->wallet < $cost){
-                $data['make_call'] = false;
-            }else{
-                $data['make_call'] = true;
-            }
-
-            $status = MyPlan::where('user_id', Auth::id())->first()->status ?? null;
-
-            if($status == 0 || $status == null){
-                $data['plan'] = false;
-            }else{
-                $data['plan'] = true;
-            }
-
-
+            $call_url = url('') . "/call-other?tk=$callTime&phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
+            $data['call_url']=$call_url;
             return response()->json([
                 'status' => true,
                 'data' => $data
             ], 200);
+
+
+
         }
     }
 
@@ -191,7 +174,9 @@ class CallController extends Controller
         $number = $request->phone;
         $plan = $request->plan;
         $user_id = $request->user_id;
+        $tk = $request->tk;
 
-        return view('call', compact('name', 'phone_no', 'number', 'plan', 'user_id'));
+
+        return view('call', compact('name', 'phone_no', 'number', 'plan', 'tk', 'user_id'));
     }
 }

@@ -74,31 +74,6 @@ class VoiceController extends Controller
         $message ="SMS====>>>>".json_encode($request->all());
         send_notification($message);
 
-        $isActive  = $request->isActive;
-        $phoneNo =   $request->clientDialedNumber;
-        $destinationNumber = $request->destinationNumber;
-        $url_ring =  "https://gomobilez.bplux.store/public/assets/calling.mp3";
-        $record =  "false";
-        $recordMaxLength =  "5";
-        $sequential = "true";
-
-
-        if ($request->input('isActive')){
-            return africastalking()->voice()
-                       //->say('Welcome to Gomobilez Call Center')
-                       ->dial(
-                        phoneNumbers: [$phoneNo],
-                        record: true,
-                        ringBackTone: 'https://gomobilez.bplux.store/public/assets/calling.mp3',
-                        recordMaxLength: 10,
-                        sequential: false,
-                        callerId: $destinationNumber,
-                       );
-        }
-
-        return response('OK');
-
-
 
         if($request->data['event_type'] == 'message.received'){
 

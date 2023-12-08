@@ -5,6 +5,9 @@
     <title>Telnyx WebRTC Call </title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="pragma" content="no-cache">
 
     <!-- Cross Browser WebRTC Adapter -->
     <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
@@ -84,6 +87,9 @@
 
 
 
+        <div id="nakeCall" style="background-color: #0000007e; padding: 12px; border-radius: 100%;" onclick="makeCall()">
+            <img src="{{ url('') }}/public/assets/svg/web_mute.svg" alt="My Happy SVG" />
+        </div>
 
 
 
@@ -180,10 +186,20 @@
          if(document.getElementById( 'audio').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
             console.log( client._audioConstraints)
             console.log( client._audioConstraints)
-            client.disableMicrophone()
+
+            if (currentCall) {
+                currentCall.muteAudio();
+                document.getElementById( 'connectStatus').innerHTML = 'Audio Muted';
+            }
+
+
             document.getElementById( 'audio').style.backgroundColor = '#000';
          }else{
-            client.enableMicrophone()
+            if (currentCall) {
+                currentCall.unmuteAudio();
+                document.getElementById( 'connectStatus').innerHTML = 'Call Connected';
+
+            }
             document.getElementById( 'audio').style.backgroundColor = '#0000007e';
          }
       }
@@ -322,17 +338,27 @@
         }
 
         function startTimer() {
+
+            var customTimeLimit = "{{ $tk }}";
+
             startTime = new Date();
 
             // Update the timer every second
             timerInterval = setInterval(function () {
                 updateTimer();
 
-                // Charge the user every 60 seconds
-                if (Math.floor((new Date() - startTime) / 1000) % 60 === 0) {
-                    chargeUser();
-                }
+            if (Math.floor((new Date() - startTime) / 1000) >= customTimeLimit) {
+                endCall(); // Call your function to end the call
+            }
+
             }, 1000);
+
+
+
+
+
+
+
         }
 
         function stopTimer() {
@@ -346,12 +372,14 @@
             var minutes = Math.floor(elapsedSeconds / 60);
             var seconds = elapsedSeconds % 60;
 
+
             // Format the timer display
             var timerDisplay = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
 
             // Update the timer element
             document.getElementById('callTimer').innerHTML = timerDisplay;
         }
+
 
 
         @if($plan == 0)

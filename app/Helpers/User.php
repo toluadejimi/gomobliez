@@ -243,6 +243,6 @@ function calculateCallTime($costPerSecond, $walletAmount)
         return "Insufficient funds";
     }
     $callTimeSeconds = $walletAmount / $costPerSecond * 60;
-    $callTimeFormatted = gmdate("H:i:s", $callTimeSeconds);
+    $callTimeFormatted = $callTimeSeconds;
     return $callTimeFormatted;
 }
