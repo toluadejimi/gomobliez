@@ -149,7 +149,7 @@ class VoiceController extends Controller
 
              $user_id =  Call::where('call_id', $request->data['payload']['call_session_id'])->first()->user_id;
 
-             $starttime = Call::where('user_id', $user_id)->first()->time_initiated;
+             $starttime = Call::where('call_id', $request->data['payload']['call_session_id'])->first()->time_initiated;
              $endtime = $request->data['payload']['end_time'];
 
 
