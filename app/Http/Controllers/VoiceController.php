@@ -135,7 +135,6 @@ class VoiceController extends Controller
 
             $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
             Call::where('user_id', $user_id)->where('call_id', null)->update([
-
                 'call_id' => $request->data['payload']['call_session_id'],
                 'time_initiated' => $request->data['occurred_at'],
                 'status' => 1,
