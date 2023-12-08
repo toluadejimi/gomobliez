@@ -149,9 +149,15 @@ class VoiceController extends Controller
 
              $user_id =  Call::where('call_id', $request->data['payload']['call_session_id'])->first()->user_id;
 
-             $calltime = $request->data['payload']['end_time'];
-             $carbon = Carbon::parse($calltime);
-             $time = $carbon->second;
+             $starttime = Call::where('user_id', $user_id)->first()->time_initiated;
+             $endtime = $request->data['payload']['end_time'];
+
+
+             $start = Carbon::parse($starttime);
+             $stop = Carbon::parse($endtime);
+
+             $time = $start->second - $stop->second;
+
 
              $plan = MyPlan::where('user_id', $user_id)->first()->status ?? null;
              $cost = Setting::where('id', 1)->first()->call_cost ?? null;
