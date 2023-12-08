@@ -98,16 +98,29 @@ class CallController extends Controller
             $costPerSecond = Setting::where('id', 1)->first()->call_cost;
             $walletAmount = Auth::user()->wallet;
             $callTime = calculateCallTime($costPerSecond, $walletAmount);
-            $cost = Setting::where('id', 1)->first()->call_cost;
-
-
-
 
 
             if($plan == 0){
-                $tk = $callTime;
+
+                $dailylimit = CallLimit::where('user_id', Auth::id())->first()->call_limit;
+                $setLimit = Setting::where('id', 1)->first()->call_limit;
+                $tk = $setLimit - $dailylimit;
+
             }else{
-                $tk = callLimit();
+                
+                $dailycalllimit = CallLimit::where('user_id', Auth::id())->first()->call_limit;
+                $setLimit = Setting::where('id', 1)->first()->call_limit;
+                $userwallet = User::where('id', Auth::id())->first()->wallet;
+                $callcost = Setting::where('id', 1)->first()->call_cost;
+                $walletlimit = $userwallet * $callcost;
+
+
+                if($dailycalllimit >= $setLimit){
+                    $tk = 0;
+                }else{
+                    $tk = $walletlimit;
+                }
+
             }
 
 
