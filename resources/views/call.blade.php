@@ -180,20 +180,10 @@
          if(document.getElementById( 'audio').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
             console.log( client._audioConstraints)
             console.log( client._audioConstraints)
-
-            if (currentCall) {
-                currentCall.muteAudio();
-                document.getElementById( 'connectStatus').innerHTML = 'Audio Muted';
-            }
-
-
+            client.disableMicrophone()
             document.getElementById( 'audio').style.backgroundColor = '#000';
          }else{
-            if (currentCall) {
-                currentCall.unmuteAudio();
-                document.getElementById( 'connectStatus').innerHTML = 'Call Connected';
-
-            }
+            client.enableMicrophone()
             document.getElementById( 'audio').style.backgroundColor = '#0000007e';
          }
       }

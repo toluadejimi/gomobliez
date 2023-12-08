@@ -53,7 +53,7 @@
             <div style="width: 50px;"></div>
             <div id="loudspeaker" style="background-color: #0000007e; padding: 12px; border-radius: 100%;"
                 onclick="loudspeaker()">
-                <img src="{{ url('') }}/public/assets/svg/hold.svg" alt="My Happy SVG" />
+                <img src="{{ url('') }}/public/assets/svg/web_loudspeaker.svg" alt="My Happy SVG" />
             </div>
 
         </div>
@@ -79,7 +79,16 @@
             </div>
 
         </div>
-        
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -98,7 +107,6 @@
         document.getElementById( 'remoteVideo').volume = 0.3;
         connect();
         makeCall();
-
 
       });
 
@@ -172,12 +180,13 @@
          if(document.getElementById( 'audio').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
             console.log( client._audioConstraints)
             console.log( client._audioConstraints)
+
             if (currentCall) {
                 currentCall.muteAudio();
                 document.getElementById( 'connectStatus').innerHTML = 'Audio Muted';
-            }else{
-                document.getElementById( 'connectStatus').innerHTML = 'Call Connected';
             }
+
+
             document.getElementById( 'audio').style.backgroundColor = '#000';
          }else{
             if (currentCall) {
@@ -192,9 +201,8 @@
       function loudspeaker(){
          if(document.getElementById( 'loudspeaker').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
             document.getElementById( 'loudspeaker').style.backgroundColor = '#000';
-            document.getElementById( 'remoteVideo').volume = 1
 
-
+            document.getElementById( 'remoteVideo').volume = 1;
 
          }else{
             document.getElementById( 'loudspeaker').style.backgroundColor = '#0000007e';
@@ -227,8 +235,6 @@
               currentCall.answer();
             } else {
               currentCall.hangup();
-              document.getElementById('connectStatus').innerHTML = 'Call Ended';
-
             }
             break;
           case 'ringing': // Someone is calling you
@@ -238,12 +244,11 @@
                 currentCall.answer();
               } else {
                 currentCall.hangup();
-                document.getElementById('connectStatus').innerHTML = 'Call Ended';
               }
             }, 1000);
             break;
           case 'active': // Call has become active
-           document.getElementById( 'connectStatus').innerHTML = 'Call Active'
+           document.getElementById( 'connectStatus').innerHTML = 'Call Connected'
             break;
           case 'hangup': // Call is over
            document.getElementById( 'connectStatus').innerHTML = 'Call Ended'
@@ -273,17 +278,10 @@
        function hangup() {
         if (currentCall) {
             currentCall.hangup();
-            stopTimer();
-            document.getElementById('connectStatus').innerHTML = 'Call Ended';
-
         }
 
         //window.location.href = "/home";
         }
-
-
-
-       
 
       function saveInLocalStorage(e) {
         var key = e.target.name || e.target.id;
@@ -320,7 +318,7 @@
                 // ... Existing cases ...
 
                 case 'active': // Call has become active
-                    document.getElementById('connectStatus').innerHTML = 'Call Active';
+                    document.getElementById('connectStatus').innerHTML = 'Call Connected';
                     startTimer();
                     break;
 
