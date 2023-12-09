@@ -336,7 +336,7 @@
 
                     <div class="form-group col-sm-12">
 
-                    <button type="submit" id="myButton" class="btn btn-primary btn-block" onclick="startLoading()">
+                    <button type="submit" id="myButton" class="btn btn-primary btn-block">
                         Pay ${{ number_format($amount) }}
                         <div id="loaders" class="loaders"></div>
                     </button>
