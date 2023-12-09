@@ -250,7 +250,11 @@
 
 
     <style>
-        .loader {
+        .loaders {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             display: none;
             border: 4px solid #f3f3f3;
             border-top: 4px solid #FFC700;
@@ -259,6 +263,7 @@
             height: 20px;
             animation: spin 1s linear infinite;
         }
+
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -276,9 +281,9 @@
               <form action="/charge" method="POST" id="payment-form" class="my-5">
                 @csrf
                 <div class="products">
-                  <h3 class="title">Pay Now</h3>
+                  <h5 class="title">Total to pay </h5>
                   <div class="item">
-                    <span class="price">${{ $amount }}</span>
+                    <span class="price">${{ number_format($amount, 2) }}</span>
                   </div>
                 </div>
 
@@ -329,9 +334,13 @@
 
                     <div class="spacer"></div>
 
+                    <button type="submit" id="myButton" class="btn btn-primary btn-block" onclick="startLoading()">
+                        Click Me
+                        <div id="loaders" class="loaders"></div>
+                    </button>
 
                     <div class="form-group col-sm-12">
-                      <button type="submit" id="myButton" onclick="startLoading()" class="btn btn-primary btn-block">Pay ${{ number_format($amount) }}</button>
+                      <button  id="myButton" onclick="startLoading()" class="">Pay ${{ number_format($amount) }}</button>
                     </div>
                   </div>
                 </div>
@@ -340,24 +349,27 @@
           </section>
         </main>
 
-        <div id="loader" class="loader"></div>
+        <div ></div>
 
         <script>
             function startLoading() {
+                var button = document.getElementById('myButton');
+                var loader = document.getElementById('loaders');
+    
                 // Disable the button
-                document.getElementById('myButton').disabled = true;
+                button.disabled = true;
     
                 // Show the loader
-                document.getElementById('loader').style.display = 'inline-block';
+                loader.style.display = 'inline-block';
     
                 // Simulate some async task (e.g., API call, data processing)
                 setTimeout(function () {
                     // Re-enable the button
-                    document.getElementById('myButton').disabled = false;
+                    button.disabled = false;
     
                     // Hide the loader
-                    document.getElementById('loader').style.display = 'none';
-                }, 2000); // Adjust the timeout based on your task duration
+                    loader.style.display = 'none';
+                }, 5000); // Adjust the timeout based on your task duration
             }
         </script>
 
