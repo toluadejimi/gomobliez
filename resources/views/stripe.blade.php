@@ -334,13 +334,13 @@
 
                     <div class="spacer"></div>
 
+                    <div class="form-group col-sm-12">
+                        
                     <button type="submit" id="myButton" class="btn btn-primary btn-block" onclick="startLoading()">
-                        Click Me
+                        Pay ${{ number_format($amount) }}
                         <div id="loaders" class="loaders"></div>
                     </button>
 
-                    <div class="form-group col-sm-12">
-                      <button  id="myButton" onclick="startLoading()" class="">Pay ${{ number_format($amount) }}</button>
                     </div>
                   </div>
                 </div>
