@@ -159,7 +159,6 @@ class VoiceController extends Controller
              $callcost = $time * $cost;
 
 
-             if($time > 35){
 
                 if($plan == 1){
                     CallLimit::where('user_id', $user_id)->increment('call_limit', $time);
@@ -172,7 +171,6 @@ class VoiceController extends Controller
 
                 }
 
-             }
 
 
 
