@@ -47,6 +47,12 @@
         .btn {
             background-color: rgb(0 0 0);
             border-color: black;
+           
+        }
+
+
+        .btn:hover {
+            background-color: #000000;
         }
 
         .loader {
@@ -243,6 +249,25 @@
 
 
 
+    <style>
+        .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #FFC700;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+
+
 
 
         <main class="page payment-page">
@@ -306,7 +331,7 @@
 
 
                     <div class="form-group col-sm-12">
-                      <button type="submit" class="btn btn-primary btn-block">Pay ${{ number_format($amount) }}</button>
+                      <button type="submit" id="myButton" onclick="startLoading()" class="btn btn-primary btn-block">Pay ${{ number_format($amount) }}</button>
                     </div>
                   </div>
                 </div>
@@ -314,9 +339,34 @@
             </div>
           </section>
         </main>
+
+        <div id="loader" class="loader"></div>
+
+        <script>
+            function startLoading() {
+                // Disable the button
+                document.getElementById('myButton').disabled = true;
+    
+                // Show the loader
+                document.getElementById('loader').style.display = 'inline-block';
+    
+                // Simulate some async task (e.g., API call, data processing)
+                setTimeout(function () {
+                    // Re-enable the button
+                    document.getElementById('myButton').disabled = false;
+    
+                    // Hide the loader
+                    document.getElementById('loader').style.display = 'none';
+                }, 2000); // Adjust the timeout based on your task duration
+            }
+        </script>
+
+
       </body>
       <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
 
 
 
