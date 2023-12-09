@@ -85,19 +85,6 @@
 
 
 
-
-
-        <div id="nakeCall" style="background-color: #0000007e; padding: 12px; border-radius: 100%;" onclick="makeCall()">
-            <img src="{{ url('') }}/public/assets/svg/web_mute.svg" alt="My Happy SVG" />
-        </div>
-
-
-
-
-
-
-
-
     <script type="text/javascript">
     var client;
       var currentCall = null;

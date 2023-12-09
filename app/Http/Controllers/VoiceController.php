@@ -151,7 +151,7 @@ class VoiceController extends Controller
              $start = Carbon::parse($starttime);
              $stop = Carbon::parse($endtime);
 
-             $time = $start->second - $stop->second;
+             $time = $stop->second - $start->second;
 
              $plan = MyPlan::where('user_id', $user_id)->first()->status ?? null;
              $cost = Setting::where('id', 1)->first()->call_cost ?? null;
