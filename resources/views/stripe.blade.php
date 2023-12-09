@@ -291,7 +291,7 @@
 
 
                 <div class="card-details">
-                  <h3 class="title">Credit Card Details</h3>
+                  <h5 class="title">Debit / Credit Card Details</h5>
                   <div class="row">
                     {{-- <div class="form-group col-sm-12">
                       <label for="email">Email Address</label>
@@ -335,7 +335,7 @@
                     <div class="spacer"></div>
 
                     <div class="form-group col-sm-12">
-                        
+
                     <button type="submit" id="myButton" class="btn btn-primary btn-block" onclick="startLoading()">
                         Pay ${{ number_format($amount) }}
                         <div id="loaders" class="loaders"></div>
