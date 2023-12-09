@@ -16,7 +16,7 @@
 </head>
 <style>
     body {
-        background: #ffea01;
+        background: #FFC700;
         margin: 0;
         height: 100%;
 
@@ -24,7 +24,7 @@
 
     .button{
 
-        background: #ffea01;
+        background: #FFC700;
         margin: 10px auto;
         border: none;
         color: white;
@@ -120,7 +120,7 @@
         text-align: center;
         font-size: 48px;
         height: 72px;
-        background: #ffea01;
+        background: #FFC700;
         border-radius: 50%;
         width: 72px;
         height: 72px;

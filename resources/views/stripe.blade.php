@@ -34,7 +34,7 @@
         }
 
         .payment-form .products {
-            background-color: #fec606;
+            background-color: #FFC700;
             padding: 25px;
         }
 
@@ -72,7 +72,7 @@
 
         .spinner {
             border: 6px solid #f3f3f3;
-            border-top: 6px solid rgb(243, 239, 7);
+            border-top: 6px solid #FFC700;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -252,13 +252,9 @@
                 @csrf
                 <div class="products">
                   <h3 class="title">Pay Now</h3>
-
                   <div class="item">
                     <span class="price">${{ $amount }}</span>
-                    <p class="item-name">Wallet Funding</p>
-                    <p class="item-description">Instant funding</p>
                   </div>
-                  <div class="total">Total<span class="price">${{ number_format($amount, 2) }}</span></div>
                 </div>
 
 
