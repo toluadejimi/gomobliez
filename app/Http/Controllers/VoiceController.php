@@ -81,10 +81,6 @@ class VoiceController extends Controller
         send_notification($message);
 
 
-
-
-
-
         if($request->data['event_type'] == 'message.received'){
 
 
@@ -135,7 +131,7 @@ class VoiceController extends Controller
 
             $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
             Call::where('user_id', $user_id)->where('call_id', null)->update([
-                'call_id' => $request->data['payload']['call_session_id'],
+                'call_id' => $request->data['payload']['call_control_id'],
                 'time_initiated' => $request->data['occurred_at'],
                 'status' => 1,
 
@@ -146,9 +142,9 @@ class VoiceController extends Controller
 
         if($request->data['event_type'] == 'call.hangup'){
 
-             $user_id =  Call::where('call_id', $request->data['payload']['call_session_id'])->first()->user_id;
+             $user_id =  Call::where('call_id', $request->data['payload']['call_control_id'])->first()->user_id;
 
-             $starttime = Call::where('call_id', $request->data['payload']['call_session_id'])->first()->time_initiated;
+             $starttime = Call::where('call_id', $request->data['payload']['call_control_id'])->first()->time_initiated;
              $endtime = $request->data['payload']['end_time'];
 
 
@@ -156,7 +152,6 @@ class VoiceController extends Controller
              $stop = Carbon::parse($endtime);
 
              $time = $start->second - $stop->second;
-
 
              $plan = MyPlan::where('user_id', $user_id)->first()->status ?? null;
              $cost = Setting::where('id', 1)->first()->call_cost ?? null;
@@ -181,7 +176,7 @@ class VoiceController extends Controller
 
 
 
-             $message ="plan====>>>>".$plan. "cost====>>>>".$callcost. "time====>>>>".$time;
+             $message ="plan====>>>>".$plan. "cost====>>>>".$callcost."start====>>>>".$start."stop====>>>>".$stop. "time====>>>>".$time;
              send_notification($message);
 
 
