@@ -372,13 +372,13 @@ class PaymentController extends Controller
 
 
 
-    
+
 
 
     public function delete_card(request $request)
     {
 
-        PayInfo::where('id', $request->card_id)->delete() ?? null;
+        PayInfo::where('id', $request->id)->delete() ?? null;
         $body['message'] = "Card deleted successfully";
 
         return response()->json([
