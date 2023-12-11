@@ -72,6 +72,11 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('charge-saved-cards', [PaymentController::class, 'charge_saved_cards']);
     Route::post('verify-account', [PaymentController::class, 'verify_account']);
     Route::post('send-to-inapp', [PaymentController::class, 'send_inapp']);
+    Route::get('conversion-rate', [PaymentController::class, 'conversion_rate']);
+    Route::post('send-to-bank', [PaymentController::class, 'send_to_bank']);
+
+
+    
 
     
 

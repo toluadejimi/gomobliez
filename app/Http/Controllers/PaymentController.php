@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use App\Models\PayInfo;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\ConversionRate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -423,6 +424,73 @@ class PaymentController extends Controller
             ], 400);
 
         }
+
+        $user_wallet = User::where('id', Auth::id())->first()->wallet;
+        if($user_wallet < $request->amount){
+
+            $data['message'] = "Insufficient Funds, Fund your wallet and try again";
+            return response()->json([
+                'status' => false,
+                'data' => $data,
+            ], 422);
+
+        }
+
+
+        $user = User::where('id', Auth::id())->first() ?? null;
+        if (Hash::check($request->password, $user->password)) {
+
+            User::where('id', Auth::id())->decrement('wallet', $request->amount);
+            User::where('email', $request->email)->increment('wallet', $request->amount);
+    
+            $user = User::where('email', $request->email)->first() ?? null;
+            $user_name = $user->first_name. " ".$user->last_name;
+    
+            $data['message'] = "$".$request->amount." has been successfully send to $user_name";
+                return response()->json([
+                    'status' => true,
+                    'data' => $data,
+                ], 200);
+
+
+        } else {
+
+            $data['message'] = "Insufficient Funds, Fund your wallet and try again";
+            return response()->json([
+                'status' => false,
+                'data' => $data,
+            ], 422);
+
+        }
+
+
+
+
+      
+
+    }
+
+
+    public function conversion_rate(request $request)
+    {
+
+       $data['conversion_rate'] = ConversionRate::select('currency', 'rate')->get();
+
+       return response()->json([
+        'status' => true,
+        'data' => $data,
+        ], 200);
+
+
+
+    }
+
+    
+
+
+    public function send_to_bank(request $request)
+    {
+     
 
         $user_wallet = User::where('id', Auth::id())->first()->wallet;
         if($user_wallet < $request->amount){
