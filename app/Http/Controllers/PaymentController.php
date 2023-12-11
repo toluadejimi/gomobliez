@@ -370,6 +370,8 @@ class PaymentController extends Controller
         ], 200);
     }
 
+    
+
 
     public function delete_card(request $request)
     {

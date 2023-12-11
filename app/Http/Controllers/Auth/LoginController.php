@@ -145,6 +145,7 @@ class LoginController extends Controller
         $user['message_credit'] = $message_credit;
         $user['plans'] = $plans;
         $user['saved_cards'] = $saved_cards;
+        
 
 
         return response()->json([
