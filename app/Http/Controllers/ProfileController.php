@@ -139,9 +139,17 @@ class ProfileController extends Controller
     public function get_plans(Request $request)
     {
 
-        $plans = Plan::select('id', 'title', 'type', 'amount', 'sms_credit', 'period', 'note')->get();
+        $comboplans = Plan::select('id', 'title', 'type', 'amount', 'sms_credit', 'period', 'note')->where('type', 1)->get();
+        $smsplans = Plan::select('id', 'title', 'type', 'amount', 'sms_credit', 'period', 'note')->where('type', 2)->get();
+        $callplans = Plan::select('id', 'title', 'type', 'amount', 'sms_credit', 'period', 'note')->where('type', 3)->get();
 
-        $body['plans'] = $plans;
+
+
+        $body['combo_plans'] = $comboplans;
+        $body['sms_plan'] = $smsplans;
+        $body['call_plan'] = $callplans;
+
+
 
             return response()->json([
                 'status' => true,
