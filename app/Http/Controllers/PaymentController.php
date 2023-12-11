@@ -361,7 +361,7 @@ class PaymentController extends Controller
     public function saved_cards(request $request)
     {
 
-        $info = PayInfo::select('id', 'customer_id', 'name')->where('user_id', Auth::id())->get() ?? null;
+        $info = PayInfo::where('user_id', Auth::id())->select('id','customer_id', 'brand', 'last4', 'exp_month', 'exp_year', 'name')->get();
         $body['info'] = $info;
 
         return response()->json([
@@ -374,7 +374,7 @@ class PaymentController extends Controller
     public function delete_card(request $request)
     {
 
-        PayInfo::where('id', $request->id)->delete() ?? null;
+        PayInfo::where('id', $request->card_id)->delete() ?? null;
         $body['message'] = "Card deleted successfully";
 
         return response()->json([
