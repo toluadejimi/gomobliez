@@ -13,12 +13,12 @@
         <div class="container">
             <div class="row d-flex justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4" style="text-align: center;">
-                    <img src="{{ url('') }}/assets/img/darklogo.png" height="25" width="100" class="mt-5"
+                    <img src="{{ url('') }}/public/assets/img/darklogo.png" height="25" width="100" class="mt-5"
                         style="text-align: center;">
                     <div class="card mt-5"
                         style="border-radius: 20px;border-width: 8px;background: rgb(11,11,11);text-align: center;">
                         <div class="card-body" style="text-align: center;background: #000000;border-radius: 300px;">
-                            <img src="{{ url('') }}/assets/img/idimage.png" height="100" width="100"
+                            <img src="{{ url('') }}/public/assets/img/idimage.png" height="100" width="100"
                                 style="text-align: center;">
 
                                 <h4 class="card-title"

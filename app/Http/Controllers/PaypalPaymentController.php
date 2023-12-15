@@ -85,13 +85,6 @@ class PaypalPaymentController extends Controller
             
             $payment->create($this->_api_context);
            
-             /**
-         * Get redirect url
-         * The API response provides the url that you must redirect
-         * the buyer to. Retrieve the url from the $payment->getLinks() method
-         *
-         */
-    
         foreach ($payment->getLinks() as $key => $link) {
             
             if ($link->getRel() == 'approval_url') {

@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Untitled</title>
-    <link rel="stylesheet" href="{{ url('') }}/assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url('') }}/assets/Select-with-live-search.css">
+    <link rel="stylesheet" href="{{ url('') }}/public/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url('') }}/public/assets/Select-with-live-search.css">
 </head>
 
 <body style="background: #ffc700;">
@@ -15,7 +15,7 @@
             <div class="row d-flex justify-content-center"
                 style="margin-right: 13px;margin-left: 0px;padding-right: -101px;padding-bottom: 15px;">
                 <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4" style="text-align: center;">
-                    <img src="{{ url('') }}/assets/img/transfernig.png" height="100" width="170" class="mt-3" <p
+                    <img src="{{ url('') }}/public/assets/img/transfernig.png" height="100" width="170" class="mt-3" <p
                         style="margin-top: 0px;margin-bottom: 10px;"></p>
                     <div class="card"
                         style="border-radius: 20px;border-width: 8px;background: rgb(11,11,11);text-align: center;">
@@ -136,9 +136,9 @@
 
 
 
-    <script src="{{ url('') }}/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="{{ url('') }}/assets/js/Select-with-live-search-bootstrap-select.min.js"></script>
-    <script src="{{ url('') }}/assets/js/Select-with-live-search-zmain.js"></script>
+    <script src="{{ url('') }}/public/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{ url('') }}/public/assets/js/Select-with-live-search-bootstrap-select.min.js"></script>
+    <script src="{{ url('') }}/public/assets/js/Select-with-live-search-zmain.js"></script>
     <script id="bs-live-reload" data-sseport="55965" data-lastchange="1702444227086" src="/js/livereload.js"></script>
 </body>
 

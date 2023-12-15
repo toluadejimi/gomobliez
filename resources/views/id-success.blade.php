@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Untitled</title>
-    <link rel="stylesheet" href="{{ url('') }}/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url('') }}/public/assets/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body style="background: #ffc700;">
@@ -13,12 +13,12 @@
         <div class="container">
             <div class="row d-flex justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4" style="text-align: center;">
-                    <img src="{{ url('') }}/assets/img/darklogo.png" height="25" width="100" class="mt-5"
+                    <img src="{{ url('') }}/public/assets/img/darklogo.png" height="25" width="100" class="mt-5"
                         style="text-align: center;">
                     <div class="card mt-5"
                         style="border-radius: 20px;border-width: 8px;background: rgb(11,11,11);text-align: center;">
                         <div class="card-body" style="text-align: center;background: #000000;border-radius: 300px;">
-                            <img src="{{ url('') }}/assets/img/okay.png" height="100" width="100"
+                            <img src="{{ url('') }}/public/assets/img/okay.png" height="100" width="100"
                                 style="text-align: center;">
 
                                 <h4 class="card-title"
@@ -46,7 +46,7 @@
             </div>
         </div>
     </section>
-    <script src="{{ url('') }}/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{ url('') }}/public/assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
 
 </html>
