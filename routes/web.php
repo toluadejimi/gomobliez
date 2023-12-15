@@ -8,6 +8,8 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\VoiceController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\ProxyController;
+
 
 
 /*
@@ -21,6 +23,9 @@ use App\Http\Controllers\Auth\ProfileController;
 |
 */
 
+
+
+Route::get('/proxy', [ProxyController::class, 'proxy']);
 
 
 
@@ -59,6 +64,30 @@ Route::get('processing', [PaymentController::class, 'processing']);
 
 Route::get('call-africa', [CallController::class, 'call_africa']);
 Route::get('call-other', [CallController::class, 'call_other']);
+
+
+
+
+
+Route::get('verify-id', [PaymentController::class, 'verify_id']);
+Route::get('upload-id', [PaymentController::class, 'upload_id']);
+Route::get('id-success', [PaymentController::class, 'id_success']);
+
+
+
+Route::post('verify-account-id', [PaymentController::class, 'verify_account_id']);
+
+
+//NGN
+Route::get('transfer-ngn', [PaymentController::class, 'transfer_ngn']);
+Route::post('send-funds-ngn', [PaymentController::class, 'send_transfer_ngn']);
+
+
+
+
+
+
+
 
 
 

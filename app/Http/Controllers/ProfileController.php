@@ -221,4 +221,21 @@ class ProfileController extends Controller
 
 
 
+    public function create_transfer_pin(Request $request)
+    {
+
+        $pin = bcrypt($request->password);
+
+        User::where('id', Auth::id())->update(['pin'=> $pin]);
+        $data['message'] = "Transfer pin has been successfully created";
+
+        return response()->json([
+            'status' => true,
+            'data' => $data,
+        ], 200);
+
+    }
+
+
+
 }

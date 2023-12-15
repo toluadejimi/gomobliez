@@ -7,10 +7,14 @@ use Session;
 use App\Models\Plan;
 use App\Models\User;
 use GuzzleHttp\Client;
+use App\Models\Country;
 use App\Models\PayInfo;
 use App\Models\Transaction;
+use App\Models\Verification;
 use Illuminate\Http\Request;
 use App\Models\ConversionRate;
+use App\Models\OauthAccessToken;
+use App\Models\OauthAccessTokens;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -485,6 +489,73 @@ class PaymentController extends Controller
 
     }
 
+
+    public function verify_id(request $request)
+    {
+
+        $id = $request->id;
+        return view ('verify-id', compact('id'));
+
+    }
+
+
+
+    public function upload_id(request $request)
+    {
+        $id = $request->id;
+        $country = Country::select('name', 'id', 'flag')->get();
+        return view ('upload-id', compact('id', 'country'));
+
+    }
+
+
+    public function verify_account_id(request $request)
+    {
+
+
+
+            $file = $request->file('front_id');
+            $fileName = $file->getClientOriginalName();
+            $destinationPath = public_path() . 'verify/images';
+            $request->front_id->move(public_path('verify/image'), $fileName);
+            $fr_file_url = url('') . "/public/verify/image/$fileName";
+        
+
+            $file = $request->file('back_id');
+            $fileName = $file->getClientOriginalName();
+            $destinationPath = public_path() . 'verify/images';
+            $request->back_id->move(public_path('verify/image'), $fileName);
+            $bk_file_url = url('') . "/public/verify/image/$fileName";
+
+
+
+
+        $usr = User::where('id', $request->id)->first();
+
+
+        $ver =  new Verification();
+        $ver->user_id = $request->id;
+        $ver->id_type = $request->id_type;
+        $ver->front_id = $fr_file_url;
+        $ver->back_id = $bk_file_url;
+        $ver->name = $usr->first_name." ".$usr->first_name;
+        $ver->save();
+
+        return redirect('/id-success');
+
+
+    }
+
+
+    public function id_success(request $request)
+    {
+
+        return view('id-success');
+
+    }
+
+    
+    
     
 
 
@@ -504,39 +575,67 @@ class PaymentController extends Controller
         }
 
 
-        $user = User::where('id', Auth::id())->first() ?? null;
-        if (Hash::check($request->password, $user->password)) {
-
-            User::where('id', Auth::id())->decrement('wallet', $request->amount);
-            User::where('email', $request->email)->increment('wallet', $request->amount);
-    
-            $user = User::where('email', $request->email)->first() ?? null;
-            $user_name = $user->first_name. " ".$user->last_name;
-    
-            $data['message'] = "$".$request->amount." has been successfully send to $user_name";
-                return response()->json([
-                    'status' => true,
-                    'data' => $data,
-                ], 200);
-
-
-        } else {
-
-            $data['message'] = "Insufficient Funds, Fund your wallet and try again";
+        $user_id = Auth::id();
+        if(Auth::user()->is_verified == 0){
+            $data['id'] = $user_id;
+            $body['url'] = url('') . "/verify-id?id=$user_id";
             return response()->json([
-                'status' => false,
-                'data' => $data,
-            ], 422);
-
+                'status' => true,
+                'data' => $body,
+            ], 200);
         }
 
 
 
+        if($request->currency == "NGN"){
+
+            $user_id = Auth::id();
+            $rate = ConversionRate::where('currency', 'NGN')->first()->rate;
+            $ngn_amount = $rate * $request->amount;
+
+            $GetToken = $request->header('Authorization');
+            $stringToRemove = "Bearer ";
+            $token = str_replace($stringToRemove, '', $GetToken);
+
+
+            $data['id'] = $user_id;
+            $body['url'] = url('') . "/transfer-ngn?amount=$ngn_amount&token=$token";
+            return response()->json([
+                    'status' => true,
+                    'data' => $body,
+            ], 200);
+    
+           
+
+        }
 
       
 
     }
 
+
+    public function  send_transfer_ngn(request $request)
+    {
+
+        dd($request->all());
+
+
+    }
+   
+
+    public function transfer_ngn(request $request)
+    {
+
+           $data['amount'] = $request->amount;
+           $data['token'] = $request->token;
+           $data['banks'] = get_banks();
+
+
+
+        return view ('transfer.ngn', $data);
+
+
+    }
 
 
 

@@ -75,12 +75,17 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::get('conversion-rate', [PaymentController::class, 'conversion_rate']);
     Route::post('send-to-bank', [PaymentController::class, 'send_to_bank']);
 
+    Route::post('create-transfer-pin', [ProfileController::class, 'create_transfer_pin']);
 
-    
 
-    
 
-    
+
+
+
+
+
+
+
 
 
 
