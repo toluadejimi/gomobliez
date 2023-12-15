@@ -441,6 +441,20 @@ class PaymentController extends Controller
         }
 
 
+        if (Hash::check($request->pin, Auth::user()->pin) == false) {
+
+            $data['message'] = "Invalid Pin, Please try again";
+            return response()->json([
+
+                'status' => false,
+                'message' => $data,
+
+            ], 500);
+        }
+
+
+
+
         $user = User::where('id', Auth::id())->first() ?? null;
         if (Hash::check($request->password, $user->password)) {
 
@@ -598,6 +612,23 @@ class PaymentController extends Controller
             $token = str_replace($stringToRemove, '', $GetToken);
 
 
+
+            if (Hash::check($request->pin, Auth::user()->pin) == false) {
+
+                $data['message'] = "Invalid Pin, Please try again";
+                return response()->json([
+
+                    'status' => false,
+                    'message' => $data,
+
+                ], 500);
+            }
+
+
+
+
+
+
             $data['id'] = $user_id;
             $body['url'] = url('') . "/transfer-ngn?amount=$ngn_amount&token=$token";
             return response()->json([
@@ -666,9 +697,6 @@ class PaymentController extends Controller
             $ref = $request->ref;
             $amount = $request->amount;
         }
-
-
-
 
         return view('success', compact('ref', 'amount'));
     }

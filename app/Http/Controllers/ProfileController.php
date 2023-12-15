@@ -13,6 +13,8 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\MyPhoneNumber;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
@@ -224,8 +226,22 @@ class ProfileController extends Controller
     public function create_transfer_pin(Request $request)
     {
 
-        $pin = bcrypt($request->password);
+        try {
+            $validator = Validator::make($request->all(), [
+                'pin' => 'required|numeric|digits:4',
+            ], [
+                'pin.required' => 'PIN is required.',
+                'pin.numeric' => 'PIN must be a number.',
+                'pin.digits' => 'PIN must be a maximum of 4 digits.',
+            ]);
+        
+            if ($validator->fails()) {
+                throw ValidationException::withMessages($validator->errors()->messages());
+            }
 
+
+
+        $pin = bcrypt($request->pin);
         User::where('id', Auth::id())->update(['pin'=> $pin]);
         $data['message'] = "Transfer pin has been successfully created";
 
@@ -233,6 +249,20 @@ class ProfileController extends Controller
             'status' => true,
             'data' => $data,
         ], 200);
+                
+        } catch (ValidationException $e) {
+       
+            $data['message'] = $e->getMessage();
+            return response()->json([
+                    'status' => false,
+                    'data' => $data,
+            ], 422);
+
+        }
+
+
+      
+
 
     }
 
