@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\MyPlan;
 use App\Models\Message;
 use App\Models\OldUser;
+use App\Models\PayInfo;
 use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -32,30 +33,62 @@ class ProfileController extends Controller
 
 
 
-            $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
-            $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
-            $myplan = MyPlan::select('id','user_id', 'plan_id', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
-            $m_credit = MyPlan::where('user_id', Auth::id())->first()->message_credit ?? null;
-            if($m_credit == 0){
-                $message_credit = null;
-            }else{
-                $message_credit = $m_credit;
-            }
-            $phone_number = MyPhoneNumber::select('phone_no', 'status')->where('user_id', Auth::id())->first() ?? null;
-            $plans = Plan::select('id','title','amount', 'period')->get();
-            $billing = User::select('first_name', 'last_name','city', 'street', 'zipcode', 'country', 'state', 'phone')->where('id', Auth::id())->get();
-            $user = Auth()->user();
-            $user['my_plan'] = $myplan;
-            $user['billing_information'] = $billing;
-            $user['my_number'] = $phone_number;
-            $user['plans'] = $plans;
-            $user['pending_messages'] = $pending_messages;
-            $user['message_credit'] = $message_credit;
+        $p = MyPlan::where('user_id', Auth::id())->first() ?? null;
 
-            return response()->json([
-                'status' => true,
-                'data' => $user,
-            ], 200);
+        if ($p != null) {
+            if ($p->status == 1) {
+
+
+                $e_date = MyPlan::where('user_id', Auth::id())->first()->expires_at ?? null;
+                $nowDate = date('Y-m-d');
+                $endDate = Carbon::parse($e_date);
+                $differenceInDays = $endDate->diffInDays($nowDate);
+
+                MyPlan::where('user_id', Auth::id())->update([
+                    'days_remaining' => $differenceInDays,
+                ]);
+
+                MyPlan::where('user_id', Auth::id())->update([
+                    'days_remaining' => $differenceInDays,
+                ]);
+            }
+        }
+
+
+        $token = $request->header('Authorization');
+
+
+        $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
+        $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
+        $myplan = MyPlan::select('id', 'plan_id', 'sms_credit', 'days_remaining', 'expires_at', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
+        $phone_number = MyPhoneNumber::select('phone_no', 'status')->where('user_id', Auth::id())->first() ?? null;
+        $m_credit = MyPlan::where('user_id', Auth::id())->first()->message_credit ?? null;
+        $saved_cards = PayInfo::latest()->select('id', 'name', 'customer_id', 'last4', 'exp_month', 'exp_year')->where('user_id', Auth::id())->get();
+
+        if ($m_credit == 0) {
+            $message_credit = null;
+        } else {
+            $message_credit = $m_credit;
+        }
+        $plans = Plan::select('id', 'title', 'amount', 'period')->get();
+        $billing = User::select('first_name', 'last_name', 'city', 'street', 'zipcode', 'country', 'state', 'phone')->where('id', Auth::id())->get();
+        $user = Auth()->user();
+        $user['token'] = $token;
+        $user['my_plan'] = $myplan;
+        $user['billing_information'] = $billing;
+        $user['my_number'] = $phone_number;
+        $user['pending_messages'] = $pending_messages;
+        $user['message_credit'] = $message_credit;
+        $user['plans'] = $plans;
+        $user['saved_cards'] = $saved_cards;
+
+
+
+        return response()->json([
+            'status' => true,
+            'data' => $user,
+            'pending_messages' => $pending_messages
+        ], 200);
 
     }
 
@@ -234,7 +267,7 @@ class ProfileController extends Controller
                 'pin.numeric' => 'PIN must be a number.',
                 'pin.digits' => 'PIN must be a maximum of 4 digits.',
             ]);
-        
+
             if ($validator->fails()) {
                 throw ValidationException::withMessages($validator->errors()->messages());
             }
@@ -249,9 +282,9 @@ class ProfileController extends Controller
             'status' => true,
             'data' => $data,
         ], 200);
-                
+
         } catch (ValidationException $e) {
-       
+
             $data['message'] = $e->getMessage();
             return response()->json([
                     'status' => false,
@@ -261,7 +294,7 @@ class ProfileController extends Controller
         }
 
 
-      
+
 
 
     }
