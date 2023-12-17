@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use App\Models\Country;
 use App\Models\PayInfo;
 use App\Models\Transaction;
+use App\Models\TopupCountry;
 use App\Models\Verification;
 use Illuminate\Http\Request;
 use App\Models\ConversionRate;
@@ -302,23 +303,37 @@ class PaymentController extends Controller
                 $trx->save();
 
 
-                return response()->json([
-                    'status' => true,
-                    'message' => "Payment completed"
-                ], 200);
-            } else {
+                $body['message'] = "Payment completed";
 
                 return response()->json([
-                    'status' => false,
-                    'message' => $th->getMessage()
-                ], 500);
+                    'status' => true,
+                    'data' => $body,
+                ], 200);
+
+              
+            } else {
+
+
+
+                $body['message'] = "Payment Failed";
+
+                return response()->json([
+                    'status' => true,
+                    'data' => $body,
+                ], 422);
+
+
             }
         } catch (\Exception $th) {
 
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
+
+            $body['message'] = $th->getMessage();
+
+                return response()->json([
+                    'status' => true,
+                    'data' => $body,
+                ], 500);
+         
         }
     }
 
@@ -357,7 +372,7 @@ class PaymentController extends Controller
 
 
 
-            return view('success', compact('ref', 'amount'));
+
         } else {
             echo "Payment_declined";
         }
@@ -873,7 +888,7 @@ class PaymentController extends Controller
     public function get_top_up_countries(request $request)
     {
 
-        $data['countries'] = Country::select('code','name')->get();
+        $data['countries'] = TopupCountry::select('code','name')->get();
 
         return response()->json([
             'status' => true,
