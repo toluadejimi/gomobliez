@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
+use DateInterval;
 use Carbon\Carbon;
 use App\Models\Plan;
 use App\Models\User;
@@ -277,6 +279,77 @@ class ProfileController extends Controller
         $pin = bcrypt($request->pin);
         User::where('id', Auth::id())->update(['pin'=> $pin]);
         $data['message'] = "Transfer pin has been successfully created";
+
+        return response()->json([
+            'status' => true,
+            'data' => $data,
+        ], 200);
+
+        } catch (ValidationException $e) {
+
+            $data['message'] = $e->getMessage();
+            return response()->json([
+                    'status' => false,
+                    'data' => $data,
+            ], 422);
+
+        }
+
+
+
+
+
+    }
+
+
+
+    public function subscribe_plan(Request $request)
+    {
+
+        try {
+
+
+            $plan = Plan::where('id', $request->id)->first();
+            if($plan->amount > Auth::user()->wallet){
+                $data['message'] = "Insufficient Funds, Fund your wallet";
+                return response()->json([
+                    'status' => true,
+                    'data' => $data,
+                ], 200);
+            }
+
+
+         
+            $currentDate = new DateTime();
+            $oneMonthLater = $currentDate->add(new DateInterval('P1M'));
+            $currentDateString = $currentDate->format('Y-m-d');
+            $oneMonthLaterString = $oneMonthLater->format('Y-m-d');
+            $dateDifference = $oneMonthLater->diff($currentDate)->days;
+
+        
+            User::where('id', Auth::id())->decrement('wallet', $plan->amount);
+
+            MyPlan::where('user_id', Auth::id())->update([
+                'title' => $plan->title,
+                'sms_credit' => $plan->sms_credit,
+                'type' => $plan->type,
+                'days_remaining' => $dateDifference,
+                'subscribe_at' => date('Y-m-d'),
+                'expires_at' => $oneMonthLaterString,
+            ]);
+
+
+
+            $trx = new Transaction();
+            $trx->user_id = Auth::id();
+            $trx->trx_id = "SUB-".random_int(00000, 99999);
+            $trx->amount = $plan->amount;
+            $trx->type = 3;
+            $trx->save();
+
+
+
+        $data['message'] = "Monthly Plan Subscribed Successfully expires at $oneMonthLaterString";
 
         return response()->json([
             'status' => true,

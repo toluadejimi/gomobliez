@@ -114,9 +114,7 @@ class LoginController extends Controller
                     'days_remaining' => $differenceInDays,
                 ]);
 
-                MyPlan::where('user_id', Auth::id())->update([
-                    'days_remaining' => $differenceInDays,
-                ]);
+           
             }
         }
 
