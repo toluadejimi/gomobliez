@@ -866,4 +866,33 @@ class PaymentController extends Controller
 
         return view('success', compact('data', 'order_token', 'status'));
     }
+
+
+
+
+    public function get_top_up_countries(request $request)
+    {
+
+        $data['countries'] = Country::select('code','name')->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $data,
+        ], 200);
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }

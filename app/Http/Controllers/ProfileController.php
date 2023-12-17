@@ -313,9 +313,9 @@ class ProfileController extends Controller
             if($plan->amount > Auth::user()->wallet){
                 $data['message'] = "Insufficient Funds, Fund your wallet";
                 return response()->json([
-                    'status' => true,
+                    'status' => false,
                     'data' => $data,
-                ], 200);
+                ], 422);
             }
 
 

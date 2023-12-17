@@ -82,6 +82,16 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
 
 
+    Route::get('countries', [PaymentController::class, 'get_top_up_countries']);
+    Route::get('airtime-network', [PaymentController::class, 'get_aitime_network']);
+    Route::post('data-network', [PaymentController::class, 'get_data_network']);
+    Route::post('data-network', [PaymentController::class, 'get_data_network']);
+    Route::post('buy-airtime', [PaymentController::class, 'buy_airtime']);
+    Route::post('buy-data', [PaymentController::class, 'buy_airtime']);
+
+
+
+
 
 
 
