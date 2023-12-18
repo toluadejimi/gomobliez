@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SmsController;
 use App\Http\Controllers\CallController;
+use App\Http\Controllers\TopupController;
 use App\Http\Controllers\VoiceController;
 use App\Http\Controllers\NumberController;
 use App\Http\Controllers\PaymentController;
@@ -58,6 +59,12 @@ Route::post('sms-webhook2', [VoiceController::class, 'sms_webhook2']);
 //login
 Route::post('login', [LoginController::class, 'login']);
 
+Route::get('get-network', [TopupController::class, 'get_network']);
+
+
+
+
+
 
 
 Route::group(['middleware' => ['auth:api', 'acess']], function () {
@@ -79,6 +86,9 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('subscribe', [ProfileController::class, 'subscribe_plan']);
     Route::post('reset-pin', [ProfileController::class, 'reset_pin']);
     Route::post('reset-password', [ProfileController::class, 'reset_password']);
+
+
+    
 
 
 
@@ -114,6 +124,9 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::get('my-subscription', [ProfileController::class, 'my_subscription']);
     Route::get('get-plans', [ProfileController::class, 'get_plans']);
     Route::post('cancle-subscription', [ProfileController::class, 'cancle_subscription']);
+    Route::post('change-plan', [ProfileController::class, 'change_plan']);
+
+    
 
 
 

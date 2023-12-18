@@ -681,11 +681,7 @@ class PaymentController extends Controller
         return view ('transfer.ngn', $data);
 
 
-    }
-
-
-
-
+    
 
     public function delete_card(request $request)
     {
