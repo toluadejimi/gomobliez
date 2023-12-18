@@ -379,13 +379,15 @@ class ProfileController extends Controller
 
         $new_plan = Plan::where('id', $request->id)->first();
         $my_plan = MyPlan::where('user_id', Auth::id())->first();
-        $r_amount = $my_plan->days_remaining * $my_plan->amount;
+        $set = Setting::where('id', 1)->first();
+        $r_amount = $my_plan->days_remaining * $set->call_cost * 60;
         $d_amount = $new_plan->amount - $r_amount;
+
 
 
         if($my_plan->status == 1){
 
-            if($new_plan->amount < $r_amount){
+            if($new_plan->amount > $r_amount){
 
 
                 if(Auth::user()->wallet < $new_plan->amount){
@@ -398,6 +400,7 @@ class ProfileController extends Controller
 
 
                     try {
+
      
                         $currentDate = new DateTime();
                         $oneMonthLater = $currentDate->add(new DateInterval('P1M'));
@@ -449,9 +452,12 @@ class ProfileController extends Controller
                 }
 
 
+                dd("2");
+
 
             }
 
+            dd("4");
 
 
         }
