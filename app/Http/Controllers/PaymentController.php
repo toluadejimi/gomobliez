@@ -310,7 +310,7 @@ class PaymentController extends Controller
                     'data' => $body,
                 ], 200);
 
-              
+
             } else {
 
 
@@ -333,7 +333,7 @@ class PaymentController extends Controller
                     'status' => true,
                     'data' => $body,
                 ], 500);
-         
+
         }
     }
 
@@ -475,10 +475,10 @@ class PaymentController extends Controller
 
             User::where('id', Auth::id())->decrement('wallet', $request->amount);
             User::where('email', $request->email)->increment('wallet', $request->amount);
-    
+
             $user = User::where('email', $request->email)->first() ?? null;
             $user_name = $user->first_name. " ".$user->last_name;
-    
+
             $data['message'] = "$".$request->amount." has been successfully send to $user_name";
                 return response()->json([
                     'status' => true,
@@ -499,7 +499,7 @@ class PaymentController extends Controller
 
 
 
-      
+
 
     }
 
@@ -548,7 +548,7 @@ class PaymentController extends Controller
             $destinationPath = public_path() . 'verify/images';
             $request->front_id->move(public_path('verify/image'), $fileName);
             $fr_file_url = url('') . "/public/verify/image/$fileName";
-        
+
 
             $file = $request->file('back_id');
             $fileName = $file->getClientOriginalName();
@@ -583,14 +583,14 @@ class PaymentController extends Controller
 
     }
 
-    
-    
-    
+
+
+
 
 
     public function send_to_bank(request $request)
     {
-     
+
 
         $user_wallet = User::where('id', Auth::id())->first()->wallet;
         if($user_wallet < $request->amount){
@@ -650,12 +650,12 @@ class PaymentController extends Controller
                     'status' => true,
                     'data' => $body,
             ], 200);
-    
-           
+
+
 
         }
 
-      
+
 
     }
 
@@ -667,7 +667,7 @@ class PaymentController extends Controller
 
 
     }
-   
+
 
     public function transfer_ngn(request $request)
     {
@@ -681,7 +681,7 @@ class PaymentController extends Controller
         return view ('transfer.ngn', $data);
 
 
-    
+    }
 
     public function delete_card(request $request)
     {
