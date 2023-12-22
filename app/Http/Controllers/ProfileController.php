@@ -309,8 +309,12 @@ class ProfileController extends Controller
         try {
 
 
-            $plan = Plan::where('id', $request->id)->first();
-            if($plan->amount > Auth::user()->wallet){
+            $myplan = MyPlan::where('user_id', Auth::id())->first() ?? null;
+            $plan = Plan::where('id', $request->id)->first() ?? null;
+
+
+
+            if($myplan->amount > Auth::user()->wallet){
                 $data['message'] = "Insufficient Funds, Fund your wallet";
                 return response()->json([
                     'status' => false,
@@ -319,24 +323,43 @@ class ProfileController extends Controller
             }
 
 
-         
+            if($myplan->status == 1){
+                $data['message'] = "You have an active plan";
+                return response()->json([
+                    'status' => false,
+                    'data' => $data,
+                ], 422);
+
+            }
+
+
+
             $currentDate = new DateTime();
             $oneMonthLater = $currentDate->add(new DateInterval('P1M'));
             $currentDateString = $currentDate->format('Y-m-d');
             $oneMonthLaterString = $oneMonthLater->format('Y-m-d');
             $dateDifference = $oneMonthLater->diff($currentDate)->days;
 
-        
-            User::where('id', Auth::id())->decrement('wallet', $plan->amount);
 
-            MyPlan::where('user_id', Auth::id())->update([
-                'title' => $plan->title,
-                'sms_credit' => $plan->sms_credit,
-                'type' => $plan->type,
-                'days_remaining' => $dateDifference,
-                'subscribe_at' => date('Y-m-d'),
-                'expires_at' => $oneMonthLaterString,
-            ]);
+            if($myplan->status == 0){
+
+
+                User::where('id', Auth::id())->decrement('wallet', $plan->amount);
+                MyPlan::where('user_id', Auth::id())->update([
+                    'title' => $plan->title,
+                    'sms_credit' => $plan->sms_credit,
+                    'type' => $plan->type,
+                    'days_remaining' => $dateDifference,
+                    'subscribe_at' => date('Y-m-d'),
+                    'expires_at' => $oneMonthLaterString,
+                    'status' => 1,
+
+                ]);
+
+            }
+
+
+
 
 
 
@@ -401,16 +424,16 @@ class ProfileController extends Controller
 
                     try {
 
-     
+
                         $currentDate = new DateTime();
                         $oneMonthLater = $currentDate->add(new DateInterval('P1M'));
                         $currentDateString = $currentDate->format('Y-m-d');
                         $oneMonthLaterString = $oneMonthLater->format('Y-m-d');
                         $dateDifference = $oneMonthLater->diff($currentDate)->days;
-            
-                    
+
+
                         User::where('id', Auth::id())->decrement('wallet', $new_plan->amount);
-            
+
                         MyPlan::where('user_id', Auth::id())->update([
                             'title' => $new_plan->title,
                             'sms_credit' => $new_plan->sms_credit,
@@ -419,33 +442,33 @@ class ProfileController extends Controller
                             'subscribe_at' => date('Y-m-d'),
                             'expires_at' => $oneMonthLaterString,
                         ]);
-            
-            
-            
+
+
+
                         $trx = new Transaction();
                         $trx->user_id = Auth::id();
                         $trx->trx_id = "SUB-".random_int(00000, 99999);
                         $trx->amount = $new_plan->amount;
                         $trx->type = 3;
                         $trx->save();
-            
-            
-            
+
+
+
                     $data['message'] = "Monthly Plan Subscribed Successfully expires at $oneMonthLaterString";
-            
+
                     return response()->json([
                         'status' => true,
                         'data' => $data,
                     ], 200);
-            
+
                     } catch (ValidationException $e) {
-            
+
                         $data['message'] = $e->getMessage();
                         return response()->json([
                                 'status' => false,
                                 'data' => $data,
                         ], 422);
-            
+
                     }
 
 
@@ -462,7 +485,7 @@ class ProfileController extends Controller
 
 
 
-    
+
 
 
     }

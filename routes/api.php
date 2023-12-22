@@ -88,7 +88,7 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('reset-password', [ProfileController::class, 'reset_password']);
 
 
-    
+
 
 
 
@@ -105,28 +105,13 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //subscribtion
     Route::get('my-subscription', [ProfileController::class, 'my_subscription']);
     Route::get('get-plans', [ProfileController::class, 'get_plans']);
     Route::post('cancle-subscription', [ProfileController::class, 'cancle_subscription']);
     Route::post('change-plan', [ProfileController::class, 'change_plan']);
 
-    
+
 
 
 

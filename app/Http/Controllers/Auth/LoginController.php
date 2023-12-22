@@ -114,7 +114,7 @@ class LoginController extends Controller
                     'days_remaining' => $differenceInDays,
                 ]);
 
-           
+
             }
         }
 
@@ -132,6 +132,8 @@ class LoginController extends Controller
         } else {
             $message_credit = $m_credit;
         }
+
+
         $plans = Plan::select('id', 'title', 'amount', 'period')->get();
         $billing = User::select('first_name', 'last_name', 'city', 'street', 'zipcode', 'country', 'state', 'phone')->where('id', Auth::id())->get();
         $user = Auth()->user();
@@ -145,7 +147,7 @@ class LoginController extends Controller
         $user['saved_cards'] = $saved_cards;
 
 
-        
+
 
 
         return response()->json([
@@ -154,7 +156,7 @@ class LoginController extends Controller
             'pending_messages' => $pending_messages
         ], 200);
 
-        
+
     }
 
 
