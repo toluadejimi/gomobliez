@@ -133,11 +133,24 @@ class LoginController extends Controller
             $message_credit = $m_credit;
         }
 
+        if($getmyplan == null){
+            $myplan = null;
+        }else{
+             
         if($getmyplan->expires_at == null){
             $myplan = null;
+
         }else{
             $myplan = $getmyplan;
         }
+
+
+
+        }
+       
+
+
+       
 
 
         $plans = Plan::select('id', 'title', 'amount', 'period')->get();
