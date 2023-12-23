@@ -122,7 +122,7 @@ class LoginController extends Controller
         $token = auth()->user()->createToken('API Token')->accessToken;
         $phone_no = MyPhoneNumber::where('user_id', Auth::id())->first()->phone_no ?? null;
         $pending_messages = Message::where('from_no', $phone_no)->orWhere('to_no', $phone_no)->count();
-        $myplan = MyPlan::select('id', 'plan_id', 'sms_credit', 'days_remaining', 'expires_at', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
+        $getmyplan = MyPlan::select('id', 'plan_id', 'sms_credit', 'days_remaining', 'expires_at', 'amount', 'status')->where('user_id', Auth::id())->first() ?? null;
         $phone_number = MyPhoneNumber::select('phone_no', 'status')->where('user_id', Auth::id())->first() ?? null;
         $m_credit = MyPlan::where('user_id', Auth::id())->first()->message_credit ?? null;
         $saved_cards = PayInfo::latest()->select('id', 'name', 'customer_id', 'last4', 'exp_month', 'exp_year')->where('user_id', Auth::id())->get();
@@ -131,6 +131,12 @@ class LoginController extends Controller
             $message_credit = null;
         } else {
             $message_credit = $m_credit;
+        }
+
+        if($getmyplan->expires_at == null){
+            $myplan = null;
+        }else{
+            $myplan = $getmyplan;
         }
 
 
