@@ -10,47 +10,93 @@ use Illuminate\Support\Facades\Http;
 
 class TopupController extends Controller
 {
-    public function get_network(){
+    public function get_top_up_countries(request $request)
+    {
 
-            $curl = curl_init();
-    
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://api-service.vtpass.com/api/get-international-airtime-countries',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-    
-            ));
-    
-            $var = curl_exec($curl);
-    
-            curl_close($curl);
-            $var = json_decode($var);
+        $countries = get_countries();
+        if($countries->status == true){
+
+            return response()->json([
+                'status' => true,
+                'data' => $countries->countries,
+            ], 200);
 
 
-         
-            $countries = $var->content->countries ?? null;
+        }
 
-    
-            $status = $var->code ?? null;
-    
-                $history = [];
-                foreach ($countries as $key => $value) {
-                    $history[] = array(
-                        "name" => $value->name,
-                        "code" => $value->code,
-                    );
-                }
-    
-                $rr =  DB::table('topup_countries')->insert($history);
-    
-                return  $rr;
-            }
-        
 
-    
+
+
+    }
+
+
+
+    public function get_services(request $request)
+    {
+
+        $country_code = $request->country_code;
+        $services = get_services($country_code);
+        if($services['status'] == true){
+
+            return response()->json([
+                'status' => true,
+                'data' => $services['service'],
+            ], 200);
+
+
+        }
+
+    }
+
+
+    public function get_service_cost(request $request)
+    {
+
+        $operator_id = $request->operator_id;
+        $service_cost = get_services_cost($operator_id);
+
+        if($service_cost['status'] == true){
+
+            return response()->json([
+                'status' => true,
+                'data' => $service_cost['service_cost'],
+            ], 200);
+
+
+        }
+
+    }
+
+
+    public function buy_airtime(request $request)
+    {
+
+        $email = env('EMAILTOK');
+        $password = env('PASSTOK');
+
+        $token = get_token($email, $password);
+
+        $operator_id = $request->operator_id;
+        $service_cost = get_services_cost($operator_id);
+
+        if($service_cost['status'] == true){
+
+            return response()->json([
+                'status' => true,
+                'data' => $service_cost['service_cost'],
+            ], 200);
+
+
+        }
+
+    }
+
+
+
+
+
+
+
+
+
 }

@@ -92,12 +92,12 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
 
 
-    Route::get('countries', [PaymentController::class, 'get_top_up_countries']);
-    Route::get('airtime-network', [PaymentController::class, 'get_aitime_network']);
-    Route::post('data-network', [PaymentController::class, 'get_data_network']);
-    Route::post('data-network', [PaymentController::class, 'get_data_network']);
-    Route::post('buy-airtime', [PaymentController::class, 'buy_airtime']);
-    Route::post('buy-data', [PaymentController::class, 'buy_airtime']);
+    Route::get('countries', [TopupController::class, 'get_top_up_countries']);
+    Route::post('services', [TopupController::class, 'get_services']);
+    Route::post('service-cost', [TopupController::class, 'get_service_cost']);
+    Route::post('data-network', [TopupController::class, 'get_data_network']);
+    Route::post('buy-airtime', [TopupController::class, 'buy_airtime']);
+    Route::post('buy-data', [TopupController::class, 'buy_airtime']);
 
 
 

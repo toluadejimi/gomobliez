@@ -881,19 +881,7 @@ class PaymentController extends Controller
 
 
 
-    public function get_top_up_countries(request $request)
-    {
-
-        $data['countries'] = TopupCountry::select('code','name')->get();
-
-        return response()->json([
-            'status' => true,
-            'data' => $data,
-        ], 200);
-
-
-
-    }
+    
 
 
 

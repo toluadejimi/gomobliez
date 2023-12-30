@@ -29,9 +29,37 @@ class RegisterationController extends Controller
 
             $sms_code = random_int(1000, 9999);
 
+
             $check_email = User::where('email', $email)->first()->email ?? null;
             $check_email_verification = User::where('email', $email)->first()->is_email_verified ?? null;
             $check_status = User::where('email', $email)->first()->status ?? null;
+            $user = User::where('email', $email)->first() ?? null;
+
+
+            if ($check_email == null) {
+
+                $user = new User();
+                $user->email = $email;
+                $user->code = $sms_code;
+                $user->save();
+
+                $send = send_email($email, $sms_code);
+
+                if ($send == true) {
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'OTP Code has been sent successfully',
+                    ], 200);
+                } else {
+
+
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'An error occurred, contact admin',
+                    ], 422);
+                }
+            }
 
 
 
@@ -51,65 +79,39 @@ class RegisterationController extends Controller
                 ], 409);
             }
 
-            if ($check_email == null) {
 
-                $user = new User();
-                $user->email = $email;
-                $user->code = $sms_code;
-                $user->save();
 
-                $token = $user->createToken('API Token')->accessToken;
-            }
 
             if ($check_email == $email && $check_email_verification == 0) {
 
-                $update_code = User::where('email', $email)
-                    ->update([
-                        'code' => $sms_code,
-                    ]);
 
-                $data = array(
-                    'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
-                    'subject' => "One Time Password",
-                    'toreceiver' => $email,
-                    'sms_code' => $sms_code,
-                );
+                $send = send_email($email, $sms_code);
 
-                Mail::send('emails.registration.otpcode', ["data1" => $data], function ($message) use ($data) {
-                    $message->from($data['fromsender']);
-                    $message->to($data['toreceiver']);
-                    $message->subject($data['subject']);
-                });
+                if ($send == true) {
 
-                return response()->json([
-                    'status' => $this->success,
-                    'message' => 'OTP Code has been sent successfully',
-                ], 200);
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'OTP Code has been sent successfully',
+                    ], 200);
+                } else {
+
+
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'An error occurred, contact admin',
+                    ], 422);
+                }
             }
 
 
-            $update_code = User::where('email', $email)
-                ->update([
-                    'code' => $sms_code,
-                ]);
+            if ($check_email == $email && $check_email_verification == 1 && $user->first_name == null && $user->last_name == null) {
 
-            $data = array(
-                'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
-                'subject' => "One Time Password",
-                'toreceiver' => $email,
-                'sms_code' => $sms_code,
-            );
 
-            Mail::send('emails.registration.otpcode', ["data1" => $data], function ($message) use ($data) {
-                $message->from($data['fromsender']);
-                $message->to($data['toreceiver']);
-                $message->subject($data['subject']);
-            });
-
-            return response()->json([
-                'status' => $this->success,
-                'message' => 'OTP Code has been sent successfully',
-            ], 200);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Email has been verified, Complete your registration',
+                ], 421);
+            }
         } catch (\Exception $e) {
             return $e->getMessage();
         }
@@ -175,33 +177,33 @@ class RegisterationController extends Controller
                 ]);
 
 
-            $user_id = User::where('email', $request->email)->first()->id;
+                $user_id = User::where('email', $request->email)->first()->id;
 
 
-            $chl_plan = MyPlan::where('user_id', $user_id)->first()->user_id ?? null;
+                $chl_plan = MyPlan::where('user_id', $user_id)->first()->user_id ?? null;
 
-            if($chl_plan == null){
+                if ($chl_plan == null) {
 
-                $plan = new MyPlan();
-                $plan->user_id = $user_id;
-                $plan->plan_id = 0;
-                $plan->amount = 0;
-                $plan->save();
-            }
+                    $plan = new MyPlan();
+                    $plan->user_id = $user_id;
+                    $plan->plan_id = 0;
+                    $plan->amount = 0;
+                    $plan->save();
+                }
 
 
-            $data = array(
-                'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
-                'subject' => "Account Creation",
-                'toreceiver' => $email,
-                'name' => $first_name,
-            );
+                $data = array(
+                    'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
+                    'subject' => "Account Creation",
+                    'toreceiver' => $email,
+                    'name' => $first_name,
+                );
 
-            Mail::send('emails.registration.account-creation', ["data1" => $data], function ($message) use ($data) {
-                $message->from($data['fromsender']);
-                $message->to($data['toreceiver']);
-                $message->subject($data['subject']);
-            });
+                Mail::send('emails.registration.account-creation', ["data1" => $data], function ($message) use ($data) {
+                    $message->from($data['fromsender']);
+                    $message->to($data['toreceiver']);
+                    $message->subject($data['subject']);
+                });
 
 
 
@@ -217,9 +219,6 @@ class RegisterationController extends Controller
                 'status' => $this->failed,
                 'message' => 'Email Already Exist',
             ], 409);
-
-
-
         } catch (\Exception $th) {
             return $th->getMessage();
         }
@@ -265,8 +264,6 @@ class RegisterationController extends Controller
                     'status' => $this->success,
                     'message' => 'OTP Code has been resent successfully',
                 ], 200);
-
-
             } else {
 
                 return response()->json([
@@ -325,8 +322,6 @@ class RegisterationController extends Controller
                     'message' => 'OTP Code verified successfully',
                 ], 200);
             }
-
-
         } catch (\Exception $th) {
             return $th->getMessage();
         }
@@ -381,8 +376,6 @@ class RegisterationController extends Controller
                     'status' => $this->success,
                     'message' => 'Check your inbox or spam for OTP Code',
                 ], 200);
-
-
             } else {
 
                 return response()->json([
@@ -392,8 +385,6 @@ class RegisterationController extends Controller
 
                 ], 404);
             }
-
-
         } catch (\Exception $e) {
             return response()->json([
                 'status' => $this->failed,
@@ -437,8 +428,6 @@ class RegisterationController extends Controller
                 'status' => $this->success,
                 'message' => 'Your password has been successfully updated',
             ], 200);
-
-
         } catch (\Exception $e) {
             return response()->json([
                 'status' => $this->failed,

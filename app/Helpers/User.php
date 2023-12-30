@@ -7,8 +7,37 @@ use Twilio\Jwt\AccessToken;
 use Illuminate\Http\Request;
 use Twilio\Jwt\Grants\VoiceGrant;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 
+function send_email($email, $sms_code)
+{
+
+    try {
+
+        $update_code = User::where('email', $email)
+            ->update([
+                'code' => $sms_code,
+            ]);
+
+        $data = array(
+            'fromsender' => 'noreply@gomobilez.bplux.store', 'Gomobilez',
+            'subject' => "One Time Password",
+            'toreceiver' => $email,
+            'sms_code' => $sms_code,
+        );
+
+        Mail::send('emails.registration.otpcode', ["data1" => $data], function ($message) use ($data) {
+            $message->from($data['fromsender']);
+            $message->to($data['toreceiver']);
+            $message->subject($data['subject']);
+        });
+
+        return true;
+    } catch (\Exception $th) {
+        return $th->getMessage();
+    }
+}
 
 
 
@@ -78,10 +107,11 @@ function generateAccessToken(Request $request)
 }
 
 
-function get_banks(){
+function get_banks()
+{
     $curl = curl_init();
 
-        curl_setopt_array($curl, array(
+    curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://web.enkpay.com/api/get-banks',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
@@ -111,7 +141,7 @@ function pay_pal_token()
         $id =
 
 
-    $clientId = base64_encode(env('PAYPAL_CLIENT_ID'));
+        $clientId = base64_encode(env('PAYPAL_CLIENT_ID'));
     $clientSecret = base64_encode(env('PAYPAL_SECRET'));
 
     $apiUrl = "https://api-m.sandbox.paypal.com/v1/oauth2/token";
@@ -143,7 +173,8 @@ function pay_pal_token()
     return $var->access_token;
 }
 
-function get_sms_profile(){
+function get_sms_profile()
+{
 
 
     $auth = env('TELNYX');
@@ -166,13 +197,11 @@ function get_sms_profile(){
 
 
     return $var->data[0]->id;
-
-
-
 }
 
 
-function sip_token(){
+function sip_token()
+{
 
     $auth = env('TELNYX');
     $apiUrl = "https://api.telnyx.com/v2/telephony_credentials";
@@ -203,20 +232,17 @@ function sip_token(){
     dd($var, $connt_id, $auth);
 
     curl_close($ch);
-
-
-
-
 }
 
 
 
-function africa_token(){
+function africa_token()
+{
 
     $apikey = env('AFRICA_APIKEY');
     $username = env('AFRICA_USERNAME');
     $clientName = env('AFRICA_CLIENTNAME');
-    $phoneNumber= env('AFRICA_PHONE');
+    $phoneNumber = env('AFRICA_PHONE');
 
 
 
@@ -232,20 +258,20 @@ function africa_token(){
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://webrtc.africastalking.com/capability-token/request',
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => '',
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => 'POST',
-      CURLOPT_POSTFIELDS =>$body,
-      CURLOPT_HTTPHEADER => array(
-        'Accept: application/json',
-        "apikey: $apikey",
-        'Content-Type: application/json'
-      ),
+        CURLOPT_URL => 'https://webrtc.africastalking.com/capability-token/request',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $body,
+        CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            "apikey: $apikey",
+            'Content-Type: application/json'
+        ),
     ));
 
 
@@ -255,10 +281,6 @@ function africa_token(){
 
 
     return $var->token;
-
-
-
-
 }
 
 
@@ -273,9 +295,158 @@ function calculateCallTime($costPerSecond, $walletAmount)
 }
 
 
-function callLimit(){
+function callLimit()
+{
     $DailyCallLimit = Setting::where('id', 1)->first()->daily_call_limit;
     $UserCallLimit = CallLimit::where('id', Auth::id())->first()->call_limit ?? 0;
     $CallTimeRemains =  $DailyCallLimit - $UserCallLimit;
     return $CallTimeRemains;
 }
+
+
+
+
+function get_countries()
+{
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://web.enkpay.com/api/get-country',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+
+    ));
+
+    $var = curl_exec($curl);
+
+    curl_close($curl);
+    $var = json_decode($var);
+
+    return  $var;
+}
+
+
+
+function get_services($country_code)
+{
+
+
+    $databody = array(
+        "country_code" => $country_code,
+    );
+
+    $body = json_encode($databody);
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://web.enkpay.com/api/get-service',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_POSTFIELDS => $body,
+        CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Content-Type: application/json'
+        ),
+    ));
+
+
+    $var = curl_exec($curl);
+    curl_close($curl);
+    $var = json_decode($var);
+
+    $data['status'] = $var->status ?? null;
+    $data['service'] = $var->data ?? null;
+    return  $data;
+}
+
+
+function get_services_cost($operator_id)
+{
+
+
+    $databody = array(
+        "operator_id" => $operator_id,
+    );
+
+    $body = json_encode($databody);
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://web.enkpay.com/api/get-service-cost',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_POSTFIELDS => $body,
+        CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Content-Type: application/json'
+        ),
+    ));
+
+    $var = curl_exec($curl);
+    curl_close($curl);
+    $var = json_decode($var);
+    $data['status'] = $var->status ?? null;
+    $data['service_cost'] = $var->data ?? null;
+    return  $data;
+}
+
+
+
+
+function get_token($email, $password)
+{
+
+
+    $databody = array(
+        "email" => $email,
+        "password" => $password,
+
+    );
+
+    $body = json_encode($databody);
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://web.enkpay.com/api/auth',//'http://127.0.0.1:8001/api/auth',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $body,
+        CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Content-Type: application/json'
+        ),
+    ));
+
+    $var = curl_exec($curl);
+    curl_close($curl);
+    $var = json_decode($var);
+
+    dd($var);
+
+
+    $data['status'] = $var->status ?? null;
+    $data['service_cost'] = $var->data ?? null;
+    return  $data;
+}
+
