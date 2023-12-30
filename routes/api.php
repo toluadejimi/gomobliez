@@ -89,9 +89,6 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
 
 
-
-
-
     Route::get('countries', [TopupController::class, 'get_top_up_countries']);
     Route::post('services', [TopupController::class, 'get_services']);
     Route::post('service-cost', [TopupController::class, 'get_service_cost']);
@@ -102,20 +99,11 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
 
 
-
-
-
     //subscribtion
     Route::get('my-subscription', [ProfileController::class, 'my_subscription']);
     Route::get('get-plans', [ProfileController::class, 'get_plans']);
     Route::post('cancle-subscription', [ProfileController::class, 'cancle_subscription']);
     Route::post('change-plan', [ProfileController::class, 'change_plan']);
-
-
-
-
-
-
 
 
     //sms messages
@@ -142,7 +130,6 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::get('delete-account', [ProfileController::class, 'delete_account']);
     Route::get('log-out', [ProfileController::class, 'log_out']);
     Route::get('legal', [ProfileController::class, 'legal']);
-
 
 
     //TRANSACTIONS

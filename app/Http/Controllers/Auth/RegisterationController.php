@@ -71,7 +71,7 @@ class RegisterationController extends Controller
                 ], 401);
             }
 
-            if ($check_email == $email && $check_status == 1) {
+            if ($check_email == $email && $check_status == 1 && $check_email_verification == 1) {
 
                 return response()->json([
                     'status' => $this->failed,
@@ -436,3 +436,4 @@ class RegisterationController extends Controller
         }
     }
 }
+

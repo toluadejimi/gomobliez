@@ -343,11 +343,10 @@ class ProfileController extends Controller
 
             if($myplan->status == 0){
 
-
                 User::where('id', Auth::id())->decrement('wallet', $plan->amount);
                 MyPlan::where('user_id', Auth::id())->update([
                     'title' => $plan->title,
-                    'sms_credit' => $plan->sms_credit,
+                    'plan_id' => $request->id,
                     'type' => $plan->type,
                     'days_remaining' => $dateDifference,
                     'subscribe_at' => date('Y-m-d'),
