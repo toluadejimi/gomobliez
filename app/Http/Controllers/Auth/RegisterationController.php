@@ -61,6 +61,9 @@ class RegisterationController extends Controller
                 }
             }
 
+           
+
+
 
 
             if ($check_email == $email && $check_status == 3) {
