@@ -367,6 +367,7 @@ function get_services($country_code)
 
     $data['status'] = $var->status ?? null;
     $data['service'] = $var->data ?? null;
+
     return  $data;
 }
 
@@ -423,7 +424,7 @@ function get_token($email, $password)
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://web.enkpay.com/api/auth',//'http://127.0.0.1:8001/api/auth',
+        CURLOPT_URL => 'http://127.0.0.1:8001/api/auth',//'https://web.enkpay.com/api/auth',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -441,12 +442,82 @@ function get_token($email, $password)
     $var = curl_exec($curl);
     curl_close($curl);
     $var = json_decode($var);
+    $status = $var->status ?? null;
 
-    dd($var);
+    if($status == true){
+        return $var->Authorization;
+    }else{
 
+    return false;
 
-    $data['status'] = $var->status ?? null;
-    $data['service_cost'] = $var->data ?? null;
-    return  $data;
+    }
+
 }
+
+
+
+function buy_airtime($country_code, $service_id, $amount, $phone, $product_id, $rate, $operator_id)
+{
+
+
+    $email = env('EMAILTOK');
+    $password = env('PASSTOK');
+    $token = get_token($email, $password);
+
+
+    $databody = array(
+        "country_code" => $country_code,
+        "service_id" => $service_id,
+        "amount" => $amount,
+        "phone" => $phone,
+        "product_id" => $product_id,
+        "rate" => $rate,
+        "operator_id" => $operator_id,
+    );
+
+    $body = json_encode($databody);
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://127.0.0.1:8001/api/buy-airtime',//'https://web.enkpay.com/api/auth',//'http://127.0.0.1:8001/api/auth',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $body,
+        CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $token,
+        ),
+    ));
+
+    $var = curl_exec($curl);
+    curl_close($curl);
+    $var = json_decode($var);
+    $status = $var->status ?? null;
+
+    if($status == true){
+
+        $data['status'] = $var->status ?? null;
+        $data['message'] = $var->message ?? null;
+        $data['ref_id'] = $var->ref_id ?? null;
+        return  $data;
+
+    }else{
+
+
+
+        return  false;
+
+
+    }
+  
+    
+}
+
+
 

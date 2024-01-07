@@ -61,10 +61,6 @@ class RegisterationController extends Controller
                 }
             }
 
-           
-
-
-
 
             if ($check_email == $email && $check_status == 3) {
 
@@ -81,9 +77,6 @@ class RegisterationController extends Controller
                     'message' => 'Email Already Exist, Login your account to continue',
                 ], 409);
             }
-
-
-
 
             if ($check_email == $email && $check_email_verification == 0) {
 
