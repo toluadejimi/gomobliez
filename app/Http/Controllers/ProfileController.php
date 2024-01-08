@@ -74,19 +74,17 @@ class ProfileController extends Controller
         }
 
 
-        if($getmyplan == null){
+        if ($getmyplan == null) {
             $myplan = null;
-        }else{
+        } else {
 
 
-        if($getmyplan->expires_at == null){
-            $myplan = null;
-        }else{
-            $myplan = $getmyplan;
+            if ($getmyplan->expires_at == null) {
+                $myplan = null;
+            } else {
+                $myplan = $getmyplan;
+            }
         }
-
-        
-    }
 
 
 
@@ -109,7 +107,6 @@ class ProfileController extends Controller
             'data' => $user,
             'pending_messages' => $pending_messages
         ], 200);
-
     }
 
 
@@ -147,8 +144,6 @@ class ProfileController extends Controller
             'status' => true,
             'data' => $data,
         ], 200);
-
-
     }
 
 
@@ -159,13 +154,12 @@ class ProfileController extends Controller
         $p = MyPlan::where('user_id', Auth::id())->first() ?? null;
         $amount = Setting::where('id', 1)->first()->call_cost ?? 0;
 
-        if($p == null ){
+        if ($p == null) {
             $body['message'] = "No active subscription";
             return response()->json([
                 'status' => false,
                 'data' => $body,
             ], 422);
-
         }
 
         if ($p->status == 1) {
@@ -195,14 +189,7 @@ class ProfileController extends Controller
                 'status' => true,
                 'data' => $body,
             ], 200);
-
-
-
-
-
         }
-
-
     }
 
 
@@ -221,12 +208,10 @@ class ProfileController extends Controller
 
 
 
-            return response()->json([
-                'status' => true,
-                'data' => $body,
-            ], 200);
-
-
+        return response()->json([
+            'status' => true,
+            'data' => $body,
+        ], 200);
     }
 
 
@@ -240,12 +225,10 @@ class ProfileController extends Controller
         $body['email'] = $set->email;
 
 
-            return response()->json([
-                'status' => true,
-                'data' => $body,
-            ], 200);
-
-
+        return response()->json([
+            'status' => true,
+            'data' => $body,
+        ], 200);
     }
 
 
@@ -266,9 +249,6 @@ class ProfileController extends Controller
             'status' => true,
             'data' => $body,
         ], 200);
-
-
-
     }
 
 
@@ -276,17 +256,15 @@ class ProfileController extends Controller
     public function legal(Request $request)
     {
 
-        $data['gdpr'] = url('')."/gdpr";
-        $data['policy'] = url('')."/policy";
-        $data['copyrite'] = url('')."/copyrite";
+        $data['gdpr'] = url('') . "/gdpr";
+        $data['policy'] = url('') . "/policy";
+        $data['copyrite'] = url('') . "/copyrite";
 
 
-            return response()->json([
-                'status' => true,
-                'data' => $data,
-            ], 200);
-
-
+        return response()->json([
+            'status' => true,
+            'data' => $data,
+        ], 200);
     }
 
 
@@ -309,29 +287,22 @@ class ProfileController extends Controller
 
 
 
-        $pin = bcrypt($request->pin);
-        User::where('id', Auth::id())->update(['pin'=> $pin]);
-        $data['message'] = "Transfer pin has been successfully created";
+            $pin = bcrypt($request->pin);
+            User::where('id', Auth::id())->update(['pin' => $pin]);
+            $data['message'] = "Transfer pin has been successfully created";
 
-        return response()->json([
-            'status' => true,
-            'data' => $data,
-        ], 200);
-
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+            ], 200);
         } catch (ValidationException $e) {
 
             $data['message'] = $e->getMessage();
             return response()->json([
-                    'status' => false,
-                    'data' => $data,
+                'status' => false,
+                'data' => $data,
             ], 422);
-
         }
-
-
-
-
-
     }
 
 
@@ -345,7 +316,7 @@ class ProfileController extends Controller
             $myplan = MyPlan::where('user_id', Auth::id())->first() ?? null;
             $plan = Plan::where('id', $request->id)->first() ?? null;
 
-            if($plan->amount > Auth::user()->wallet){
+            if ($plan->amount > Auth::user()->wallet) {
                 $data['message'] = "Insufficient Funds, Fund your wallet";
                 return response()->json([
                     'status' => false,
@@ -354,13 +325,13 @@ class ProfileController extends Controller
             }
 
 
-            if($myplan->status == 0){
+            if ($myplan->status == 0) {
 
-            $currentDate = new DateTime();
-            $oneMonthLater = $currentDate->add(new DateInterval('P1M'));
-            $currentDateString = $currentDate->format('Y-m-d');
-            $oneMonthLaterString = $oneMonthLater->format('Y-m-d');
-            $dateDifference = $oneMonthLater->diff($currentDate)->days;
+                $currentDate = new DateTime();
+                $oneMonthLater = $currentDate->add(new DateInterval('P1M'));
+                $currentDateString = $currentDate->format('Y-m-d');
+                $oneMonthLaterString = $oneMonthLater->format('Y-m-d');
+                $dateDifference = $oneMonthLater->diff($currentDate)->days;
 
 
                 User::where('id', Auth::id())->decrement('wallet', $plan->amount);
@@ -379,56 +350,44 @@ class ProfileController extends Controller
 
                 $trx = new Transaction();
                 $trx->user_id = Auth::id();
-                $trx->trx_id = "SUB-".random_int(00000, 99999);
+                $trx->trx_id = "SUB-" . random_int(00000, 99999);
                 $trx->amount = $plan->amount;
                 $trx->type = 3;
                 $trx->save();
-    
-    
-    
-            $data['message'] = "Monthly Plan Subscribed Successfully expires at $oneMonthLaterString";
-    
-            return response()->json([
-                'status' => true,
-                'data' => $data,
-            ], 200);
-    
 
 
 
+                $data['message'] = "Monthly Plan Subscribed Successfully expires at $oneMonthLaterString";
+
+                return response()->json([
+                    'status' => true,
+                    'data' => $data,
+                ], 200);
             }
 
 
 
 
-            if($myplan->status == 1){
+            if ($myplan->status == 1) {
                 $data['message'] = "You have an active plan";
                 return response()->json([
                     'status' => false,
                     'data' => $data,
                 ], 422);
-
             }
-
-    
         } catch (ValidationException $e) {
 
             $data['message'] = $e->getMessage();
             return response()->json([
-                    'status' => false,
-                    'data' => $data,
+                'status' => false,
+                'data' => $data,
             ], 422);
-
         }
-
-
-
-
-
     }
 
 
-    public function change_plan(Request $request){
+    public function change_plan(Request $request)
+    {
 
 
 
@@ -440,18 +399,18 @@ class ProfileController extends Controller
 
 
 
-        if($my_plan->status == 1){
+        if ($my_plan->status == 1) {
 
-            if($new_plan->amount > $r_amount){
+            if ($new_plan->amount > $r_amount) {
 
 
-                if(Auth::user()->wallet < $new_plan->amount){
-                    $data['message'] = "Insufficient Funds, Fund $".$d_amount." to continue the change of plan";
+                if (Auth::user()->wallet < $new_plan->amount) {
+                    $data['message'] = "Insufficient Funds, Fund $" . $d_amount . " to continue the change of plan";
                     return response()->json([
-                            'status' => false,
-                            'data' => $data,
+                        'status' => false,
+                        'data' => $data,
                     ], 422);
-                }else{
+                } else {
 
 
                     try {
@@ -479,50 +438,29 @@ class ProfileController extends Controller
 
                         $trx = new Transaction();
                         $trx->user_id = Auth::id();
-                        $trx->trx_id = "SUB-".random_int(00000, 99999);
+                        $trx->trx_id = "SUB-" . random_int(00000, 99999);
                         $trx->amount = $new_plan->amount;
                         $trx->type = 3;
                         $trx->save();
 
 
 
-                    $data['message'] = "Monthly Plan Subscribed Successfully expires at $oneMonthLaterString";
+                        $data['message'] = "Monthly Plan Subscribed Successfully expires at $oneMonthLaterString";
 
-                    return response()->json([
-                        'status' => true,
-                        'data' => $data,
-                    ], 200);
-
+                        return response()->json([
+                            'status' => true,
+                            'data' => $data,
+                        ], 200);
                     } catch (ValidationException $e) {
 
                         $data['message'] = $e->getMessage();
                         return response()->json([
-                                'status' => false,
-                                'data' => $data,
+                            'status' => false,
+                            'data' => $data,
                         ], 422);
-
                     }
-
-
                 }
-
-
-
-
             }
-
-
-
         }
-
-
-
-
-
-
     }
-
-
-
-
 }
