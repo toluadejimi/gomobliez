@@ -312,8 +312,6 @@ class ProfileController extends Controller
             $myplan = MyPlan::where('user_id', Auth::id())->first() ?? null;
             $plan = Plan::where('id', $request->id)->first() ?? null;
 
-
-
             if($plan->amount > Auth::user()->wallet){
                 $data['message'] = "Insufficient Funds, Fund your wallet";
                 return response()->json([
@@ -323,25 +321,14 @@ class ProfileController extends Controller
             }
 
 
-            if($myplan->status == 1){
-                $data['message'] = "You have an active plan";
-                return response()->json([
-                    'status' => false,
-                    'data' => $data,
-                ], 422);
-
-            }
-
-
-
+            if($myplan->status == 0){
+                
             $currentDate = new DateTime();
             $oneMonthLater = $currentDate->add(new DateInterval('P1M'));
             $currentDateString = $currentDate->format('Y-m-d');
             $oneMonthLaterString = $oneMonthLater->format('Y-m-d');
             $dateDifference = $oneMonthLater->diff($currentDate)->days;
 
-
-            if($myplan->status == 0){
 
                 User::where('id', Auth::id())->decrement('wallet', $plan->amount);
                 MyPlan::where('user_id', Auth::id())->update([
@@ -355,29 +342,42 @@ class ProfileController extends Controller
 
                 ]);
 
+
+
+                $trx = new Transaction();
+                $trx->user_id = Auth::id();
+                $trx->trx_id = "SUB-".random_int(00000, 99999);
+                $trx->amount = $plan->amount;
+                $trx->type = 3;
+                $trx->save();
+    
+    
+    
+            $data['message'] = "Monthly Plan Subscribed Successfully expires at $oneMonthLaterString";
+    
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+            ], 200);
+    
+
+
+
             }
 
 
 
 
+            if($myplan->status == 1){
+                $data['message'] = "You have an active plan";
+                return response()->json([
+                    'status' => false,
+                    'data' => $data,
+                ], 422);
 
+            }
 
-            $trx = new Transaction();
-            $trx->user_id = Auth::id();
-            $trx->trx_id = "SUB-".random_int(00000, 99999);
-            $trx->amount = $plan->amount;
-            $trx->type = 3;
-            $trx->save();
-
-
-
-        $data['message'] = "Monthly Plan Subscribed Successfully expires at $oneMonthLaterString";
-
-        return response()->json([
-            'status' => true,
-            'data' => $data,
-        ], 200);
-
+    
         } catch (ValidationException $e) {
 
             $data['message'] = $e->getMessage();
