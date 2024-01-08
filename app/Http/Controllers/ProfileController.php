@@ -160,6 +160,8 @@ class ProfileController extends Controller
                 'days_remaining' => null,
                 'subscribe_at' => null,
                 'expires_at' => null,
+                'status' => 0,
+
             ]);
 
 
