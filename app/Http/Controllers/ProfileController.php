@@ -77,11 +77,16 @@ class ProfileController extends Controller
         if($getmyplan == null){
             $myplan = null;
         }else{
+
+
         if($getmyplan->expires_at == null){
             $myplan = null;
         }else{
             $myplan = $getmyplan;
         }
+
+        
+    }
 
 
 
