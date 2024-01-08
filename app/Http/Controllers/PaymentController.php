@@ -471,7 +471,7 @@ class PaymentController extends Controller
 
 
         $user = User::where('id', Auth::id())->first() ?? null;
-        if (Hash::check($request->password, $user->password)) {
+        if (Hash::check($request->pin, $user->pin)) {
 
             User::where('id', Auth::id())->decrement('wallet', $request->amount);
             User::where('email', $request->email)->increment('wallet', $request->amount);
@@ -479,7 +479,7 @@ class PaymentController extends Controller
             $user = User::where('email', $request->email)->first() ?? null;
             $user_name = $user->first_name. " ".$user->last_name;
 
-            $data['message'] = "$".$request->amount." has been successfully send to $user_name";
+            $data['message'] = "$".$request->amount." has been successfully sent to $user_name";
                 return response()->json([
                     'status' => true,
                     'data' => $data,

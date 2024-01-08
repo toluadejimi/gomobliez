@@ -80,6 +80,15 @@ class TopupController extends Controller
                     'data' => $data
                 ], 200);
             
+        }else{
+
+            $data['message'] = "Please try again after some time";
+            return response()->json([
+                'status' => false,
+                'data' => $data
+            ], 422);
+
+
         }
 
 
