@@ -138,16 +138,29 @@ class ProfileController extends Controller
     public function cancle_subscription(Request $request)
     {
 
-        $p = MyPlan::where('id', $request->id)->first() ?? null;
+        $p = MyPlan::where('user_id', Auth::id())->first() ?? null;
         $amount = Setting::where('id', 1)->first()->call_cost ?? 0;
 
-        if ($p->status == 1) {
+        if($p == null ){
+            $body['message'] = "No active subscription";
+            return response()->json([
+                'status' => false,
+                'data' => $body,
+            ], 422);
 
+        }
+
+        if ($p->status == 1) {
             $days = $p->days_remaining;
             $amt = $amount * 60 * $days;
-
             User::where('id', Auth::id())->increment('wallet', $amt);
-            $p = MyPlan::where('id', $request->id)->delete();
+            $p = MyPlan::where('user_id', Auth::id())->where('plan_id', $request->id)->update([
+                'title' => null,
+                'type' => null,
+                'days_remaining' => null,
+                'subscribe_at' => null,
+                'expires_at' => null,
+            ]);
 
 
             $trx = new Transaction();
@@ -322,7 +335,7 @@ class ProfileController extends Controller
 
 
             if($myplan->status == 0){
-                
+
             $currentDate = new DateTime();
             $oneMonthLater = $currentDate->add(new DateInterval('P1M'));
             $currentDateString = $currentDate->format('Y-m-d');
