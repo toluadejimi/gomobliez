@@ -50,9 +50,6 @@ class CallController extends Controller
 
         if (Str::contains($request->phone_no, $phone)) {
 
-            dd('hello');
-
-
             $clientName = auth()->user()?->name ?? 'Browser';
             $token = africastalking()
                 ->voice()
@@ -81,9 +78,6 @@ class CallController extends Controller
 
 
         } else {
-
-
-
 
             $call_url = url('') . "/call-other?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
 
