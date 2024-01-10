@@ -485,7 +485,7 @@ class PaymentController extends Controller
                     'data' => $data,
                 ], 200);
 
-                
+
 
 
         } else {
@@ -508,14 +508,12 @@ class PaymentController extends Controller
 
     public function conversion_rate(request $request)
     {
-
-       $data['conversion_rate'] = ConversionRate::select('currency', 'rate')->get();
+       $data['conversion_rate'] = ConversionRate::select('rate')->where('currency', $request->currency)->get();
 
        return response()->json([
         'status' => true,
         'data' => $data,
         ], 200);
-
 
 
     }
@@ -883,7 +881,7 @@ class PaymentController extends Controller
 
 
 
-    
+
 
 
 

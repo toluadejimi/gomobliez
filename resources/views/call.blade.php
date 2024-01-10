@@ -101,6 +101,7 @@
         connect();
         makeCall();
 
+
       });
 
 
@@ -125,6 +126,7 @@
           password: "{{ env('SIPPASS') }}",
           ringtoneFile: './assets/web-call-out-tune.mp3',
         });
+
 
 
         client.remoteElement = 'remoteVideo';
@@ -259,9 +261,6 @@
         let phoneNo = phone.replace(/\s/g, '');
 
         console.log(phoneNo);
-
-
-
 
         const params = {
           callerName: 'Caller Name',
