@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Telnyx WebRTC Call </title>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="pragma" content="no-cache">
 
     <!-- Cross Browser WebRTC Adapter -->
-    <script
-      type="text/javascript"
-      src="https://webrtc.github.io/adapter/adapter-latest.js"
-    ></script>
+    <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 
     <!-- Include the Telnyx WEBRTC JS SDK -->
-    <script
-      type="text/javascript"
-      src="https://unpkg.com/@telnyx/webrtc"
-    ></script>
+    <script type="text/javascript" src="https://unpkg.com/@telnyx/webrtc"></script>
 
     <!-- <script
     type="text/javascript"
@@ -26,77 +21,72 @@
   ></script> -->
 
     <!-- To style up the demo a little -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="shortcut icon" href="./favicon.ico" />
-  </head>
-  <body style="padding: 0px; margin: 0px; background-color: #FFC700;">
+</head>
+
+<body style="padding: 0px; margin: 0px; background-color: #FFC700;">
     <div class="container" style="background-color: #FFC700; max-width: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; height:100vh">
         <div id="connectStatus">
             Connecting...
         </div>
+
+        <div style="font-weight: 700; font-size: 20px;" id="callTimer">
+            0:00
+        </div>
+
+
         <div style="height: 50px;"></div>
         <div>
-            <img src = "./assets/images/svg/web_call_image.svg" alt="My Happy SVG"/>
+            <img src="{{ url('') }}/public/assets/svg/web_call_image.svg" alt="My Happy SVG" />
         </div>
         <div style="height: 20px;"></div>
         <div id="name" style="font-weight: 700; font-size: 18px;">
-            Name Name
+            {{ $name ?? "No Name" }}
         </div>
         <div id="number" style="font-weight: 600; font-size: 16px;">
-            phone number
+            {{ $phone_no }}
         </div>
         <div style="height: 45px;"></div>
         <div style="display: flex;">
-             <div id="audio" style="background-color: #0000007e; padding: 12px; border-radius: 100%;" onclick="mute()">
-                <img src = "./assets/images/svg/web_mute.svg" alt="My Happy SVG"/>
+            <div id="audio" style="background-color: #0000007e; padding: 12px; border-radius: 100%;" onclick="mute()">
+                <img src="{{ url('') }}/public/assets/svg/web_mute.svg" alt="My Happy SVG" />
             </div>
             <div style="width: 50px;"></div>
-            <div id="loudspeaker"style="background-color: #0000007e; padding: 12px; border-radius: 100%;" onclick="loudspeaker()">
-                <img src = "./assets/images/svg/web_loudspeaker.svg" alt="My Happy SVG"/>
+            <div id="loudspeaker" style="background-color: #0000007e; padding: 12px; border-radius: 100%;"
+                onclick="loudspeaker()">
+                <img src="{{ url('') }}/public/assets/svg/web_loudspeaker.svg" alt="My Happy SVG" />
             </div>
+
         </div>
         <div style="height: 60px;"></div>
 
-            <div id ='end' onclick="hangup()">
-                <img src = "./assets/images/svg/web_cancel.svg" alt="My Happy SVG"/>
-            </div>
-            <div style="visibility: hidden;">
-                <div>
-             <video
-              id="localVideo"
-              autoplay="true"
-
-              playsinline="true"
-              class="w-100"
-              style="
+        <div id='end' onclick="hangup()">
+            <img src="{{ url('') }}/public/assets/svg/web_cancel.svg" alt="My Happy SVG" />
+        </div>
+        <div style="visibility: hidden;">
+            <div>
+                <video id="localVideo" autoplay="true" playsinline="true" class="w-100" style="
                 background-color: #000;
                 border: 1px solid #ccc;
                 border-radius: 5px;
                 height: 0px;
-              "
-            ></video>
-             <video
-              id="remoteVideo"
-              autoplay="true"
-              playsinline="true"
-              class="w-100"
-              style="
+              "></video>
+                <video id="remoteVideo" autoplay="true" playsinline="true" class="w-100" style="
                 background-color: #000;
                 border: 1px solid #ccc;
                 border-radius: 5px;
                 height: 0px;
-              "
-            ></video>
-            <audio id="remoteMedia" autoplay="true" />
+              "></video>
             </div>
 
-    </div>
+        </div>
+
+
+
     <script type="text/javascript">
-      var client;
+    var client;
       var currentCall = null;
 
       var username = localStorage.getItem('telnyx.example.username') || '';
@@ -110,6 +100,7 @@
         document.getElementById( 'remoteVideo').volume = 0.3;
         connect();
         makeCall();
+
 
       });
 
@@ -131,24 +122,25 @@
 
         client = new TelnyxWebRTC.TelnyxRTC({
           env: 'production',
-          login:'adewaletolu57512',
-          password: 'FsLopXYV',
+          login: "{{ env('SIPUSERNAME') }}",
+          password: "{{ env('SIPPASS') }}",
           ringtoneFile: './assets/web-call-out-tune.mp3',
         });
 
-        client.remoteElement = 'remoteMedia';
-        // client.localElement = 'localVideo';
 
-        // document.getElementById( 'remoteVideo').mute =false;
 
-        // if (document.getElementById('audio').checked) {
-          client.enableMicrophone();
+        client.remoteElement = 'remoteVideo';
+        client.localElement = 'localVideo';
 
+        document.getElementById( 'remoteVideo').mute =false;
+
+        if (document.getElementById('audio').checked) {
             console.log('audio')
-            console.log(client.getAudioOutDevices());
-        // } else {
-        //   client.disableMicrophone();
-        // }
+            console.log(document.getElementById('audio'))
+          client.enableMicrophone();
+        } else {
+          client.disableMicrophone();
+        }
 
         client.on('telnyx.ready', function () {
           document.getElementById( 'connectStatus').innerHTML = 'Connected';
@@ -181,11 +173,22 @@
 
       function mute(){
          if(document.getElementById( 'audio').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
+            console.log( client._audioConstraints)
+            console.log( client._audioConstraints)
 
-            client.disableMicrophone()
+            if (currentCall) {
+                currentCall.muteAudio();
+                document.getElementById( 'connectStatus').innerHTML = 'Audio Muted';
+            }
+
+
             document.getElementById( 'audio').style.backgroundColor = '#000';
          }else{
-            client.enableMicrophone()
+            if (currentCall) {
+                currentCall.unmuteAudio();
+                document.getElementById( 'connectStatus').innerHTML = 'Call Connected';
+
+            }
             document.getElementById( 'audio').style.backgroundColor = '#0000007e';
          }
       }
@@ -194,7 +197,7 @@
          if(document.getElementById( 'loudspeaker').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
             document.getElementById( 'loudspeaker').style.backgroundColor = '#000';
 
-            document.getElementById( 'remoteVideo').volume = 2;
+            document.getElementById( 'remoteVideo').volume = 1;
 
          }else{
             document.getElementById( 'loudspeaker').style.backgroundColor = '#0000007e';
@@ -253,10 +256,16 @@
       }
 
       function makeCall() {
+
+        var phone = "+{{$number}}";
+        let phoneNo = phone.replace(/\s/g, '');
+
+        console.log(phoneNo);
+
         const params = {
           callerName: 'Caller Name',
           callerNumber: 'Caller Number',
-          destinationNumber: '+15304262488',
+          destinationNumber: phoneNo,
         };
 
         client.enableMicrophone();
@@ -267,11 +276,13 @@
       /**
        * Hangup the currentCall if present
        */
-      function hangup() {
+       function hangup() {
         if (currentCall) {
-          currentCall.hangup();
+            currentCall.hangup();
         }
-      }
+
+        window.location.href = "/home";
+        }
 
       function saveInLocalStorage(e) {
         var key = e.target.name || e.target.id;
@@ -291,6 +302,124 @@
           });
         }
       }
-    </script>
-  </body>
+
+
+      function endCall() {
+        if (currentCall) {
+            currentCall.hangup();
+        }
+    }
+
+        var startTime;
+        var timerInterval;
+
+        function handleCallUpdate(call) {
+            currentCall = call;
+            switch (call.state) {
+                // ... Existing cases ...
+
+                case 'active': // Call has become active
+                    document.getElementById('connectStatus').innerHTML = 'Call Connected';
+                    startTimer();
+                    break;
+
+                case 'hangup': // Call is over
+                    document.getElementById('connectStatus').innerHTML = 'Call Ended';
+                    stopTimer();
+                    break;
+
+                // ... Existing cases ...
+            }
+        }
+
+        function startTimer() {
+
+            var customTimeLimit = "{{ $tk }}";
+
+            startTime = new Date();
+
+            // Update the timer every second
+            timerInterval = setInterval(function () {
+                updateTimer();
+
+            if (Math.floor((new Date() - startTime) / 1000) >= customTimeLimit) {
+                endCall(); // Call your function to end the call
+            }
+
+            }, 1000);
+
+
+
+
+
+
+
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function updateTimer() {
+            var currentTime = new Date();
+            var elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+
+            var minutes = Math.floor(elapsedSeconds / 60);
+            var seconds = elapsedSeconds % 60;
+
+
+            // Format the timer display
+            var timerDisplay = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+
+            // Update the timer element
+            document.getElementById('callTimer').innerHTML = timerDisplay;
+        }
+
+
+
+        @if($plan == 0)
+        function chargeUser() {
+            // Perform the logic to charge the user
+            // You can make an AJAX request to your server here
+            // For example, using the Fetch API
+            fetch('/api/charge', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any additional headers if needed
+                },
+                // Add the user ID or any other data needed for the charging process
+                body: JSON.stringify({ userId: "{{ $user_id }}" }),
+            })
+                .then(response => response.json())
+                .then(data => {
+
+
+                    if (data.data === false) {
+                        endCall();
+                        window.location.href = "/home";
+                     } else {
+                         // Continue charging with a delay
+                         setTimeout(chargeUser, 60000);
+                     }
+                    // Handle the response from the server if needed
+                    console.log(data);
+
+
+                })
+                .catch(error => {
+                    // Handle errors if the request fails
+                    console.error('Error:', error);
+                });
+        }
+        @endif
+
+
+
+
+
+
+        </script>
+</body>
+
 </html>
