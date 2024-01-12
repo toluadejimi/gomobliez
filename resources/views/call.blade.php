@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -7,21 +6,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <!-- Cross Browser WebRTC Adapter -->
     <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 
     <!-- Include the Telnyx WEBRTC JS SDK -->
     <script type="text/javascript" src="https://unpkg.com/@telnyx/webrtc"></script>
 
-    <!-- <script
-    type="text/javascript"
-    src="../../lib/bundle.js"
-  ></script> -->
-
     <!-- To style up the demo a little -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="./styles.css" />
-    <link rel="shortcut icon" href="./favicon.ico" />
 </head>
 
 <body style="padding: 0px; margin: 0px; background-color: #FFC700;">
@@ -129,7 +120,7 @@
           env: 'production',
           login: "{{ env('SIPUSERNAME') }}",
           password: "{{ env('SIPPASS') }}",
-          ringtoneFile: './assets/web-call-out-tune.mp3',
+          ringtoneFile: "{{ url('') }}/public/assets/ringback_tone.mp3",
         });
 
 
