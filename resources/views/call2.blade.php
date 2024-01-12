@@ -169,12 +169,10 @@
 
             function mute(){
                if(document.getElementById( 'audio').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
-                  console.log( client._audioConstraints)
-                  console.log( client._audioConstraints)
-                  client.disableMicrophone()
+                  client.disableMicrophone();
                   document.getElementById( 'audio').style.backgroundColor = '#000';
                }else{
-                  client.enableMicrophone()
+                  client.enableMicrophone();
                   document.getElementById( 'audio').style.backgroundColor = '#0000007e';
                }
             }
@@ -257,9 +255,6 @@
                   callerNumber: 'Caller Number',
                   destinationNumber: "{{ $number }}",
                 };
-
-
-
 
                 client.enableMicrophone();
                 currentCall = client.newCall(params);

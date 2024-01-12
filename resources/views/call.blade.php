@@ -147,7 +147,7 @@
         }
 
         client.on('telnyx.ready', function () {
-          document.getElementById( 'connectStatus').innerHTML = 'Connected';
+          document.getElementById( 'connectStatus').innerHTML = 'Call Ready';
         });
 
         client.on('telnyx.socket.close', function () {
@@ -177,12 +177,10 @@
 
       function mute(){
          if(document.getElementById( 'audio').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
-            console.log( client._audioConstraints)
-            console.log( client._audioConstraints)
-            client.disableMicrophone()
+            client.disableMicrophone();
             document.getElementById( 'audio').style.backgroundColor = '#000';
          }else{
-            client.enableMicrophone()
+            client.enableMicrophone();
             document.getElementById( 'audio').style.backgroundColor = '#0000007e';
          }
       }
@@ -190,7 +188,6 @@
       function loudspeaker(){
          if(document.getElementById( 'loudspeaker').style.backgroundColor == 'rgba(0, 0, 0, 0.494)'){
             document.getElementById( 'loudspeaker').style.backgroundColor = '#000';
-
             document.getElementById( 'remoteVideo').volume = 1;
 
          }else{
@@ -354,16 +351,11 @@
 
         @if($plan == 0)
         function chargeUser() {
-            // Perform the logic to charge the user
-            // You can make an AJAX request to your server here
-            // For example, using the Fetch API
             fetch('/api/charge', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Add any additional headers if needed
                 },
-                // Add the user ID or any other data needed for the charging process
                 body: JSON.stringify({ userId: "{{ $user_id }}" }),
             })
                 .then(response => response.json())
