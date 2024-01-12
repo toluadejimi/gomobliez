@@ -127,6 +127,7 @@ class CallController extends Controller
 
             }
 
+            //$token = get_callToken();
 
             $call_url = url('') . "/call-other?tk=$tk&phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
             $data['call_url']=$call_url;

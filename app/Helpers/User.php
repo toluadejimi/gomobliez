@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Setting;
 use App\Models\CallLimit;
@@ -424,7 +425,7 @@ function get_token($email, $password)
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://127.0.0.1:8001/api/auth',//'https://web.enkpay.com/api/auth',
+        CURLOPT_URL => 'https://web.enkpay.com/api/auth',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -444,14 +445,12 @@ function get_token($email, $password)
     $var = json_decode($var);
     $status = $var->status ?? null;
 
-    if($status == true){
+    if ($status == true) {
         return $var->Authorization;
-    }else{
+    } else {
 
-    return false;
-
+        return false;
     }
-
 }
 
 
@@ -479,7 +478,7 @@ function buy_airtime($country_code, $service_id, $amount, $phone, $product_id, $
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://127.0.0.1:8001/api/buy-airtime',//'https://web.enkpay.com/api/auth',//'http://127.0.0.1:8001/api/auth',
+        CURLOPT_URL => 'http://127.0.0.1:8001/api/buy-airtime', //'https://web.enkpay.com/api/auth',//'http://127.0.0.1:8001/api/auth',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -500,24 +499,64 @@ function buy_airtime($country_code, $service_id, $amount, $phone, $product_id, $
     $var = json_decode($var);
     $status = $var->status ?? null;
 
-    if($status == true){
+    if ($status == true) {
 
         $data['status'] = $var->status ?? null;
         $data['message'] = $var->message ?? null;
         $data['ref_id'] = $var->ref_id ?? null;
         return  $data;
-
-    }else{
+    } else {
 
 
 
         return  false;
-
-
     }
-  
-    
 }
 
 
+function get_callToken()
+{
 
+
+    $key = env('TELNYX');
+    $time = Carbon::now()->addHour()->toIso8601String();
+    $username = env('SIPUSERNAME');
+    $password = env('SIPPASS');
+
+
+    $curl = curl_init();
+
+    $payload = array(
+        "api_key_id" => $key,
+        "expiration" => $time,
+        "permission_groups" => array(
+            "string"
+        )
+    );
+
+    curl_setopt_array($curl, [
+        CURLOPT_HTTPHEADER => [
+            "Content-Type: application/json",
+            "Authorization: Basic " . base64_encode("$username:$password"),
+            "Cache-Control:no-store",
+
+        ],
+
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_URL => "https://api.telnyx.com/auth/access_tokens",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => "POST",
+    ]);
+
+    $var = curl_exec($curl);
+
+
+    curl_close($curl);
+    $var = json_decode($var);
+
+    dd($var);
+
+
+
+
+}

@@ -93,7 +93,7 @@
 
 
     <script type="text/javascript">
-            var client;
+      var client;
       var currentCall = null;
 
       var username = localStorage.getItem('telnyx.example.username') || '';
@@ -107,7 +107,6 @@
         document.getElementById( 'remoteVideo').volume = 0.3;
         connect();
         makeCall();
-
       });
 
 
@@ -125,7 +124,6 @@
 
       function connect() {
         const env = 'production';
-
         client = new TelnyxWebRTC.TelnyxRTC({
           env: 'production',
           login: "{{ env('SIPUSERNAME') }}",
