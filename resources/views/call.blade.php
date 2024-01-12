@@ -13,12 +13,6 @@
     <script type="text/javascript" src="https://unpkg.com/@telnyx/webrtc@2.9.0/lib/bundle.js"></script>
 
 
-
-    <!-- <script
-    type="text/javascript"
-    src="../../lib/bundle.js"
-  ></script> -->
-
     <!-- To style up the demo a little -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 
@@ -92,21 +86,6 @@
             var number = localStorage.getItem('telnyx.example.number') || '';
             var audio = localStorage.getItem('telnyx.example.audio') || '1';
             var video = localStorage.getItem('telnyx.example.video') || '1';
-
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                // Request microphone permission
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then(function (stream)
-             {
-                        console.log('Microphone permission granted');
-                        // You can do something with the microphone stream if needed
-                    })
-                    .catch(function (error) {
-                        console.error('Error accessing microphone:', error);
-                    });
-            } else {
-                console.error('getUserMedia is not supported in this browser');
-            }
 
 
 
