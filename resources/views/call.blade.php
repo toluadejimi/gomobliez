@@ -255,7 +255,7 @@
           destinationNumber: "{{ $number }}",
         };
 
-        client.enableMicrophone();c
+        client.enableMicrophone();
         currentCall = client.newCall(params);
       }
 
