@@ -138,7 +138,7 @@
                 env: 'production',
                 login: "{{ env('SIPUSERNAME') }}",
                 password: "{{ env('SIPPASS') }}",
-                ringtoneFile: "{{ url('') }}/assets/ringback_tone.mp3",
+                ringtoneFile: "{{ url('') }}/public/assets/ringback_tone.mp3",
               });
 
 
