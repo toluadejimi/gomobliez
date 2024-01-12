@@ -12,6 +12,9 @@
     <!-- Include the Telnyx WEBRTC JS SDK -->
     <script type="text/javascript" src="https://unpkg.com/@telnyx/webrtc@2.9.0/lib/bundle.js"></script>
 
+    <!-- To style up the demo a little -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
 </head>
 
 <body style="padding: 0px; margin: 0px; background-color: #FFC700;">
