@@ -70,6 +70,9 @@ class CallController extends Controller
             $call->save();
 
             $data['call_url']=$call_url;
+            $data['call_url']=$call_url;
+            $data['id']= 1;
+            $data['time']= 200;
 
             return response()->json([
                 'status' => true,
@@ -131,6 +134,9 @@ class CallController extends Controller
 
             $call_url = url('') . "/call-other?tk=$tk&phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
             $data['call_url']=$call_url;
+            $data['id']= 1;
+            $data['time']= 200;
+
             return response()->json([
                 'status' => true,
                 'data' => $data
