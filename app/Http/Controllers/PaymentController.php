@@ -603,6 +603,17 @@ class PaymentController extends Controller
 
         }
 
+        if (Hash::check($request->pin, Auth::user()->pin) == false) {
+
+            $data['message'] = "Invalid Pin, Please try again";
+            return response()->json([
+
+                'status' => false,
+                'message' => $data,
+
+            ], 500);
+        }
+
 
         $user_id = Auth::id();
         if(Auth::user()->is_verified == 0){

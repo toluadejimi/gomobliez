@@ -44,10 +44,7 @@ class CallController extends Controller
 
 
         $user_id = Auth::id();
-
         $phone = ['+234', '+254', '+256', '+255'];
-
-
         if (Str::contains($request->phone_no, $phone)) {
 
             $clientName = auth()->user()?->name ?? 'Browser';
