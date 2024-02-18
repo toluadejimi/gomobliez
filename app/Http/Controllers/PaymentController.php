@@ -602,6 +602,7 @@ class PaymentController extends Controller
             ], 422);
 
         }
+        
 
         if (Hash::check($request->pin, Auth::user()->pin) == false) {
 
