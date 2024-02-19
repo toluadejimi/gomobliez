@@ -85,7 +85,7 @@
                        
                     </div>
                     <div class="modal-body">
-                        You are about to make a call to +{{ $number }}
+                        You are about call to +{{ $number }}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancle</button>
