@@ -181,12 +181,12 @@
                 }
 
                 client.on('telnyx.ready', function() {
-                    document.getElementById('connectStatus').innerHTML = 'Initialized';
+                    document.getElementById('connectStatus').innerHTML = 'Call Initialized';
                     showModal();
                 });
 
                 client.on('telnyx.socket.close', function() {
-                    document.getElementById('connectStatus').innerHTML = 'Disconnected';
+                    document.getElementById('connectStatus').innerHTML = 'Call Disconnected';
                     client.disconnect();
                     detachListeners(client);
                 });
@@ -194,19 +194,19 @@
                 client.on('telnyx.error', function(error) {
                     console.error('telnyx error:', error);
                     alert(error.message)
-                    document.getElementById('connectStatus').innerHTML = 'Disconnected';
+                    document.getElementById('connectStatus').innerHTML = 'Call Disconnected';
                     client.disconnect();
                     detachListeners(client);
                 });
 
                 client.on('telnyx.notification', handleNotification);
 
-                document.getElementById('connectStatus').innerHTML = 'Connecting...';
+                document.getElementById('connectStatus').innerHTML = 'Call Initializing';
                 client.connect();
             }
 
             function disconnect() {
-                document.getElementById('connectStatus').innerHTML = 'Disconnecting...';
+                document.getElementById('connectStatus').innerHTML = 'Call Disconnecting...';
                 client.disconnect();
             }
 
