@@ -82,14 +82,14 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content" style="padding: 0px; margin: 0px; background-color: #FFC700;">
                     <div class="modal-header">
-                       
+
                     </div>
                     <div class="modal-body">
                         You are about call to +{{ $number }}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancle</button>
-                        <button type="button" id='start' onclick="makeCall()"  data-dismiss="modal" class="btn btn-success" id="modalActionButton">Continue</button>
+                        <button type="button" id='start' onclick="makeCall()" data-dismiss="modal" class="btn btn-success" id="modalActionButton">Continue</button>
                     </div>
                 </div>
             </div>
@@ -126,13 +126,10 @@
             var video = localStorage.getItem('telnyx.example.video') || '1';
 
             ready(function() {
+                showModal();
                 document.getElementById('audio').checked = audio === '1';
                 document.getElementById('remoteVideo').volume = 0.3;
                 connect();
-
-
-
-                // makeCall();
 
             });
 

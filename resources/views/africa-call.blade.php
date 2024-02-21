@@ -183,7 +183,7 @@
                     // Initialize the client variable
                     client = new Africastalking.Client(token, params);
                     console.log(client);
-                    makeCall();
+                    console.log("hello");
 
                 } catch (error) {
                     console.error('Error initializing Africastalking client:', error);
