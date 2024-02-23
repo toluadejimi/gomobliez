@@ -24,7 +24,7 @@
 
         <div style="height: 50px;"></div>
         <div>
-            <img src="{{ url('') }}/assets/svg/error.svg" alt="My Happy SVG" />
+            <img src="{{ url('') }}/public/assets/svg/error.svg" alt="My Happy SVG" />
         </div>
         <div style="height: 20px;"></div>
         <div id="name" style="font-weight: 700; font-size: 18px;">
