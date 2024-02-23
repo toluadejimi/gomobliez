@@ -78,7 +78,7 @@
         </div>
 
 
-        <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade " data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content" style="padding: 0px; margin: 0px; background-color: #FFC700;">
                     <div class="modal-header">
@@ -112,6 +112,11 @@
                 $('#exampleModal').modal('show');
             }
 
+            $('#exampleModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+
 
 
 
@@ -126,7 +131,6 @@
             var video = localStorage.getItem('telnyx.example.video') || '1';
 
             ready(function() {
-                showModal();
                 document.getElementById('audio').checked = audio === '1';
                 document.getElementById('remoteVideo').volume = 0.3;
                 connect();

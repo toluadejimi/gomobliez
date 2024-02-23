@@ -206,15 +206,28 @@ class CallController extends Controller
     public function call_other(request $request)
     {
 
+        if ($request->call_token == null) {
+            return redirect('error-call');
+        }
+
+
+
         $chktoken = Call::where('call_token', $request->call_token)->first()->status ?? null;
+        $token = Call::where('call_token', $request->call_token)->first() ?? null;
+
+        if($token == null){
+            return redirect('error-call');
+        }
+
+
+        
+
 
         if ($chktoken == 1) {
             return redirect('error-call');
         }
 
-        if ($chktoken == null) {
-            return redirect('error-call');
-        }
+       
 
 
 
