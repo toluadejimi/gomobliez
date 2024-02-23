@@ -28,16 +28,15 @@ class CallController extends Controller
         }
 
 
-        if($plans == 1){
+        if ($plans == 1) {
 
             $ck = CallLimit::where('user_id', Auth::id())->whereDate('created_at', Carbon::today())->first() ?? null;
-            if($ck == null){
+            if ($ck == null) {
                 $cl = new CallLimit();
                 $cl->user_id = Auth::id();
                 $cl->call_limit = 0;
                 $cl->save();
             }
-
         }
 
 
@@ -54,7 +53,8 @@ class CallController extends Controller
                 ->for($clientName)
                 ->token();
 
-            $call_url = url('') . "/call-africa?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt&token=$token->token&clientName=$token->clientName";
+            $call_token = Str::random('200');
+            $call_url = url('') . "/call-africa?phone=$request->phone_no&call_token=$call_token&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
 
             $call = new Call();
             $call->user_id = Auth::id();
@@ -64,24 +64,24 @@ class CallController extends Controller
             $call->end_time = "0:00";
             $call->to_phone = $request->phone_no;
             $call->call_url = $call_url;
+            $call->call_token = $call_token;
+            $call->call_url = $call_url;
             $call->save();
 
-            $data['call_url']=$call_url;
-            $data['call_url']=$call_url;
-            $data['id']= 2;
-            $data['time']= 200;
+            $data['call_url'] = $call_url;
+            $data['call_url'] = $call_url;
+            $data['id'] = 2;
+            $data['time'] = 200;
 
             return response()->json([
                 'status' => true,
                 'data' => $data
             ], 200);
-
-
         } else {
 
             $call_token = Str::random('200');
             $call_url = url('') . "/call-other?phone=$request->phone_no&call_token=$call_token&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
-            
+
             $call = new Call();
             $call->user_id = Auth::id();
             $call->name = $request->name;
@@ -95,53 +95,46 @@ class CallController extends Controller
             $call->save();
 
 
+
             $costPerSecond = Setting::where('id', 1)->first()->call_cost;
             $walletAmount = Auth::user()->wallet;
             $callTime = calculateCallTime($costPerSecond, $walletAmount);
 
 
-            if($plan == 1){
+            if ($plan == 1) {
 
                 $dailylimit = CallLimit::where('user_id', Auth::id())->first()->call_limit;
                 $setLimit = Setting::where('id', 1)->first()->call_limit;
                 $planlimit = $setLimit - $dailylimit;
 
-                if($dailylimit >= $setLimit){
+                if ($dailylimit >= $setLimit) {
                     $tk = 0;
-                }else{
+                } else {
                     $tk = $planlimit;
                 }
-
-
-
-            }else{
+            } else {
 
                 $dailycalllimit = CallLimit::where('user_id', Auth::id())->first()->call_limit;
                 $setLimit = Setting::where('id', 1)->first()->call_limit;
                 $userwallet = User::where('id', Auth::id())->first()->wallet;
                 $callcost = Setting::where('id', 1)->first()->call_cost;
                 $walletlimit = $userwallet * $callcost;
-                if($dailycalllimit >= $setLimit){
+                if ($dailycalllimit >= $setLimit) {
                     $tk = 0;
-                }else{
+                } else {
                     $tk = $walletlimit;
                 }
-
             }
 
 
-            $call_url = url('') . "/call-other?tk=$tk&phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
-            $data['call_url']=$call_url;
-            $data['id']= 1;
-            $data['time']= 200;
+            $data['call_url'] = $call_url;
+            $data['id'] = 1;
+            $data['time'] = 200;
 
             return response()->json([
                 'status' => true,
                 'data' => $data
             ], 200);
-
-
-
         }
     }
 
@@ -215,7 +208,7 @@ class CallController extends Controller
 
 
         $chktoken = Call::where('phone_no', $request->phone)->where('call_token', $request->call_token)->status ?? null;
-        if($chktoken == 1 || $chktoken == null ){
+        if ($chktoken == 1 || $chktoken == null) {
             return redirect('error-call');
         }
 
@@ -238,12 +231,8 @@ class CallController extends Controller
     }
 
 
-    public function error_call(){
+    public function error_call()
+    {
         return view('error-call');
     }
-
-
-
-
-
 }
