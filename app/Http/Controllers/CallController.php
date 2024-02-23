@@ -79,8 +79,9 @@ class CallController extends Controller
 
         } else {
 
-            $call_url = url('') . "/call-other?phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
-
+            $call_token = Str::random('200');
+            $call_url = url('') . "/call-other?phone=$request->phone_no&call_token=$call_token&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
+            
             $call = new Call();
             $call->user_id = Auth::id();
             $call->name = $request->name;
@@ -89,7 +90,10 @@ class CallController extends Controller
             $call->end_time = "0:00";
             $call->to_phone = $request->phone_no;
             $call->call_url = $call_url;
+            $call->call_token = $call_token;
+            $call->call_url = $call_url;
             $call->save();
+
 
             $costPerSecond = Setting::where('id', 1)->first()->call_cost;
             $walletAmount = Auth::user()->wallet;
@@ -117,8 +121,6 @@ class CallController extends Controller
                 $userwallet = User::where('id', Auth::id())->first()->wallet;
                 $callcost = Setting::where('id', 1)->first()->call_cost;
                 $walletlimit = $userwallet * $callcost;
-
-
                 if($dailycalllimit >= $setLimit){
                     $tk = 0;
                 }else{
@@ -127,7 +129,6 @@ class CallController extends Controller
 
             }
 
-            //$token = get_callToken();
 
             $call_url = url('') . "/call-other?tk=$tk&phone=$request->phone_no&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
             $data['call_url']=$call_url;
@@ -213,6 +214,11 @@ class CallController extends Controller
     {
 
 
+        $chktoken = Call::where('phone_no', $request->phone)->where('call_token', $request->call_token)->status ?? null;
+        if($chktoken == 1 || $chktoken == null ){
+            return redirect('error-call');
+        }
+
         function localize_us_number($phone)
         {
             // $numbers_only = preg_replace("/[^\d]/", "", $phone);
@@ -230,4 +236,14 @@ class CallController extends Controller
 
         return view('call', compact('name', 'phone_no', 'number', 'plan', 'tk', 'user_id'));
     }
+
+
+    public function error_call(){
+        return view('error-call');
+    }
+
+
+
+
+
 }

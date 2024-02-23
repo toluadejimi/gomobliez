@@ -28,6 +28,10 @@ use App\Http\Controllers\ProxyController;
 Route::get('/proxy', [ProxyController::class, 'proxy']);
 
 
+Route::any('error-call', [CallController::class, 'error_call']);
+
+
+
 
 
 Route::get('/t', function () {
