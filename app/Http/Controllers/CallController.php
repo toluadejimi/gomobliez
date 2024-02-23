@@ -208,7 +208,7 @@ class CallController extends Controller
 
 
 
-        $chktoken = Call::where('to_phone', $request->phone)->where('call_token', $request->call_token)->first()->status ?? null;
+        $chktoken = Call::where('call_token', $request->call_token)->first()->status ?? null;
 
         dd($chktoken, $request->call_token);
 
