@@ -206,12 +206,17 @@ class CallController extends Controller
     public function call_other(request $request)
     {
 
-
-
         $chktoken = Call::where('call_token', $request->call_token)->first()->status ?? null;
-        if ($chktoken == 1 || $chktoken == null) {
+
+        if ($chktoken == 1) {
             return redirect('error-call');
         }
+
+        if ($chktoken == null) {
+            return redirect('error-call');
+        }
+
+
 
         function localize_us_number($phone)
         {
