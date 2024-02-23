@@ -207,7 +207,7 @@ class CallController extends Controller
     {
 
 
-        $chktoken = Call::where('phone_no', $request->phone)->where('call_token', $request->call_token)->first()->status ?? null;
+        $chktoken = Call::where('to_phone', $request->phone)->where('call_token', $request->call_token)->first()->status ?? null;
         if ($chktoken == 1 || $chktoken == null) {
             return redirect('error-call');
         }
