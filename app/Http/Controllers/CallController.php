@@ -209,9 +209,6 @@ class CallController extends Controller
 
 
         $chktoken = Call::where('call_token', $request->call_token)->first()->status ?? null;
-
-        dd($chktoken, $request->call_token);
-
         if ($chktoken == 1 || $chktoken == null) {
             return redirect('error-call');
         }
