@@ -207,7 +207,8 @@ class CallController extends Controller
     {
 
         if ($request->call_token == null) {
-            return redirect('error-call');
+            $error_message = "Token can not be null";
+            return view('error-call', compact('error_message'));
         }
 
 
