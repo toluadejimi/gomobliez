@@ -216,15 +216,14 @@ class CallController extends Controller
         $token = Call::where('call_token', $request->call_token)->first() ?? null;
 
         if($token == null){
-            return redirect('error-call');
+            $error_message = "Call Token is missing";
+            return view('error-call', compact('error_message'));
         }
 
-
-        
-
-
+    
         if ($chktoken == 1) {
-            return redirect('error-call');
+            $error_message = "Token not valid";
+            return view('error-call', compact('error_message'));
         }
 
        

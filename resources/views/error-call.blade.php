@@ -31,7 +31,7 @@
             {{ "Error!!"}}
         </div>
         <div id="number" style="font-weight: 400; font-size: 16px;">
-            {{ "Make calls from the mobile app only" }}
+            {{ $error_message }}
         </div>
      
 
