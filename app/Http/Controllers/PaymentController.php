@@ -165,12 +165,12 @@ class PaymentController extends Controller
 
 
         $ref = "FUND" . random_int(0000, 9999) . date("his");
-        $trx = "TRX" . random_int(0000, 9999) . date("his");
+        $Trx = "TRX" . random_int(0000, 9999) . date("his");
 
 
         $amount = $request->amount;
         $trx = new Transaction();
-        $trx->trx_id = $trx;
+        $trx->trx_id = $Trx;
         $trx->type = 1;
         $trx->ref = $ref;
         $trx->amount = $amount;
