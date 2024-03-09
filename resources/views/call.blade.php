@@ -102,11 +102,6 @@
 
 
 
-
-
-
-
-
         <script type="text/javascript">
             function showModal() {
                 $('#exampleModal').modal('show');
@@ -185,6 +180,10 @@
                     document.getElementById('connectStatus').innerHTML = 'Call Initialized';
                     showModal();
                 });
+
+
+
+
 
                 client.on('telnyx.socket.close', function() {
                     document.getElementById('connectStatus').innerHTML = 'Call Disconnected';

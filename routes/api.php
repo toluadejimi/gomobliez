@@ -42,6 +42,10 @@ Route::post('forgot-password', [RegisterationController::class, 'forgot_password
 Route::post('reset-password', [RegisterationController::class, 'reset_password']);
 
 
+Route::any('verify-payment', [PaymentController::class, 'charge']);
+
+
+
 Route::get('token', [VoiceController::class, 'token']);
 
 Route::post('callback', [VoiceController::class, 'callback']);

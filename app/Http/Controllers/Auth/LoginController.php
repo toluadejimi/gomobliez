@@ -37,8 +37,6 @@ class LoginController extends Controller
 
         $email = $request->email;
         $credentials = request(['email', 'password']);
-
-
         Passport::tokensExpireIn(Carbon::now()->addMinutes(50));
         Passport::refreshTokensExpireIn(Carbon::now()->addMinutes(50));
 
@@ -56,7 +54,7 @@ class LoginController extends Controller
         if (!auth()->attempt($credentials)) {
             return response()->json([
                 'status' => $this->failed,
-                'message' => 'Phone No or Password Incorrect'
+                'message' => 'Email or Password Incorrect'
             ], 401);
         }
 
@@ -136,7 +134,7 @@ class LoginController extends Controller
         if($getmyplan == null){
             $myplan = null;
         }else{
-             
+
         if($getmyplan->expires_at == null){
             $myplan = null;
 
@@ -147,10 +145,10 @@ class LoginController extends Controller
 
 
         }
-       
 
 
-       
+
+
 
 
         $plans = Plan::select('id', 'title', 'amount', 'period')->get();

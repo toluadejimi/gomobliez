@@ -2,25 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Stripe;
-use Session;
-use App\Models\Plan;
-use App\Models\User;
-use GuzzleHttp\Client;
+use App\Models\ConversionRate;
 use App\Models\Country;
 use App\Models\PayInfo;
 use App\Models\Transaction;
-use App\Models\TopupCountry;
+use App\Models\User;
 use App\Models\Verification;
 use Illuminate\Http\Request;
-use App\Models\ConversionRate;
-use App\Models\OauthAccessToken;
-use App\Models\OauthAccessTokens;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
-
-
+use Session;
+use Stripe;
 
 
 class PaymentController extends Controller
@@ -66,8 +58,6 @@ class PaymentController extends Controller
 
 
             $url = url('');
-
-
 
 
             $curl = curl_init();
@@ -118,7 +108,6 @@ class PaymentController extends Controller
             // $final = json_encode($link);
 
 
-
             $body['href'] = $link;
 
 
@@ -130,8 +119,6 @@ class PaymentController extends Controller
             $trx->type = 2; //credit
             $trx->token = $token;
             $trx->save();
-
-
 
 
             if ($link != null) {
@@ -158,7 +145,6 @@ class PaymentController extends Controller
             $body['href'] = url('') . "/stripe?amount=$request->amount&email=$email&id=$id";
 
 
-
             return response()->json([
                 'status' => true,
                 'data' => $body,
@@ -170,101 +156,125 @@ class PaymentController extends Controller
     public function charge(request $request)
     {
 
+        $email = $request->email;
+        $payid = $request->payid;
+        $is_Stripe = $request->is_Stripe;
 
-        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        $cost = Plan::where('id', 1)->first()->amount;
-        $tok = $request->stripeToken;
-        $final = str_replace(" ", "", $tok);
+        User::where('email', $email)->increment('wallet', $request->amount);
 
+        $ref = "FUND" . random_int(0000, 9999) . date("his");
 
-        if ($request->save_payinfo == 'on') {
-
-            $customer = \Stripe\Customer::create([
-                'source' => $tok,
-                'email' => $request->email,
-            ]);
-
-
-            $stripe = \Stripe\Charge::create([
-                'amount' => $request->amount * 100,
-                'currency' => 'usd',
-                'customer' => $customer->id,
-            ]);
+        $amount = $request->amount;
+        $trx = new Transaction();
+        $trx->type = 1;
+        $trx->ref = $ref;
+        $trx->amount = $amount;
+        $trx->status = 1;
+        $trx->save();
 
 
-            $ck = PayInfo::where("last4", $stripe->source->last4)->first()->last4 ?? null;
-            if ($ck != $stripe->source->last4) {
-                $pay = new PayInfo();
-                $pay->user_id = $request->id;
-                $pay->customer_id = $customer->id;
-                $pay->name = $request->name_on_card;
-                $pay->brand = $stripe->source->brand;
-                $pay->last4 = $stripe->source->last4;
-                $pay->exp_month = $stripe->source->exp_month;
-                $pay->exp_year = $stripe->source->exp_year;
-                $pay->save();
-            }
-
-            $status = $stripe->status ?? null;
-
-            if ($status == 'succeeded') {
-
-                User::where('email', $request->email)->increment('wallet', $request->amount);
-
-                $ref = "FUND" . random_int(0000, 9999) . date("his");
-
-                $amount = $request->amount;
+        $data['message'] = "Your Wallet has been funded with $".number_format($request->amount, 2);
+        return response()->json([
+            'status' => true,
+            'data' => $data,
+        ], 200);
 
 
-                $trx = new Transaction();
-                $trx->type = 1;
-                $trx->amount = $amount;
-                $trx->status = 1;
-                $trx->save();
-
-                return view('success', compact('ref', 'amount'));
-            } else {
-                return view('decline', compact('ref', 'amount'));
-            }
-        }
 
 
-        $stripe =  Stripe\Charge::create([
-            "amount" => $request->amount * 100,
-            "currency" => "USD",
-            'source' => $tok,
-            "description" => "Wallet funding on Gomobilez",
-        ]);
-
-
-        $status = $stripe->status ?? null;
-
-        if ($status == 'succeeded') {
-
-
-            User::where('email', $request->email)->increment('wallet', $request->amount);
-
-            $ref = "FUND" . random_int(0000, 9999) . date("his");
-
-            $amount = $request->amount;
-
-
-            $trx = new Transaction();
-            $trx->type = 1;
-            $trx->amount = $amount;
-            $trx->status = 1;
-            $trx->save();
-
-
-            return view('success', compact('ref', 'amount'));
-
-
-            echo "Payment_successful";
-        } else {
-            echo "Payment_declined";
-        }
+//        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+//        $cost = Plan::where('id', 1)->first()->amount;
+//        $tok = $request->stripeToken;
+//        $final = str_replace(" ", "", $tok);
+//
+//
+//        if ($request->save_payinfo == 'on') {
+//
+//            $customer = \Stripe\Customer::create([
+//                'source' => $tok,
+//                'email' => $request->email,
+//            ]);
+//
+//
+//            $stripe = \Stripe\Charge::create([
+//                'amount' => $request->amount * 100,
+//                'currency' => 'usd',
+//                'customer' => $customer->id,
+//            ]);
+//
+//
+//            $ck = PayInfo::where("last4", $stripe->source->last4)->first()->last4 ?? null;
+//            if ($ck != $stripe->source->last4) {
+//                $pay = new PayInfo();
+//                $pay->user_id = $request->id;
+//                $pay->customer_id = $customer->id;
+//                $pay->name = $request->name_on_card;
+//                $pay->brand = $stripe->source->brand;
+//                $pay->last4 = $stripe->source->last4;
+//                $pay->exp_month = $stripe->source->exp_month;
+//                $pay->exp_year = $stripe->source->exp_year;
+//                $pay->save();
+//            }
+//
+//            $status = $stripe->status ?? null;
+//
+//            if ($status == 'succeeded') {
+//
+//                User::where('email', $request->email)->increment('wallet', $request->amount);
+//
+//                $ref = "FUND" . random_int(0000, 9999) . date("his");
+//
+//                $amount = $request->amount;
+//
+//
+//                $trx = new Transaction();
+//                $trx->type = 1;
+//                $trx->amount = $amount;
+//                $trx->status = 1;
+//                $trx->save();
+//
+//                return view('success', compact('ref', 'amount'));
+//            } else {
+//                return view('decline', compact('ref', 'amount'));
+//            }
+//        }
+//
+//
+//        $stripe =  Stripe\Charge::create([
+//            "amount" => $request->amount * 100,
+//            "currency" => "USD",
+//            'source' => $tok,
+//            "description" => "Wallet funding on Gomobilez",
+//        ]);
+//
+//
+//        $status = $stripe->status ?? null;
+//
+//        if ($status == 'succeeded') {
+//
+//
+//            User::where('email', $request->email)->increment('wallet', $request->amount);
+//
+//            $ref = "FUND" . random_int(0000, 9999) . date("his");
+//
+//            $amount = $request->amount;
+//
+//
+//            $trx = new Transaction();
+//            $trx->type = 1;
+//            $trx->amount = $amount;
+//            $trx->status = 1;
+//            $trx->save();
+//
+//
+//            return view('success', compact('ref', 'amount'));
+//
+//
+//            echo "Payment_successful";
+//        } else {
+//            echo "Payment_declined";
+//        }
     }
-
 
 
     public function charge_saved_cards(request $request)
@@ -314,7 +324,6 @@ class PaymentController extends Controller
             } else {
 
 
-
                 $body['message'] = "Payment Failed";
 
                 return response()->json([
@@ -329,10 +338,10 @@ class PaymentController extends Controller
 
             $body['message'] = $th->getMessage();
 
-                return response()->json([
-                    'status' => true,
-                    'data' => $body,
-                ], 500);
+            return response()->json([
+                'status' => true,
+                'data' => $body,
+            ], 500);
 
         }
     }
@@ -369,10 +378,6 @@ class PaymentController extends Controller
             $trx->save();
 
 
-
-
-
-
         } else {
             echo "Payment_declined";
         }
@@ -382,7 +387,7 @@ class PaymentController extends Controller
     public function saved_cards(request $request)
     {
 
-        $info = PayInfo::where('user_id', Auth::id())->select('id','customer_id', 'brand', 'last4', 'exp_month', 'exp_year', 'name')->get();
+        $info = PayInfo::where('user_id', Auth::id())->select('id', 'customer_id', 'brand', 'last4', 'exp_month', 'exp_year', 'name')->get();
         $body['info'] = $info;
 
         return response()->json([
@@ -392,13 +397,12 @@ class PaymentController extends Controller
     }
 
 
-
     public function verify_account(request $request)
     {
 
         $user = User::where('email', $request->email)->first() ?? null;
 
-        if($user == null){
+        if ($user == null) {
 
             $data['message'] = "User not found";
             return response()->json([
@@ -409,13 +413,12 @@ class PaymentController extends Controller
         }
 
 
-        $data['name'] = $user->first_name. " ".$user->last_name;
+        $data['name'] = $user->first_name . " " . $user->last_name;
 
         return response()->json([
             'status' => true,
             'data' => $data,
         ], 200);
-
 
 
     }
@@ -425,7 +428,7 @@ class PaymentController extends Controller
 
 
         $user_email = User::where('email', $request->email)->first()->email ?? null;
-        if($user_email == null){
+        if ($user_email == null) {
             $data['message'] = "User not found";
             return response()->json([
                 'status' => false,
@@ -434,7 +437,7 @@ class PaymentController extends Controller
         }
 
 
-        if($request->email == Auth::user()->email){
+        if ($request->email == Auth::user()->email) {
 
             $data['message'] = "You can not send money to yourself";
             return response()->json([
@@ -445,7 +448,7 @@ class PaymentController extends Controller
         }
 
         $user_wallet = User::where('id', Auth::id())->first()->wallet;
-        if($user_wallet < $request->amount){
+        if ($user_wallet < $request->amount) {
 
             $data['message'] = "Insufficient Funds, Fund your wallet and try again";
             return response()->json([
@@ -468,8 +471,6 @@ class PaymentController extends Controller
         }
 
 
-
-
         $user = User::where('id', Auth::id())->first() ?? null;
         if (Hash::check($request->pin, $user->pin)) {
 
@@ -477,15 +478,13 @@ class PaymentController extends Controller
             User::where('email', $request->email)->increment('wallet', $request->amount);
 
             $user = User::where('email', $request->email)->first() ?? null;
-            $user_name = $user->first_name. " ".$user->last_name;
+            $user_name = $user->first_name . " " . $user->last_name;
 
-            $data['message'] = "$".$request->amount." has been successfully sent to $user_name";
-                return response()->json([
-                    'status' => true,
-                    'data' => $data,
-                ], 200);
-
-
+            $data['message'] = "$" . $request->amount . " has been successfully sent to $user_name";
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+            ], 200);
 
 
         } else {
@@ -499,20 +498,16 @@ class PaymentController extends Controller
         }
 
 
-
-
-
-
     }
 
 
     public function conversion_rate(request $request)
     {
-       $data['conversion_rate'] = ConversionRate::select('rate')->where('currency', $request->currency)->get();
+        $data['conversion_rate'] = ConversionRate::select('rate')->where('currency', $request->currency)->get();
 
-       return response()->json([
-        'status' => true,
-        'data' => $data,
+        return response()->json([
+            'status' => true,
+            'data' => $data,
         ], 200);
 
 
@@ -523,17 +518,16 @@ class PaymentController extends Controller
     {
 
         $id = $request->id;
-        return view ('verify-id', compact('id'));
+        return view('verify-id', compact('id'));
 
     }
-
 
 
     public function upload_id(request $request)
     {
         $id = $request->id;
         $country = Country::select('name', 'id', 'flag')->get();
-        return view ('upload-id', compact('id', 'country'));
+        return view('upload-id', compact('id', 'country'));
 
     }
 
@@ -542,32 +536,29 @@ class PaymentController extends Controller
     {
 
 
-
-            $file = $request->file('front_id');
-            $fileName = $file->getClientOriginalName();
-            $destinationPath = public_path() . 'verify/images';
-            $request->front_id->move(public_path('verify/image'), $fileName);
-            $fr_file_url = url('') . "/public/verify/image/$fileName";
-
-
-            $file = $request->file('back_id');
-            $fileName = $file->getClientOriginalName();
-            $destinationPath = public_path() . 'verify/images';
-            $request->back_id->move(public_path('verify/image'), $fileName);
-            $bk_file_url = url('') . "/public/verify/image/$fileName";
+        $file = $request->file('front_id');
+        $fileName = $file->getClientOriginalName();
+        $destinationPath = public_path() . 'verify/images';
+        $request->front_id->move(public_path('verify/image'), $fileName);
+        $fr_file_url = url('') . "/public/verify/image/$fileName";
 
 
+        $file = $request->file('back_id');
+        $fileName = $file->getClientOriginalName();
+        $destinationPath = public_path() . 'verify/images';
+        $request->back_id->move(public_path('verify/image'), $fileName);
+        $bk_file_url = url('') . "/public/verify/image/$fileName";
 
 
         $usr = User::where('id', $request->id)->first();
 
 
-        $ver =  new Verification();
+        $ver = new Verification();
         $ver->user_id = $request->id;
         $ver->id_type = $request->id_type;
         $ver->front_id = $fr_file_url;
         $ver->back_id = $bk_file_url;
-        $ver->name = $usr->first_name." ".$usr->first_name;
+        $ver->name = $usr->first_name . " " . $usr->first_name;
         $ver->save();
 
         return redirect('/id-success');
@@ -584,16 +575,12 @@ class PaymentController extends Controller
     }
 
 
-
-
-
-
     public function send_to_bank(request $request)
     {
 
 
         $user_wallet = User::where('id', Auth::id())->first()->wallet;
-        if($user_wallet < $request->amount){
+        if ($user_wallet < $request->amount) {
 
             $data['message'] = "Insufficient Funds, Fund your wallet and try again";
             return response()->json([
@@ -617,7 +604,7 @@ class PaymentController extends Controller
 
 
         $user_id = Auth::id();
-        if(Auth::user()->is_verified == 0){
+        if (Auth::user()->is_verified == 0) {
             $data['id'] = $user_id;
             $body['url'] = url('') . "/verify-id?id=$user_id";
             return response()->json([
@@ -627,8 +614,7 @@ class PaymentController extends Controller
         }
 
 
-
-        if($request->currency == "NGN"){
+        if ($request->currency == "NGN") {
 
             $user_id = Auth::id();
             $rate = ConversionRate::where('currency', 'NGN')->first()->rate;
@@ -637,7 +623,6 @@ class PaymentController extends Controller
             $GetToken = $request->header('Authorization');
             $stringToRemove = "Bearer ";
             $token = str_replace($stringToRemove, '', $GetToken);
-
 
 
             if (Hash::check($request->pin, Auth::user()->pin) == false) {
@@ -652,27 +637,21 @@ class PaymentController extends Controller
             }
 
 
-
-
-
-
             $data['id'] = $user_id;
             $body['url'] = url('') . "/transfer-ngn?amount=$ngn_amount&token=$token";
             return response()->json([
-                    'status' => true,
-                    'data' => $body,
+                'status' => true,
+                'data' => $body,
             ], 200);
-
 
 
         }
 
 
-
     }
 
 
-    public function  send_transfer_ngn(request $request)
+    public function send_transfer_ngn(request $request)
     {
 
         dd($request->all());
@@ -684,13 +663,12 @@ class PaymentController extends Controller
     public function transfer_ngn(request $request)
     {
 
-           $data['amount'] = $request->amount;
-           $data['token'] = $request->token;
-           $data['banks'] = get_banks();
+        $data['amount'] = $request->amount;
+        $data['token'] = $request->token;
+        $data['banks'] = get_banks();
 
 
-
-        return view ('transfer.ngn', $data);
+        return view('transfer.ngn', $data);
 
 
     }
@@ -698,7 +676,7 @@ class PaymentController extends Controller
     public function delete_card(request $request)
     {
 
-        PayInfo::where('id', $request->id)->delete() ?? null;
+            PayInfo::where('id', $request->id)->delete() ?? null;
         $body['message'] = "Card deleted successfully";
 
         return response()->json([
@@ -706,8 +684,6 @@ class PaymentController extends Controller
             'data' => $body,
         ], 200);
     }
-
-
 
 
     public function success(request $request)
@@ -758,10 +734,6 @@ class PaymentController extends Controller
     }
 
 
-
-
-
-
     public function verify_payment(request $request)
     {
 
@@ -771,7 +743,6 @@ class PaymentController extends Controller
 
             echo "Payment_declined";
         }
-
 
 
         if ($request->status == 'true') {
@@ -808,10 +779,8 @@ class PaymentController extends Controller
             $order_amount = (int)$amount;
 
 
-
-
             if ($ss == "COMPLETED") {
-                $user_id =  Transaction::where('token', $request->token)->first()->user_id ?? null;
+                $user_id = Transaction::where('token', $request->token)->first()->user_id ?? null;
                 User::where('id', $user_id)->increment('wallet', $order_amount);
                 Transaction::where('token', $request->token)->update([
                     'status' => 2
@@ -830,7 +799,7 @@ class PaymentController extends Controller
             } else {
 
 
-                echo  $status ?? "Somthingwent wrong";
+                echo $status ?? "Somthingwent wrong";
 
                 // return response()->json([
                 //     'status' => false,
@@ -838,13 +807,9 @@ class PaymentController extends Controller
                 // ], 500);
 
 
-
             }
         }
     }
-
-
-
 
 
     public function payment_decline(request $request)
@@ -864,7 +829,6 @@ class PaymentController extends Controller
             $status = $request->status;
 
 
-
             return view('decline', compact('data', 'order_token', 'status'));
         } else {
 
@@ -877,8 +841,6 @@ class PaymentController extends Controller
     }
 
 
-
-
     public function return(request $request)
     {
 
@@ -889,21 +851,6 @@ class PaymentController extends Controller
 
         return view('success', compact('data', 'order_token', 'status'));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
