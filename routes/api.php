@@ -42,7 +42,7 @@ Route::post('forgot-password', [RegisterationController::class, 'forgot_password
 Route::post('reset-password', [RegisterationController::class, 'reset_password']);
 
 
-Route::any('verify-payment', [PaymentController::class, 'charge']);
+Route::post('verify-payment', [PaymentController::class, 'charge']);
 
 
 
