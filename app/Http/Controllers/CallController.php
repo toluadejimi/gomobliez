@@ -69,7 +69,6 @@ class CallController extends Controller
             $call->save();
 
             $data['call_url'] = $call_url;
-            $data['call_url'] = $call_url;
             $data['id'] = 2;
             $data['time'] = 200;
 
