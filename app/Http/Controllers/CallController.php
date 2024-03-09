@@ -54,7 +54,7 @@ class CallController extends Controller
                 ->token();
 
             $call_token = Str::random('200');
-            $call_url = url('') . "/call-africa?phone=$request->phone_no&call_token=$call_token&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
+            $call_url = url('') . "/call-other?phone=$request->phone_no&call_token=$call_token&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
 
             $call = new Call();
             $call->user_id = Auth::id();
@@ -221,13 +221,13 @@ class CallController extends Controller
             return view('error-call', compact('error_message'));
         }
 
-    
+
         if ($chktoken == 1) {
             $error_message = "Token not valid";
             return view('error-call', compact('error_message'));
         }
 
-       
+
 
 
 
