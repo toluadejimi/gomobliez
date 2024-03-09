@@ -162,6 +162,9 @@ class PaymentController extends Controller
 
         User::where('email', $email)->increment('wallet', $request->amount);
 
+        $user_id = User::where('email', $email)->first()->id;
+
+
         $ref = "FUND" . random_int(0000, 9999) . date("his");
 
         $amount = $request->amount;
@@ -169,6 +172,7 @@ class PaymentController extends Controller
         $trx->type = 1;
         $trx->ref = $ref;
         $trx->amount = $amount;
+        $trx->user_id = $user_id;
         $trx->status = 1;
         $trx->save();
 
