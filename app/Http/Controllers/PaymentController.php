@@ -161,14 +161,16 @@ class PaymentController extends Controller
         $is_Stripe = $request->is_Stripe;
 
         User::where('email', $email)->increment('wallet', $request->amount);
-
         $user_id = User::where('email', $email)->first()->id;
 
 
         $ref = "FUND" . random_int(0000, 9999) . date("his");
+        $trx = "TRX" . random_int(0000, 9999) . date("his");
+
 
         $amount = $request->amount;
         $trx = new Transaction();
+        $trx->trx_id = $trx;
         $trx->type = 1;
         $trx->ref = $ref;
         $trx->amount = $amount;
