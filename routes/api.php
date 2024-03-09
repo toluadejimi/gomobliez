@@ -31,6 +31,8 @@ use App\Http\Controllers\Transaction\TransactionController;
 // });
 
 
+Route::post('verify-payment', [PaymentController::class, 'charge']);
+
 
 
 //Registration
@@ -42,7 +44,6 @@ Route::post('forgot-password', [RegisterationController::class, 'forgot_password
 Route::post('reset-password', [RegisterationController::class, 'reset_password']);
 
 
-Route::post('verify-payment', [PaymentController::class, 'charge']);
 
 
 
