@@ -113,9 +113,6 @@
             })
 
 
-
-
-
             var client;
             var currentCall = null;
 
@@ -129,16 +126,13 @@
                 document.getElementById('audio').checked = audio === '1';
                 document.getElementById('remoteVideo').volume = 0.3;
                 connect();
-
             });
-
 
 
             function checkAudio() {
                 check.classList.toggle('playing', window.isAudioPlaying());
                 window.requestAnimationFrame(checkAudio);
             }
-
 
 
             function detachListeners(client) {
