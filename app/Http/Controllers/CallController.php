@@ -71,7 +71,7 @@ class CallController extends Controller
                 if ($dailylimit >= $setLimit) {
                     return response()->json([
                         'status' => false,
-                        'data' => "Service not available at the moment, try again later"
+                        'message' => "Service not available at the moment, try again later"
                     ], 422);
 
                 } else {
