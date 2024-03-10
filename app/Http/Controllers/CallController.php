@@ -100,6 +100,66 @@ class CallController extends Controller
                 'status' => true,
                 'data' => $data
             ], 200);
+        } else {
+
+
+            $costPerSecond = Setting::where('id', 1)->first()->call_cost;
+            $walletAmount = Auth::user()->wallet;
+            $wallet = User::where('id', Auth::id())->first()->wallet ?? null;
+            $time_to_call =  calculateCallTime($costPerSecond, $walletAmount);
+
+            if($time_to_call == 0){
+                return response()->json([
+                    'status' => false,
+                    'message' => "Insufficient funds to make call, Fund your wallet"
+                ], 422);
+            }
+
+
+            $call = new Call();
+            $call->user_id = Auth::id();
+            $call->name = $request->name;
+            $call->time_initiated = date('h:i');
+            $call->call_time = "0:00";
+            $call->end_time = "0:00";
+            $call->to_phone = $request->phone_no;
+            $call->time_to_call = $time_to_call;
+            $call->save();
+
+
+            if ($plan == 1) {
+
+                $dailylimit = CallLimit::where('user_id', Auth::id())->first()->call_limit;
+                $setLimit = Setting::where('id', 1)->first()->call_limit;
+                $planlimit = $setLimit - $dailylimit;
+
+                if ($dailylimit >= $setLimit) {
+                    $tk = 0;
+                } else {
+                    $tk = $planlimit;
+                }
+            } else {
+
+                $dailycalllimit = CallLimit::where('user_id', Auth::id())->first()->call_limit;
+                $setLimit = Setting::where('id', 1)->first()->call_limit;
+                $userwallet = User::where('id', Auth::id())->first()->wallet;
+                $callcost = Setting::where('id', 1)->first()->call_cost;
+                $walletlimit = $userwallet * $callcost;
+                if ($dailycalllimit >= $setLimit) {
+                    $tk = 0;
+                } else {
+                    $tk = $walletlimit;
+                }
+            }
+
+
+            $data['id'] = 1;
+            $data['time'] = $time_to_call;
+
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ], 200);
         }
     }
 
