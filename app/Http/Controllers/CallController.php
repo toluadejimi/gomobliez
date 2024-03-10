@@ -123,7 +123,7 @@ class CallController extends Controller
                 if ($dailylimit >= $setLimit) {
                     return response()->json([
                         'status' => false,
-                        'data' => "Service not available at the moment, try again later"
+                        'message' => "Service not available at the moment, try again later"
                     ], 422);
 
                 } else {
@@ -151,7 +151,7 @@ class CallController extends Controller
         if ($call_cost > Auth::user()->wallet) {
             return response()->json([
                 'status' => false,
-                'data' => "Insufficient funds to make call, Fund your wallet"
+                'message' => "Insufficient funds to make call, Fund your wallet"
             ], 422);
 
         } else {
