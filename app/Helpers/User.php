@@ -288,7 +288,7 @@ function africa_token()
 function calculateCallTime($costPerSecond, $walletAmount)
 {
     if (Auth::user()->wallet < 0) {
-        return "Insufficient funds";
+        return 0;
     }
     $callTimeSeconds = $walletAmount / $costPerSecond * 60;
     $callTimeFormatted = $callTimeSeconds;

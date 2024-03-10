@@ -39,9 +39,6 @@ class CallController extends Controller
             }
         }
 
-
-
-
         $user_id = Auth::id();
         $phone = ['+234', '+254', '+256', '+255'];
         if (Str::contains($request->phone_no, $phone)) {
@@ -78,8 +75,19 @@ class CallController extends Controller
             ], 200);
         } else {
 
-            $call_token = Str::random('200');
-            $call_url = url('') . "/call-other?phone=$request->phone_no&call_token=$call_token&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
+
+            $costPerSecond = Setting::where('id', 1)->first()->call_cost;
+            $walletAmount = Auth::user()->wallet;
+            $wallet = User::where('id', Auth::id())->first()->wallet ?? null;
+            $time_to_call =  calculateCallTime($costPerSecond, $walletAmount);
+
+            if($time_to_call == 0){
+                return response()->json([
+                    'status' => false,
+                    'message' => "Insufficient funds to make call, Fund your wallet"
+                ], 422);
+            }
+
 
             $call = new Call();
             $call->user_id = Auth::id();
@@ -88,16 +96,9 @@ class CallController extends Controller
             $call->call_time = "0:00";
             $call->end_time = "0:00";
             $call->to_phone = $request->phone_no;
-            $call->call_url = $call_url;
-            $call->call_token = $call_token;
-            $call->call_url = $call_url;
+            $call->time_to_call = $time_to_call;
+            //$call->call_token = $call_token;
             $call->save();
-
-
-
-            $costPerSecond = Setting::where('id', 1)->first()->call_cost;
-            $walletAmount = Auth::user()->wallet;
-            $callTime = calculateCallTime($costPerSecond, $walletAmount);
 
 
             if ($plan == 1) {
@@ -126,9 +127,8 @@ class CallController extends Controller
             }
 
 
-            $data['call_url'] = $call_url;
             $data['id'] = 1;
-            $data['time'] = 200;
+            $data['time'] = $time_to_call;
 
             return response()->json([
                 'status' => true,
