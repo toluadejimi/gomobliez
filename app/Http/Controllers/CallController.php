@@ -27,17 +27,13 @@ class CallController extends Controller
             $plan = $plans;
         }
 
-
-        if ($plans == 1) {
-
-            $ck = CallLimit::where('user_id', Auth::id())->whereDate('created_at', Carbon::today())->first() ?? null;
-            if ($ck == null) {
-                $cl = new CallLimit();
-                $cl->user_id = Auth::id();
-                $cl->call_limit = 0;
-                $cl->save();
-            }
+        $Ck = CallLimit::where('user_id', Auth::id())->first() ?? null;
+        if ($Ck == null) {
+            $limit = new CallLimit();
+            $limit->user_id = Auth::id();
+            $limit->save();
         }
+
 
         $user_id = Auth::id();
         $phone = ['+234', '+254', '+256', '+255'];
@@ -45,10 +41,9 @@ class CallController extends Controller
 
             $costPerSecond = Setting::where('id', 1)->first()->call_cost;
             $walletAmount = Auth::user()->wallet;
-            $wallet = User::where('id', Auth::id())->first()->wallet ?? null;
-            $time_to_call =  calculateCallTime($costPerSecond, $walletAmount);
+            $time_to_call = calculateCallTime($costPerSecond, $walletAmount);
 
-            if($time_to_call == 0){
+            if ($time_to_call == 0) {
                 return response()->json([
                     'status' => false,
                     'message' => "Insufficient funds to make call, Fund your wallet"
@@ -70,71 +65,42 @@ class CallController extends Controller
             if ($plan == 1) {
 
                 $dailylimit = CallLimit::where('user_id', Auth::id())->first()->call_limit ?? null;
-
-                if($dailylimit == null){
-
-                    $limit = new CallLimit();
-                    $limit->user_id = Auth::id();
-                    $limit->save();
-
-                }
-
-
-                $setLimit = Setting::where('id', 1)->first()->call_limit;
-                $planlimit = $setLimit - $dailylimit;
+                $setLimit = Setting::where('id', 1)->first()->daily_call_limit;
+                $callsec = $setLimit - $dailylimit;
 
                 if ($dailylimit >= $setLimit) {
-                    $tk = 0;
+                    return response()->json([
+                        'status' => false,
+                        'data' => "Service not available at the moment, try again later"
+                    ], 422);
+
                 } else {
-                    $tk = $planlimit;
-                }
-            } else {
-
-                $dailycalllimit = CallLimit::where('user_id', Auth::id())->first()->call_limit ?? null;
-
-                if($dailycalllimit == null){
-
-                    $limit = new CallLimit();
-                    $limit->user_id = Auth::id();
-                    $limit->save();
-
+                    $data['id'] = 1;
+                    $data['time'] = $callsec;
+                    return response()->json([
+                        'status' => true,
+                        'data' => $data
+                    ], 200);
                 }
 
-                $setLimit = Setting::where('id', 1)->first()->call_limit;
-                $userwallet = User::where('id', Auth::id())->first()->wallet;
-                $callcost = Setting::where('id', 1)->first()->call_cost;
-                $walletlimit = $userwallet * $callcost;
-                if ($dailycalllimit >= $setLimit) {
-                    $tk = 0;
-                } else {
-                    $tk = $walletlimit;
-                }
+
             }
 
-
-            $data['id'] = 1;
-            $data['time'] = $time_to_call;
-
-            return response()->json([
-                'status' => true,
-                'data' => $data
-            ], 200);
         } else {
 
 
             $costPerSecond = Setting::where('id', 1)->first()->call_cost;
             $walletAmount = Auth::user()->wallet;
             $wallet = User::where('id', Auth::id())->first()->wallet ?? null;
-            $time_to_call =  calculateCallTime($costPerSecond, $walletAmount);
+            $time_to_call = calculateCallTime($costPerSecond, $walletAmount);
 
 
-            if($time_to_call == 0){
+            if ($time_to_call == 0) {
                 return response()->json([
                     'status' => false,
                     'message' => "Insufficient funds to make call, Fund your wallet"
                 ], 422);
             }
-
 
 
             $call = new Call();
@@ -151,51 +117,46 @@ class CallController extends Controller
             if ($plan == 1) {
 
                 $dailylimit = CallLimit::where('user_id', Auth::id())->first()->call_limit ?? null;
-
-                if($dailylimit == null){
-
-                    $limit = new CallLimit();
-                    $limit->user_id = Auth::id();
-                    $limit->save();
-
-                }
-
-
-                $setLimit = Setting::where('id', 1)->first()->call_limit;
-                $planlimit = $setLimit - $dailylimit;
+                $setLimit = Setting::where('id', 1)->first()->daily_call_limit;
+                $callsec = $setLimit - $dailylimit;
 
                 if ($dailylimit >= $setLimit) {
-                    $tk = 0;
+                    return response()->json([
+                        'status' => false,
+                        'data' => "Service not available at the moment, try again later"
+                    ], 422);
+
                 } else {
-                    $tk = $planlimit;
-                }
-            } else {
-
-                $dailycalllimit = CallLimit::where('user_id', Auth::id())->first()->call_limit ?? null;
-
-                if($dailycalllimit == null){
-
-                    $limit = new CallLimit();
-                    $limit->user_id = Auth::id();
-                    $limit->save();
-
+                    $data['id'] = 1;
+                    $data['time'] = $callsec;
+                    return response()->json([
+                        'status' => true,
+                        'data' => $data
+                    ], 200);
                 }
 
-                $setLimit = Setting::where('id', 1)->first()->call_limit;
-                $userwallet = User::where('id', Auth::id())->first()->wallet;
-                $callcost = Setting::where('id', 1)->first()->call_cost;
-                $walletlimit = $userwallet * $callcost;
-                if ($dailycalllimit >= $setLimit) {
-                    $tk = 0;
-                } else {
-                    $tk = $walletlimit;
-                }
+
             }
 
 
-            $data['id'] = 1;
-            $data['time'] = $time_to_call;
+        }
 
+
+        $costPerSecond = Setting::where('id', 1)->first()->call_cost;
+        $walletAmount = Auth::user()->wallet;
+        $time_to_call = calculateCallTime($costPerSecond, $walletAmount);
+        $call_cost = Setting::where('id', 1)->first()->call_cost;
+
+
+        if ($call_cost > Auth::user()->wallet) {
+            return response()->json([
+                'status' => false,
+                'data' => "Insufficient funds to make call, Fund your wallet"
+            ], 422);
+
+        } else {
+            $data['id'] = 1;
+            $data['time'] =  $time_to_call;
             return response()->json([
                 'status' => true,
                 'data' => $data
