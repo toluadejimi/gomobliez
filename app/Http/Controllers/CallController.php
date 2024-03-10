@@ -43,39 +43,6 @@ class CallController extends Controller
         $phone = ['+234', '+254', '+256', '+255'];
         if (Str::contains($request->phone_no, $phone)) {
 
-            $clientName = auth()->user()?->name ?? 'Browser';
-            $token = africastalking()
-                ->voice()
-                ->webrtc()
-                ->for($clientName)
-                ->token();
-
-            $call_token = Str::random('200');
-            $call_url = url('') . "/call-other?phone=$request->phone_no&call_token=$call_token&name=$request->name&plan=$plan&user_id=$user_id&parameters=skipMediaPermissionPrompt";
-
-            $call = new Call();
-            $call->user_id = Auth::id();
-            $call->name = $request->name;
-            $call->time_initiated = date('h:i');
-            $call->call_time = "0:00";
-            $call->end_time = "0:00";
-            $call->to_phone = $request->phone_no;
-            $call->call_url = $call_url;
-            $call->call_token = $call_token;
-            $call->call_url = $call_url;
-            $call->save();
-
-            $data['call_url'] = $call_url;
-            $data['id'] = 2;
-            $data['time'] = 200;
-
-            return response()->json([
-                'status' => true,
-                'data' => $data
-            ], 200);
-        } else {
-
-
             $costPerSecond = Setting::where('id', 1)->first()->call_cost;
             $walletAmount = Auth::user()->wallet;
             $wallet = User::where('id', Auth::id())->first()->wallet ?? null;
@@ -97,7 +64,6 @@ class CallController extends Controller
             $call->end_time = "0:00";
             $call->to_phone = $request->phone_no;
             $call->time_to_call = $time_to_call;
-            //$call->call_token = $call_token;
             $call->save();
 
 
