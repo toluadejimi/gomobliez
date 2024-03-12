@@ -150,6 +150,21 @@ class VoiceController extends Controller
         }
 
 
+        if($request->data['event_type'] == 'call.answered'){
+
+            $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
+            Call::where('user_id', $user_id)->where('call_id', $request->data['payload']['call_control_id'])->update([
+                'time_initiated' => $request->data['occurred_at'],
+                'status' => 3,
+            ]);
+
+        }
+
+
+
+
+
+
 
 
         if($request->data['event_type'] == 'call.hangup'){
@@ -162,14 +177,15 @@ class VoiceController extends Controller
              $call_cost = Call::where('call_id', $request->data['payload']['call_control_id'])->first()->call_cost ?? null;
 
 
-            if($status == 2){
+
+            if($status == 3){
 
                  $start = Carbon::parse($starttime);
                  $stop = Carbon::parse($endtime);
                  $time = $stop->second - $start->second;
 
-                 $plan = MyPlan::where('user_id', $user_id)->first()->status ?? null;
 
+                 $plan = MyPlan::where('user_id', $user_id)->first()->status ?? null;
                  $callcost = $time * $call_cost;
 
 
