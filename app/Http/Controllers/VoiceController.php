@@ -140,22 +140,12 @@ class VoiceController extends Controller
         }
 
 
-        if($request->data['event_type'] == 'call.bridged'){
-
-            $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
-            Call::where('user_id', $user_id)->where('call_id', $request->data['payload']['call_control_id'])->update([
-                'status' => 2,
-            ]);
-
-        }
-
-
         if($request->data['event_type'] == 'call.answered'){
 
             $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
             Call::where('user_id', $user_id)->where('call_id', $request->data['payload']['call_control_id'])->update([
                 'time_initiated' => $request->data['occurred_at'],
-                'status' => 3,
+                'status' => 2,
             ]);
 
         }
@@ -178,7 +168,7 @@ class VoiceController extends Controller
 
 
 
-            if($status == 3){
+            if($status == 2){
 
                  $start = Carbon::parse($starttime);
                  $stop = Carbon::parse($endtime);
