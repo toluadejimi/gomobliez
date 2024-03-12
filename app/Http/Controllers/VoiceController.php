@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CallCost;
 use DateTime;
 use Exception;
 use Carbon\Carbon;
@@ -128,7 +129,6 @@ class VoiceController extends Controller
 
         if($request->data['event_type'] == 'call.initiated'){
 
-
             $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
             Call::where('user_id', $user_id)->where('call_id', null)->update([
                 'call_id' => $request->data['payload']['call_control_id'],
@@ -140,42 +140,67 @@ class VoiceController extends Controller
         }
 
 
+        if($request->data['event_type'] == 'call.bridged'){
+
+            $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
+            Call::where('user_id', $user_id)->where('call_id', $request->data['payload']['call_control_id'])->update([
+                'status' => 2,
+            ]);
+
+        }
+
+
+
+
         if($request->data['event_type'] == 'call.hangup'){
 
              $user_id =  Call::where('call_id', $request->data['payload']['call_control_id'])->first()->user_id;
-
              $starttime = Call::where('call_id', $request->data['payload']['call_control_id'])->first()->time_initiated;
              $endtime = $request->data['payload']['end_time'];
 
-
-             $start = Carbon::parse($starttime);
-             $stop = Carbon::parse($endtime);
-
-             $time = $stop->second - $start->second;
-
-             $plan = MyPlan::where('user_id', $user_id)->first()->status ?? null;
-             $cost = Setting::where('id', 1)->first()->call_cost ?? null;
-
-             $callcost = $time * $cost;
+             $status = Call::where('call_id', $request->data['payload']['call_control_id'])->first()->status ?? null;
+             $call_cost = Call::where('call_id', $request->data['payload']['call_control_id'])->first()->call_cost ?? null;
 
 
+            if($status == 2){
 
-                if($plan == 1){
-                    CallLimit::where('user_id', $user_id)->increment('call_limit', $time);
-                }
+                 $start = Carbon::parse($starttime);
+                 $stop = Carbon::parse($endtime);
+                 $time = $stop->second - $start->second;
 
-                if($plan == 0){
+                 $plan = MyPlan::where('user_id', $user_id)->first()->status ?? null;
 
-                    CallLimit::where('user_id', $user_id)->increment('call_limit', $time);
-                    User::where('id', $user_id)->decrement('wallet', $callcost);
-
-                }
+                 $callcost = $time * $call_cost;
 
 
+                 if($plan == 1){
+                     CallLimit::where('user_id', $user_id)->increment('call_limit', $time);
+                     $message ="$user_id | has limit has been added with | $time ";
+                     send_notification($message);
+                 }
+
+                 if($plan == 0){
+                     User::where('id', $user_id)->decrement('wallet', $callcost);
+                     $message ="$user_id | wallet has been debited | $callcost";
+                     send_notification($message);
+                 }
 
 
-             $message ="plan====>>>>".$plan. "cost====>>>>".$callcost."start====>>>>".$start."stop====>>>>".$stop. "time====>>>>".$time;
-             send_notification($message);
+                $user_id = Call::where('to_phone',$request->data['payload']['to'])->first()->user_id ?? null;
+                Call::where('user_id', $user_id)->where('call_id', $request->data['payload']['call_control_id'])->update([
+                    'status' => 3,
+                ]);
+
+
+
+
+             }
+
+
+                $message ="No calls made by $user_id";
+                send_notification($message);
+
+
 
 
 

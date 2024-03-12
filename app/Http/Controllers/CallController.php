@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Call;
+use App\Models\CallCost;
 use App\Models\User;
 use App\Models\MyPlan;
 use App\Models\Setting;
@@ -35,58 +36,19 @@ class CallController extends Controller
         }
 
 
-        $user_id = Auth::id();
-        $phone = ['+234', '+254', '+256', '+255'];
-        if (Str::contains($request->phone_no, $phone)) {
+        $get_no_code = substr($request->phone_no, 4);
 
-            $costPerSecond = Setting::where('id', 1)->first()->call_cost;
-            $walletAmount = Auth::user()->wallet;
-            $time_to_call = calculateCallTime($costPerSecond, $walletAmount);
+        $usphone = ['+1'];
+        $ngnphone = ['+234'];
 
-            if ($time_to_call == 0) {
-                return response()->json([
-                    'status' => false,
-                    'message' => "Insufficient funds to make call, Fund your wallet"
-                ], 422);
-            }
+        if (Str::contains($request->phone_no, $usphone)) {
+            $cost = CallCost::where('code', "+1")->first()->cost ?? null;
+            $call_cost = $cost;
+        }if (Str::contains($request->phone_no, $ngnphone)){
+            $cost = CallCost::where('code', "+234")->first()->cost ?? null;
+            $call_cost = $cost;
+        }
 
-
-            $call = new Call();
-            $call->user_id = Auth::id();
-            $call->name = $request->name;
-            $call->time_initiated = date('h:i');
-            $call->call_time = "0:00";
-            $call->end_time = "0:00";
-            $call->to_phone = $request->phone_no;
-            $call->time_to_call = $time_to_call;
-            $call->save();
-
-
-            if ($plan == 1) {
-
-                $dailylimit = CallLimit::where('user_id', Auth::id())->first()->call_limit ?? null;
-                $setLimit = Setting::where('id', 1)->first()->daily_call_limit;
-                $callsec = $setLimit - $dailylimit;
-
-                if ($dailylimit >= $setLimit) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => "Service not available at the moment, try again later"
-                    ], 422);
-
-                } else {
-                    $data['id'] = 1;
-                    $data['time'] = $callsec;
-                    return response()->json([
-                        'status' => true,
-                        'data' => $data
-                    ], 200);
-                }
-
-
-            }
-
-        } else {
 
 
             $costPerSecond = Setting::where('id', 1)->first()->call_cost;
@@ -111,6 +73,7 @@ class CallController extends Controller
             $call->end_time = "0:00";
             $call->to_phone = $request->phone_no;
             $call->time_to_call = $time_to_call;
+            $call->call_cost = $call_cost;
             $call->save();
 
 
@@ -134,9 +97,6 @@ class CallController extends Controller
                         'data' => $data
                     ], 200);
                 }
-
-
-            }
 
 
         }
@@ -197,7 +157,7 @@ class CallController extends Controller
     public function recent_calls(request $request)
     {
 
-        $calls = Call::latest()->select('to_phone', 'name', 'call_url', 'created_at')->where('user_id', Auth::id())->get() ?? null;
+        $calls = Call::latest()->select('to_phone', 'name', 'call_url', 'created_at')->where('user_id', Auth::id())->take(10)->get() ?? null;
 
         if ($calls == null) {
             $data['calls'] = [];
