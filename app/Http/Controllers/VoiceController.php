@@ -167,8 +167,7 @@ class VoiceController extends Controller
              $call_cost = Call::where('call_id', $request->data['payload']['call_control_id'])->first()->call_cost ?? null;
 
 
-
-            if($status == 2){
+            if($status == 2 || $status == 3 ){
 
                  $start = Carbon::parse($starttime);
                  $stop = Carbon::parse($endtime);
