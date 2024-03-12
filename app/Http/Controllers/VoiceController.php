@@ -182,8 +182,8 @@ class VoiceController extends Controller
 
 
                  if($plan == 1){
-                     CallLimit::where('user_id', $user_id)->increment('call_limit', $time);
-                     $message ="$user_id | has limit has been added with | $time ";
+                     CallLimit::where('user_id', $user_id)->increment('call_limit', $seconds);
+                     $message ="$user_id | has limit has been added with | $seconds sec";
                      send_notification($message);
                  }
 
