@@ -166,16 +166,19 @@ class VoiceController extends Controller
              $status = Call::where('call_id', $request->data['payload']['call_control_id'])->first()->status ?? null;
              $call_cost = Call::where('call_id', $request->data['payload']['call_control_id'])->first()->call_cost ?? null;
 
-
             if($status == 2 || $status == 3 ){
 
-                 $start = Carbon::parse($starttime);
-                 $stop = Carbon::parse($endtime);
-                 $time = $stop->second - $start->second;
+
+                $start = new DateTime($starttime);
+                $stop = new DateTime($endtime);
+
+                $interval = $stop->diff($start);
+                $seconds = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
 
 
                  $plan = MyPlan::where('user_id', $user_id)->first()->status ?? null;
-                 $callcost = $time * $call_cost;
+                 $callcost = $seconds * $call_cost;
+
 
 
                  if($plan == 1){
@@ -199,11 +202,13 @@ class VoiceController extends Controller
 
 
 
-             }
-
-
+             }else{
                 $message ="No calls made by $user_id";
                 send_notification($message);
+            }
+
+
+
 
 
 
