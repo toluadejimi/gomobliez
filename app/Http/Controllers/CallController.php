@@ -72,7 +72,7 @@ class CallController extends Controller
             $call->call_time = "0:00";
             $call->end_time = "0:00";
             $call->to_phone = $request->phone_no;
-            $call->time_to_call = $time_to_call;
+            $call->time_to_call = round($time_to_call);
             $call->call_cost = $call_cost;
             $call->save();
 
@@ -91,7 +91,7 @@ class CallController extends Controller
 
                 } else {
                     $data['id'] = 1;
-                    $data['time'] = $callsec;
+                    $data['time'] = round($callsec);
                     return response()->json([
                         'status' => true,
                         'data' => $data
@@ -116,7 +116,7 @@ class CallController extends Controller
 
         } else {
             $data['id'] = 1;
-            $data['time'] =  $time_to_call;
+            $data['time'] =  round($time_to_call);
             return response()->json([
                 'status' => true,
                 'data' => $data
