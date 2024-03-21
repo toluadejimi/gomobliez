@@ -50,7 +50,6 @@ class CallController extends Controller
         }
 
 
-
             $costPerSecond = Setting::where('id', 1)->first()->call_cost;
             $walletAmount = Auth::user()->wallet;
             $wallet = User::where('id', Auth::id())->first()->wallet ?? null;
@@ -157,7 +156,7 @@ class CallController extends Controller
     public function recent_calls(request $request)
     {
 
-        $calls = Call::latest()->select('to_phone', 'name', 'call_url', 'created_at')->where('user_id', Auth::id())->take(10)->get() ?? null;
+        $calls = Call::latest()->select('to_phone', 'name', 'call_url', 'call_time' 'created_at')->where('user_id', Auth::id())->take(10)->get() ?? null;
 
         if ($calls == null) {
             $data['calls'] = [];
