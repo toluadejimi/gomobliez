@@ -156,7 +156,7 @@ class CallController extends Controller
     public function recent_calls(request $request)
     {
 
-        $calls = Call::latest()->select('to_phone', 'name', 'call_url', 'call_time' 'created_at')->where('user_id', Auth::id())->take(10)->get() ?? null;
+        $calls = Call::latest()->select('to_phone', 'name', 'call_url', 'call_time', 'created_at')->where('user_id', Auth::id())->take(10)->get() ?? null;
 
         if ($calls == null) {
             $data['calls'] = [];
