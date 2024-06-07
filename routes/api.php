@@ -90,7 +90,7 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('create-transfer-pin', [ProfileController::class, 'create_transfer_pin']);
     Route::post('subscribe', [ProfileController::class, 'subscribe_plan']);
     Route::post('reset-pin', [ProfileController::class, 'reset_pin']);
-    Route::post('reset-password', [ProfileController::class, 'reset_password']);
+   // Route::post('reset-password', [ProfileController::class, 'reset_password']);
 
 
 
