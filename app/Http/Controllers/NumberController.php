@@ -29,7 +29,7 @@ class NumberController extends Controller
 
 
 
-        $countries = Country::select('code', 'name', 'flag')->orderByDesc('name')->get();
+        $countries = Country::select('code', 'name', 'flag', 'cost')->orderByDesc('name')->get();
 
         $data['countries'] = $countries;
 
@@ -322,5 +322,5 @@ class NumberController extends Controller
 
 
 
-   
+
 }
