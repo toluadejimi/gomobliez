@@ -458,7 +458,6 @@ function get_token($email, $password)
 function buy_airtime($country_code, $service_id, $amount, $phone, $product_id, $rate, $operator_id)
 {
 
-
     $email = env('EMAILTOK');
     $password = env('PASSTOK');
     $token = get_token($email, $password);

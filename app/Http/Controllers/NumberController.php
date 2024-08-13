@@ -235,57 +235,57 @@ class NumberController extends Controller
             }
 
 
-            // $auth = env('TELNYX');
+             $auth = env('TELNYX');
 
 
-            // $data = [
+             $data = [
 
 
-            //     "phone_numbers" => [
-            //         "phone_number" => $request->phone_no,
-            //     ]
-            // ];
+                 "phone_numbers" => [
+                     "phone_number" => $request->phone_no,
+                 ]
+             ];
 
-            // $post_data = json_encode($data);
-
-
-            // $curl = curl_init();
-
-            // curl_setopt_array($curl, [
-            //     CURLOPT_HTTPHEADER => [
-            //         "Authorization: Bearer $auth"
-            //     ],
-            //     CURLOPT_URL => "https://api.telnyx.com/v2/number_orders",
-            //     CURLOPT_RETURNTRANSFER => true,
-            //     CURLOPT_CUSTOMREQUEST => 'POST',
-            //     CURLOPT_POSTFIELDS => $post_data
-
-            // ]);
-
-            // $var = curl_exec($curl);
-            // curl_close($curl);
+             $post_data = json_encode($data);
 
 
-            // User::where('id', Auth::id())->decrement('wallet', $amount);
-            //     MyPhoneNumber::create([
-            //         'user_id' => Auth::id(),
-            //         'accountSid' => $incoming_phone_number->accountSid,
-            //         'phone_no' => $request->phone_no,
-            //         'sid' => $incoming_phone_number->sid,
-            //         'amount' => $amount,
-            //         'status' => 1
-            //     ]);
+             $curl = curl_init();
+
+             curl_setopt_array($curl, [
+                 CURLOPT_HTTPHEADER => [
+                     "Authorization: Bearer $auth"
+                 ],
+                 CURLOPT_URL => "https://api.telnyx.com/v2/number_orders",
+                 CURLOPT_RETURNTRANSFER => true,
+                 CURLOPT_CUSTOMREQUEST => 'POST',
+                 CURLOPT_POSTFIELDS => $post_data
+
+             ]);
+
+             $var = curl_exec($curl);
+             curl_close($curl);
 
 
-            //     $trx_id = "TRX" . date("yis");
-            //     Transaction::create([
-            //         'trx_id' => $trx_id,
-            //         'user_id' => Auth::id(),
-            //         'amount' => $amount,
-            //         'status' => 1,
-            //         'type' => 1
+             User::where('id', Auth::id())->decrement('wallet', $amount);
+                 MyPhoneNumber::create([
+                     'user_id' => Auth::id(),
+                     'accountSid' => $incoming_phone_number->accountSid ?? null,
+                     'phone_no' => $request->phone_no,
+                     'sid' => $incoming_phone_number->sid,
+                     'amount' => $amount,
+                     'status' => 1
+                 ]);
 
-            //     ]);
+
+                 $trx_id = "TRX" . date("yis");
+                 Transaction::create([
+                     'trx_id' => $trx_id,
+                     'user_id' => Auth::id(),
+                     'amount' => $amount,
+                     'status' => 2,
+                     'type' => 1
+
+                 ]);
 
 
             $data['message'] = "$request->phone_no is now yours";
@@ -308,16 +308,28 @@ class NumberController extends Controller
     {
 
 
-        MyPhoneNumber::where('user_id', Auth::id())->delete();
+        $ck = MyPhoneNumber::where('user_id', Auth::id())->first() ?? null;
 
-        $data['message'] = "Phone Number Deleted Successfully";
-        return response()->json([
+        if($ck != null){
+            MyPhoneNumber::where('user_id', Auth::id())->delete();
+            $data['message'] = "Phone Number Deleted Successfully";
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ], 200);
+        }else{
 
-            'status' => true,
-            'data' => $data
+            return response()->json([
+                'status' => true,
+                'message' => "no number assigned"
+            ], 422);
+
+        }
 
 
-        ], 200);
+
+
+
     }
 
 

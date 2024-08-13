@@ -153,6 +153,25 @@ class PaymentController extends Controller
     }
 
 
+    public function send_money()
+    {
+
+
+
+    }
+
+
+    public function account_verificaation()
+    {
+
+
+
+    }
+
+
+
+
+
     public function charge(request $request)
     {
 
