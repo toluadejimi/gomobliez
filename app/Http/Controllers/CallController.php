@@ -76,6 +76,8 @@ class CallController extends Controller
             $call->save();
 
 
+
+
             if ($plan == 1) {
 
                 $dailylimit = CallLimit::where('user_id', Auth::id())->first()->call_limit ?? null;
@@ -89,7 +91,7 @@ class CallController extends Controller
                     ], 422);
 
                 } else {
-                    $data['id'] = 1;
+                    $data['id'] = $call->id;
                     $data['time'] = round($callsec);
                     return response()->json([
                         'status' => true,
@@ -114,7 +116,7 @@ class CallController extends Controller
             ], 422);
 
         } else {
-            $data['id'] = 1;
+            $data['id'] = $call->id;
             $data['time'] =  round($time_to_call);
             return response()->json([
                 'status' => true,
@@ -232,6 +234,80 @@ class CallController extends Controller
 
 
         return view('call', compact('name', 'phone_no', 'number', 'plan', 'tk', 'user_id'));
+    }
+
+
+
+    public function update_call(request $request){
+
+
+        if($request->id == null){
+
+            return response()->json([
+                'status' => false,
+                'message' => "Call ID cant not be null"
+            ], 422);
+        }
+
+
+
+        $call = Call::where('id', $request->id)->first() ?? null;
+
+        if($call == null){
+
+            return response()->json([
+                'status' => false,
+                'message' => "Call not founnd"
+            ], 422);
+        }
+
+
+
+        if($request->call_status == "answered"){
+
+            $call_cost = Call::where('id', $request->id)->first()->call_cost;
+
+            Call::where('id', $request->id)->where('user_id', $request->user_id)->update([
+                'status' => 2,
+            ]);
+
+            $amount = $call_cost * $request->call_time;
+
+            User::where('id', $request->user_id)->decrement('wallet', $amount);
+
+            return response()->json([
+                'status' => true,
+                'message' => "Call Completed"
+            ], 200);
+
+
+        }
+
+        if($request->call_status == "declined"){
+
+            $call_cost = Call::where('id', $request->id)->first()->call_cost;
+            Call::where('id', $request->id)->where('user_id', $request->user_id)->update([
+                'status' => 1,
+            ]);
+
+            $amount = $call_cost * $request->call_time;
+            User::where('id', $request->user_id)->decrement('wallet', $amount);
+
+            return response()->json([
+                'status' => true,
+                'message' => "Call Ended"
+            ], 200);
+
+
+        }
+
+       
+
+
+
+
+
+
     }
 
 

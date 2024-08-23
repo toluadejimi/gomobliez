@@ -52,6 +52,10 @@ Route::get('token', [VoiceController::class, 'token']);
 Route::post('callback', [VoiceController::class, 'callback']);
 Route::get('fallback', [VoiceController::class, 'fallback']);
 Route::post('voice_url', [VoiceController::class, 'voice_url']);
+Route::post('update-call', [CallController::class, 'update_call']);
+
+
+
 
 
 Route::post('afri-callback', [CallbackController::class, 'callback']);
