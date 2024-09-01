@@ -305,6 +305,67 @@ class ProfileController extends Controller
         }
     }
 
+    public function update_transfer_pin(Request $request)
+    {
+
+        try {
+            $validator = Validator::make($request->all(), [
+                'new_pin' => 'required|numeric|digits:4',
+
+            ], [
+                'new_pin.required' => 'PIN is required.',
+                'new_pin.numeric' => 'PIN must be a number.',
+                'new_pin.digits' => 'PIN must be a maximum of 4 digits.',
+            ]);
+
+            if ($validator->fails()) {
+                throw ValidationException::withMessages($validator->errors()->messages());
+            }
+
+            $pin = bcrypt($request->new_pin);
+            User::where('id', Auth::id())->update(['pin' => $pin]);
+            $data['message'] = "Transfer pin has been updated successfully";
+
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+            ], 200);
+
+
+        } catch (ValidationException $e) {
+
+            $data['message'] = $e->getMessage();
+            return response()->json([
+                'status' => false,
+                'data' => $data,
+            ], 422);
+        }
+    }
+
+
+    public function update_token(Request $request)
+    {
+
+        try {
+
+            User::where('id', Auth::id())->update(['device_id' => $request->token]);
+            $data['message'] = "Token updated successfully";
+
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+            ], 200);
+
+
+        } catch (ValidationException $e) {
+
+            $data['message'] = $e->getMessage();
+            return response()->json([
+                'status' => false,
+                'data' => $data,
+            ], 422);
+        }
+    }
 
 
     public function subscribe_plan(Request $request)

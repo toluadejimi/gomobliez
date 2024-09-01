@@ -92,6 +92,13 @@ Route::group(['middleware' => ['auth:api', 'acess']], function () {
     Route::post('send-to-bank', [PaymentController::class, 'send_to_bank']);
 
     Route::post('create-pin', [ProfileController::class, 'create_transfer_pin']);
+    Route::post('update-pin', [ProfileController::class, 'update_transfer_pin']);
+    Route::post('update-token', [ProfileController::class, 'update_token']);
+
+
+
+
+
     Route::post('subscribe', [ProfileController::class, 'subscribe_plan']);
     Route::post('reset-pin', [ProfileController::class, 'reset_pin']);
    // Route::post('reset-password', [ProfileController::class, 'reset_password']);
